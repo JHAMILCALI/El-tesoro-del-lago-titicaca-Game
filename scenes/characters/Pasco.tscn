@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://c_pasco_001"]
+
+[ext_resource type="Script" path="res://scripts/pasco.gd" id="1_pasco"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pasco"]
+radius = 16.0
+
+[node name="Pasco" type="CharacterBody2D" groups=["player"]]
+script = ExtResource("1_pasco")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_pasco")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+color = Color(0.2, 0.6, 1, 1)
+
+[node name="Label" type="Label" parent="."]
+offset_left = -30.0
+offset_top = -38.0
+offset_right = 30.0
+offset_bottom = -18.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "Pasco"
+horizontal_alignment = 1
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
