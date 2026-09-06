@@ -1,10 +1,10 @@
 extends Node2D
 
-@onready var pasco: Pasco = $Pasco
-@onready var huita: Huita = $Huita
-@onready var spanish_patrol: SpanishPatrol = $SpanishPatrol
-@onready var hud: HUD = $HUD
-@onready var dialogue_box: DialogueBox = $DialogueBox
+@onready var pasco = $Pasco
+@onready var huita = $Huita
+@onready var spanish_patrol = $SpanishPatrol
+@onready var hud = $HUD
+@onready var dialogue_box = $DialogueBox
 
 @onready var start_checkpoint: Node2D = $Checkpoints/StartCheckpoint
 @onready var checkpoint_huita: Node2D = $Checkpoints/CheckpointHuita
@@ -21,7 +21,7 @@ func _ready() -> void:
 	if start_checkpoint:
 		last_checkpoint_pos = start_checkpoint.global_position
 	else:
-		last_checkpoint_pos = pasco.global_position if pasco else Vector2(100, 360)
+		last_checkpoint_pos = pasco.global_position if pasco != null else Vector2(100, 360)
 
 	if hud:
 		hud.update_objective("Avanza con cuidado por el camino.")

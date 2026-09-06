@@ -1,11 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://c_level01_001"]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/level01_convoy.gd" id="1_level"]
-[ext_resource type="PackedScene" uid="uid://c_pasco_001" path="res://scenes/characters/Pasco.tscn" id="2_pasco"]
-[ext_resource type="PackedScene" uid="uid://c_huita_001" path="res://scenes/characters/Huita.tscn" id="3_huita"]
-[ext_resource type="PackedScene" uid="uid://c_spanishpatrol_001" path="res://scenes/enemies/SpanishPatrol.tscn" id="4_patrol"]
-[ext_resource type="PackedScene" uid="uid://c_hud_001" path="res://scenes/ui/HUD.tscn" id="5_hud"]
-[ext_resource type="PackedScene" uid="uid://c_dialoguebox_001" path="res://scenes/ui/DialogueBox.tscn" id="6_dialogue"]
+[ext_resource type="PackedScene" path="res://scenes/characters/Pasco.tscn" id="2_pasco"]
+[ext_resource type="PackedScene" path="res://scenes/characters/Huita.tscn" id="3_huita"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/SpanishPatrol.tscn" id="4_patrol"]
+[ext_resource type="PackedScene" path="res://scenes/ui/HUD.tscn" id="5_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/DialogueBox.tscn" id="6_dialogue"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_top"]
 size = Vector2(2800, 100)
