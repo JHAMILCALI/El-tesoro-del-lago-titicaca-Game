@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://k34r3u50jioa"]
 
 [ext_resource type="Script" uid="uid://bk6arl4xw7qby" path="res://scripts/main_menu.gd" id="1_menu"]
+[ext_resource type="VideoStreamTheora" path="res://assets/videos/video_menu.ogv" id="2_video"]
 
 [node name="MainMenu" type="Control" unique_id=560983490]
 layout_mode = 3
@@ -20,6 +21,19 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0.08, 0.12, 0.18, 1)
+
+[node name="BackgroundVideo" type="VideoStreamPlayer" parent="." unique_id=984712034]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stream = ExtResource("2_video")
+autoplay = true
+expand = true
+loop = true
 
 [node name="TitleLabel" type="Label" parent="." unique_id=431379442]
 layout_mode = 1
