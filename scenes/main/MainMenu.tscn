@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bk6arl4xw7qby" path="res://scripts/main_menu.gd" id="1_menu"]
 [ext_resource type="VideoStreamTheora" path="res://assets/videos/video_menu.ogv" id="2_video"]
 [ext_resource type="Texture2D" uid="uid://bb821nooqf0sq" path="res://assets/images/titulo_menu.png" id="3_title"]
+[ext_resource type="AudioStream" path="res://assets/audio/Lake Titicaca (Main Menu) - Alt Take.mp3" id="4_music"]
 
 [node name="MainMenu" type="Control" unique_id=560983490]
 layout_mode = 3
@@ -35,6 +36,11 @@ stream = ExtResource("2_video")
 autoplay = true
 expand = true
 loop = true
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=294810293]
+stream = ExtResource("4_music")
+volume_db = -3.74
+autoplay = true
 
 [node name="TitleTexture" type="TextureRect" parent="." unique_id=431379442]
 layout_mode = 1
