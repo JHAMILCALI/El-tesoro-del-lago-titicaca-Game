@@ -32,6 +32,41 @@ text = "Objetivo:
 Avanza con cuidado por el camino."
 autowrap_mode = 2
 
+[node name="DetectionContainer" type="VBoxContainer" parent="Control"]
+visible = false
+layout_mode = 0
+offset_left = 20.0
+offset_top = 110.0
+offset_right = 380.0
+offset_bottom = 160.0
+
+[node name="DetectionTitle" type="Label" parent="Control/DetectionContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+theme_override_font_sizes/font_size = 14
+text = "DETECCIÓN:"
+
+[node name="DetectionBarLabel" type="Label" parent="Control/DetectionContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 16
+text = "[░░░░░░░░░░]"
+
+[node name="PauseHelpLabel" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 45.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 14
+text = "ESC — Pausa"
+horizontal_alignment = 2
+
 [node name="InteractionPrompt" type="Label" parent="Control"]
 visible = false
 layout_mode = 1

@@ -6,6 +6,7 @@
 radius = 16.0
 
 [node name="Pasco" type="CharacterBody2D" groups=["player"]]
+z_index = 10
 script = ExtResource("1_pasco")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

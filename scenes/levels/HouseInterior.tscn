@@ -1,0 +1,238 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/house_interior.gd" id="1_house"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_house_body"]
+size = Vector2(300, 220)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_door"]
+radius = 58.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_horizontal"]
+size = Vector2(520, 34)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_vertical"]
+size = Vector2(34, 360)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_exit"]
+radius = 52.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_treasure"]
+radius = 48.0
+
+[node name="HouseInterior" type="Node2D"]
+script = ExtResource("1_house")
+
+[node name="Exterior" type="Node2D" parent="."]
+
+[node name="HouseBody" type="StaticBody2D" parent="Exterior"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Exterior/HouseBody"]
+shape = SubResource("RectangleShape2D_house_body")
+
+[node name="HouseVisual" type="ColorRect" parent="Exterior/HouseBody"]
+offset_left = -150.0
+offset_top = -110.0
+offset_right = 150.0
+offset_bottom = 110.0
+color = Color(0.38, 0.28, 0.18, 1)
+
+[node name="RoofVisual" type="ColorRect" parent="Exterior/HouseBody"]
+offset_left = -165.0
+offset_top = -125.0
+offset_right = 165.0
+offset_bottom = -95.0
+color = Color(0.24, 0.16, 0.11, 1)
+
+[node name="HouseLabel" type="Label" parent="Exterior/HouseBody"]
+offset_left = -90.0
+offset_top = -35.0
+offset_right = 90.0
+offset_bottom = 5.0
+theme_override_colors/font_color = Color(1, 0.9, 0.7, 1)
+theme_override_font_sizes/font_size = 24
+text = "CASA"
+horizontal_alignment = 1
+
+[node name="DoorVisual" type="ColorRect" parent="Exterior"]
+offset_left = -178.0
+offset_top = -38.0
+offset_right = -145.0
+offset_bottom = 38.0
+color = Color(0.15, 0.09, 0.05, 1)
+
+[node name="DoorArea" type="Area2D" parent="Exterior"]
+position = Vector2(-190, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Exterior/DoorArea"]
+shape = SubResource("CircleShape2D_door")
+
+[node name="DebugVisual" type="ColorRect" parent="Exterior/DoorArea"]
+offset_left = -35.0
+offset_top = -45.0
+offset_right = 35.0
+offset_bottom = 45.0
+color = Color(0.25, 0.65, 1, 0.28)
+mouse_filter = 2
+
+[node name="DebugLabel" type="Label" parent="Exterior/DoorArea"]
+offset_left = -70.0
+offset_top = 50.0
+offset_right = 70.0
+offset_bottom = 70.0
+theme_override_colors/font_color = Color(0.5, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "ENTRADA CASA [E]"
+horizontal_alignment = 1
+
+[node name="ExteriorSpawn" type="Marker2D" parent="Exterior"]
+position = Vector2(-260, 0)
+
+[node name="Interior" type="Node2D" parent="."]
+position = Vector2(0, 760)
+
+[node name="Floor" type="ColorRect" parent="Interior"]
+offset_left = -260.0
+offset_top = -180.0
+offset_right = 260.0
+offset_bottom = 180.0
+color = Color(0.32, 0.24, 0.16, 1)
+mouse_filter = 2
+
+[node name="InteriorLabel" type="Label" parent="Interior"]
+offset_left = -120.0
+offset_top = -155.0
+offset_right = 120.0
+offset_bottom = -125.0
+theme_override_colors/font_color = Color(1, 0.9, 0.7, 1)
+theme_override_font_sizes/font_size = 18
+text = "INTERIOR DE LA CASA"
+horizontal_alignment = 1
+
+[node name="Walls" type="Node2D" parent="Interior"]
+
+[node name="TopWall" type="StaticBody2D" parent="Interior/Walls"]
+position = Vector2(0, -180)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interior/Walls/TopWall"]
+shape = SubResource("RectangleShape2D_wall_horizontal")
+
+[node name="Visual" type="ColorRect" parent="Interior/Walls/TopWall"]
+offset_left = -260.0
+offset_top = -17.0
+offset_right = 260.0
+offset_bottom = 17.0
+color = Color(0.18, 0.13, 0.09, 1)
+
+[node name="BottomWall" type="StaticBody2D" parent="Interior/Walls"]
+position = Vector2(0, 180)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interior/Walls/BottomWall"]
+shape = SubResource("RectangleShape2D_wall_horizontal")
+
+[node name="Visual" type="ColorRect" parent="Interior/Walls/BottomWall"]
+offset_left = -260.0
+offset_top = -17.0
+offset_right = 260.0
+offset_bottom = 17.0
+color = Color(0.18, 0.13, 0.09, 1)
+
+[node name="LeftWall" type="StaticBody2D" parent="Interior/Walls"]
+position = Vector2(-260, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interior/Walls/LeftWall"]
+shape = SubResource("RectangleShape2D_wall_vertical")
+
+[node name="Visual" type="ColorRect" parent="Interior/Walls/LeftWall"]
+offset_left = -17.0
+offset_top = -180.0
+offset_right = 17.0
+offset_bottom = 180.0
+color = Color(0.18, 0.13, 0.09, 1)
+
+[node name="RightWall" type="StaticBody2D" parent="Interior/Walls"]
+position = Vector2(260, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interior/Walls/RightWall"]
+shape = SubResource("RectangleShape2D_wall_vertical")
+
+[node name="Visual" type="ColorRect" parent="Interior/Walls/RightWall"]
+offset_left = -17.0
+offset_top = -180.0
+offset_right = 17.0
+offset_bottom = 180.0
+color = Color(0.18, 0.13, 0.09, 1)
+
+[node name="ExitArea" type="Area2D" parent="Interior"]
+position = Vector2(-190, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interior/ExitArea"]
+shape = SubResource("CircleShape2D_exit")
+
+[node name="DebugVisual" type="ColorRect" parent="Interior/ExitArea"]
+offset_left = -35.0
+offset_top = -45.0
+offset_right = 35.0
+offset_bottom = 45.0
+color = Color(0.3, 0.7, 1, 0.3)
+mouse_filter = 2
+
+[node name="DebugLabel" type="Label" parent="Interior/ExitArea"]
+offset_left = -65.0
+offset_top = 50.0
+offset_right = 65.0
+offset_bottom = 70.0
+theme_override_colors/font_color = Color(0.55, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "SALIDA [E]"
+horizontal_alignment = 1
+
+[node name="InteriorSpawn" type="Marker2D" parent="Interior"]
+position = Vector2(-120, 0)
+
+[node name="TreasureArea" type="Area2D" parent="Interior"]
+position = Vector2(110, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interior/TreasureArea"]
+shape = SubResource("CircleShape2D_treasure")
+
+[node name="TreasureVisual" type="ColorRect" parent="Interior/TreasureArea"]
+offset_left = -22.0
+offset_top = -22.0
+offset_right = 22.0
+offset_bottom = 22.0
+color = Color(1, 0.75, 0.08, 1)
+mouse_filter = 2
+
+[node name="TreasureLabel" type="Label" parent="Interior/TreasureArea"]
+offset_left = -60.0
+offset_top = -52.0
+offset_right = 60.0
+offset_bottom = -28.0
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 16
+text = "TESORO"
+horizontal_alignment = 1
+
+[node name="TriggerLabel" type="Label" parent="Interior/TreasureArea"]
+offset_left = -75.0
+offset_top = 32.0
+offset_right = 75.0
+offset_bottom = 52.0
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 10
+text = "ZONA DEL TESORO"
+horizontal_alignment = 1
+
+[node name="TreasureCheckpoint" type="Marker2D" parent="Interior"]
+position = Vector2(35, 0)
+
+[node name="CheckpointLabel" type="Label" parent="Interior/TreasureCheckpoint"]
+offset_left = -55.0
+offset_top = 65.0
+offset_right = 55.0
+offset_bottom = 85.0
+theme_override_colors/font_color = Color(0.3, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "CHECKPOINT 3"
+horizontal_alignment = 1

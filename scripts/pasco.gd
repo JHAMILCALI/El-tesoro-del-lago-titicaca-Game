@@ -5,8 +5,11 @@ class_name Pasco
 @export var run_speed: float = 280.0
 
 var can_move: bool = true
+var is_hidden: bool = false
+var hide_area_count: int = 0
 
 func _ready() -> void:
+	add_to_group("player")
 	_ensure_input_actions()
 
 func _physics_process(_delta: float) -> void:
@@ -30,8 +33,19 @@ func set_movement_enabled(enabled: bool) -> void:
 	if not enabled:
 		velocity = Vector2.ZERO
 
+func enter_hide_area() -> void:
+	hide_area_count += 1
+	is_hidden = hide_area_count > 0
+
+func exit_hide_area() -> void:
+	hide_area_count = maxi(0, hide_area_count - 1)
+	is_hidden = hide_area_count > 0
+
+func clear_hide_state() -> void:
+	hide_area_count = 0
+	is_hidden = false
+
 func _ensure_input_actions() -> void:
-	# Fallback key registration if not loaded from project.godot
 	var actions := {
 		"move_up": [KEY_W, KEY_UP],
 		"move_down": [KEY_S, KEY_DOWN],

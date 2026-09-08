@@ -10,8 +10,8 @@ signal menu_requested
 @onready var alpha_complete_panel: Panel = $Control/AlphaCompletePanel
 @onready var restart_button: Button = $Control/AlphaCompletePanel/VBoxContainer/RestartButton
 @onready var menu_button: Button = $Control/AlphaCompletePanel/VBoxContainer/MenuButton
-
-var notification_timer: SceneTreeTimer = null
+@onready var detection_container: Control = $Control/DetectionContainer
+@onready var detection_bar_label: Label = $Control/DetectionContainer/DetectionBarLabel
 
 func _ready() -> void:
 	add_to_group("hud")
@@ -21,6 +21,8 @@ func _ready() -> void:
 		notification_label.visible = false
 	if alpha_complete_panel:
 		alpha_complete_panel.visible = false
+	if detection_container:
+		detection_container.visible = false
 
 	if restart_button:
 		restart_button.pressed.connect(_on_restart_pressed)
@@ -29,9 +31,29 @@ func _ready() -> void:
 
 func update_objective(text: String) -> void:
 	if objective_label:
-		objective_label.text = "Objetivo:\n" + text
+		objective_label.text = "OBJETIVO:\n" + text
 
-func show_interaction_prompt(prompt_text: String = "[E] Interactuar") -> void:
+func update_detection_progress(ratio: float) -> void:
+	if not detection_container or not detection_bar_label:
+		return
+
+	if ratio <= 0.0:
+		detection_container.visible = false
+	else:
+		detection_container.visible = true
+		var total_blocks := 10
+		var filled_blocks := int(round(ratio * total_blocks))
+		filled_blocks = clampi(filled_blocks, 0, total_blocks)
+		var bar_str := "["
+		for i in range(total_blocks):
+			if i < filled_blocks:
+				bar_str += "█"
+			else:
+				bar_str += "░"
+		bar_str += "]"
+		detection_bar_label.text = bar_str
+
+func show_interaction_prompt(prompt_text: String = "[E] HABLAR") -> void:
 	if interaction_prompt:
 		interaction_prompt.text = prompt_text
 		interaction_prompt.visible = true
@@ -45,7 +67,7 @@ func show_temporary_notification(message: String, duration: float = 2.0) -> void
 		notification_label.text = message
 		notification_label.visible = true
 		get_tree().create_timer(duration).timeout.connect(func():
-			if notification_label:
+			if notification_label and notification_label.text == message:
 				notification_label.visible = false
 		)
 
