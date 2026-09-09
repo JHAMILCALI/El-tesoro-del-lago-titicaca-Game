@@ -5,7 +5,7 @@ signal stone_count_changed(new_count: int)
 
 @export var walk_speed: float = 180.0
 @export var run_speed: float = 280.0
-@export var stone_travel_distance: float = 180.0
+@export var stone_travel_distance: float = 220.0
 @export var initial_stones: int = 3
 @export var max_stones: int = 10
 
@@ -59,6 +59,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		if can_throw_stone:
 			_throw_stone()
 
+func _get_mouse_aim() -> Dictionary:
+	var local_mouse = get_local_mouse_position()
+	var mouse_dist = local_mouse.length()
+	var aim_dir = local_mouse.normalized() if mouse_dist > 5.0 else last_direction
+	var aim_dist = clampf(mouse_dist, 40.0, stone_travel_distance)
+	var target_pos = aim_dir * aim_dist
+	return {
+		"dir": aim_dir,
+		"dist": aim_dist,
+		"target_pos": target_pos
+	}
+
 func _update_aim_indicator() -> void:
 	if not aim_line or not aim_target:
 		return
@@ -70,27 +82,29 @@ func _update_aim_indicator() -> void:
 	if not is_aim_visible:
 		return
 
+	var aim_info = _get_mouse_aim()
 	var start_pos := Vector2.ZERO
-	var end_pos := last_direction.normalized() * stone_travel_distance
+	var end_pos: Vector2 = aim_info.target_pos
 
 	aim_line.clear_points()
 	aim_line.add_point(start_pos)
 	aim_line.add_point(end_pos)
 
 	aim_target.position = end_pos
-	aim_target.rotation = last_direction.angle()
+	aim_target.rotation = (aim_info.dir as Vector2).angle()
 
 func _throw_stone() -> void:
 	if not stone_scene or stone_count <= 0:
 		return
 
+	var aim_info = _get_mouse_aim()
 	can_throw_stone = false
 	stone_count -= 1
 	_sync_hud_stones()
 
 	var stone = stone_scene.instantiate()
 	stone.global_position = global_position
-	stone.setup(last_direction)
+	stone.setup(aim_info.dir, aim_info.dist)
 	get_parent().add_child(stone)
 
 	get_tree().create_timer(0.8).timeout.connect(func():
@@ -142,3 +156,10 @@ func _ensure_input_actions() -> void:
 				var ev := InputEventKey.new()
 				ev.physical_keycode = key_code
 				InputMap.action_add_event(action_name, ev)
+
+	# Ensure Mouse Button Right also triggers throw_stone
+	if InputMap.has_action("throw_stone"):
+		var mouse_event := InputEventMouseButton.new()
+		mouse_event.button_index = MOUSE_BUTTON_RIGHT
+		if not InputMap.action_has_event("throw_stone", mouse_event):
+			InputMap.action_add_event("throw_stone", mouse_event)

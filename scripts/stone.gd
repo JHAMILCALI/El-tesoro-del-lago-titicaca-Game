@@ -1,15 +1,16 @@
 extends Node2D
 class_name Stone
 
-@export var speed: float = 350.0
+@export var speed: float = 380.0
 @export var travel_distance: float = 180.0
 
 var direction: Vector2 = Vector2.RIGHT
 var distance_traveled: float = 0.0
 var noise_area_scene: PackedScene = preload("res://scenes/objects/NoiseArea.tscn")
 
-func setup(launch_direction: Vector2) -> void:
+func setup(launch_direction: Vector2, target_distance: float = 180.0) -> void:
 	direction = launch_direction.normalized() if launch_direction != Vector2.ZERO else Vector2.RIGHT
+	travel_distance = maxf(20.0, target_distance)
 	rotation = direction.angle()
 
 func _process(delta: float) -> void:
