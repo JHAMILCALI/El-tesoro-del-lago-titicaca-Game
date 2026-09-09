@@ -16,6 +16,13 @@ signal menu_requested
 
 func _ready() -> void:
 	add_to_group("hud")
+	var control_node = get_node_or_null("Control")
+	if control_node is Control:
+		control_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		for child in control_node.get_children():
+			if child is Control and child not in [restart_button, menu_button] and not child.get_parent() == alpha_complete_panel:
+				child.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
 	if interaction_prompt:
 		interaction_prompt.visible = false
 	if notification_label:
@@ -36,7 +43,7 @@ func update_objective(text: String) -> void:
 
 func update_stone_count(count: int) -> void:
 	if stone_count_label:
-		stone_count_label.text = "PIEDRAS: " + str(count) + "  [Q]"
+		stone_count_label.text = "PIEDRAS: " + str(count) + "  [Clic Izq]"
 
 func update_detection_progress(ratio: float) -> void:
 	if not detection_container or not detection_bar_label:

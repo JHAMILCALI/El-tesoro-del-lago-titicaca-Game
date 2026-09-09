@@ -48,15 +48,34 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("throw_stone") and can_move:
-		get_viewport().set_input_as_handled()
+	_handle_throw_input(event)
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed and not event.is_echo():
+		_handle_throw_input(event)
+
+func _handle_throw_input(event: InputEvent) -> void:
+	if not can_move:
+		return
+
+	var is_throw_click := false
+	if event.is_action_pressed("throw_stone"):
+		is_throw_click = true
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed and not event.is_echo():
+		is_throw_click = true
+
+	if is_throw_click:
 		if stone_count <= 0:
-			var hud = get_tree().get_first_node_in_group("hud")
-			if hud and hud.has_method("show_temporary_notification"):
-				hud.show_temporary_notification("Sin piedras. Busca más en el camino.", 2.0)
+			if can_throw_stone:
+				can_throw_stone = false
+				var hud = get_tree().get_first_node_in_group("hud")
+				if hud and hud.has_method("show_temporary_notification"):
+					hud.show_temporary_notification("Sin piedras. Busca más en el camino.", 2.0)
+				get_tree().create_timer(1.0).timeout.connect(func(): can_throw_stone = true)
 			return
 
 		if can_throw_stone:
+			get_viewport().set_input_as_handled()
 			_throw_stone()
 
 func _get_mouse_aim() -> Dictionary:
@@ -146,7 +165,6 @@ func _ensure_input_actions() -> void:
 		"move_right": [KEY_D, KEY_RIGHT],
 		"run": [KEY_SHIFT],
 		"interact": [KEY_E, KEY_ENTER],
-		"throw_stone": [KEY_Q],
 		"pause": [KEY_ESCAPE]
 	}
 	for action_name in actions:
@@ -157,9 +175,11 @@ func _ensure_input_actions() -> void:
 				ev.physical_keycode = key_code
 				InputMap.action_add_event(action_name, ev)
 
-	# Ensure Mouse Button Right also triggers throw_stone
-	if InputMap.has_action("throw_stone"):
-		var mouse_event := InputEventMouseButton.new()
-		mouse_event.button_index = MOUSE_BUTTON_RIGHT
-		if not InputMap.action_has_event("throw_stone", mouse_event):
-			InputMap.action_add_event("throw_stone", mouse_event)
+	# Ensure Left Mouse Click triggers throw_stone
+	if not InputMap.has_action("throw_stone"):
+		InputMap.add_action("throw_stone")
+
+	var mouse_event := InputEventMouseButton.new()
+	mouse_event.button_index = MOUSE_BUTTON_LEFT
+	if not InputMap.action_has_event("throw_stone", mouse_event):
+		InputMap.action_add_event("throw_stone", mouse_event)

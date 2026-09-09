@@ -115,7 +115,7 @@ func _on_tutorial_trigger_entered(body: Node2D) -> void:
 	if story_state == StoryState.START:
 		story_state = StoryState.PATROL_1_PASSED
 	hud.update_objective("Evita a la patrulla y llega hasta Huita.")
-	hud.show_temporary_notification("Usa los arbustos para ocultarte o presiona Q para lanzar piedras.", 3.0)
+	hud.show_temporary_notification("Usa los arbustos para ocultarte o usa el Clic Izquierdo para lanzar piedras.", 3.0)
 
 func _on_huita_proximity_changed(is_near: bool) -> void:
 	if is_near and story_state <= StoryState.HUITA_FOUND:
