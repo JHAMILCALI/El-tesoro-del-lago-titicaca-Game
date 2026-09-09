@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/HUD.tscn" id="5_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/DialogueBox.tscn" id="6_dialogue"]
 [ext_resource type="PackedScene" path="res://scenes/levels/HouseInterior.tscn" id="7_house"]
+[ext_resource type="PackedScene" path="res://scenes/objects/PickableStone.tscn" id="8_stone_pickup"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_horizontal"]
 size = Vector2(4200, 100)
@@ -460,6 +461,23 @@ point_b = Vector2(2700, 300)
 position = Vector2(2000, 360)
 point_a = Vector2(1500, 360)
 point_b = Vector2(2400, 360)
+
+[node name="PickableStones" type="Node2D" parent="."]
+
+[node name="PickableStone1" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+position = Vector2(400, 360)
+
+[node name="PickableStone2" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+position = Vector2(850, 430)
+
+[node name="PickableStone3" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+position = Vector2(1700, 310)
+
+[node name="PickableStone4" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+position = Vector2(2300, 430)
+
+[node name="PickableStone5" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+position = Vector2(2900, 360)
 
 [node name="HUD" parent="." instance=ExtResource("5_hud")]
 

@@ -28,9 +28,29 @@ offset_right = 370.0
 offset_bottom = 95.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 16
-text = "Objetivo:
+text = "OBJETIVO:
 Avanza con cuidado por el camino."
 autowrap_mode = 2
+
+[node name="StoneCountPanel" type="Panel" parent="Control"]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 20.0
+offset_right = 580.0
+offset_bottom = 70.0
+
+[node name="StoneCountLabel" type="Label" parent="Control/StoneCountPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 16
+text = "PIEDRAS: 3  [Q]"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="DetectionContainer" type="VBoxContainer" parent="Control"]
 visible = false

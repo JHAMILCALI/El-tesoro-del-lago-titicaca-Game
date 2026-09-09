@@ -1,15 +1,20 @@
 extends CharacterBody2D
 class_name Pasco
 
+signal stone_count_changed(new_count: int)
+
 @export var walk_speed: float = 180.0
 @export var run_speed: float = 280.0
 @export var stone_travel_distance: float = 180.0
+@export var initial_stones: int = 3
+@export var max_stones: int = 10
 
 var can_move: bool = true
 var is_hidden: bool = false
 var hide_area_count: int = 0
 var last_direction: Vector2 = Vector2.RIGHT
 var can_throw_stone: bool = true
+var stone_count: int = 3
 
 var stone_scene: PackedScene = preload("res://scenes/objects/Stone.tscn")
 
@@ -18,7 +23,9 @@ var stone_scene: PackedScene = preload("res://scenes/objects/Stone.tscn")
 
 func _ready() -> void:
 	add_to_group("player")
+	stone_count = initial_stones
 	_ensure_input_actions()
+	call_deferred("_sync_hud_stones")
 
 func _process(_delta: float) -> void:
 	_update_aim_indicator()
@@ -41,15 +48,22 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("throw_stone") and can_throw_stone and can_move:
+	if event.is_action_pressed("throw_stone") and can_move:
 		get_viewport().set_input_as_handled()
-		_throw_stone()
+		if stone_count <= 0:
+			var hud = get_tree().get_first_node_in_group("hud")
+			if hud and hud.has_method("show_temporary_notification"):
+				hud.show_temporary_notification("Sin piedras. Busca más en el camino.", 2.0)
+			return
+
+		if can_throw_stone:
+			_throw_stone()
 
 func _update_aim_indicator() -> void:
 	if not aim_line or not aim_target:
 		return
 
-	var is_aim_visible = can_throw_stone and can_move
+	var is_aim_visible = can_throw_stone and can_move and stone_count > 0
 	aim_line.visible = is_aim_visible
 	aim_target.visible = is_aim_visible
 
@@ -67,10 +81,13 @@ func _update_aim_indicator() -> void:
 	aim_target.rotation = last_direction.angle()
 
 func _throw_stone() -> void:
-	if not stone_scene:
+	if not stone_scene or stone_count <= 0:
 		return
 
 	can_throw_stone = false
+	stone_count -= 1
+	_sync_hud_stones()
+
 	var stone = stone_scene.instantiate()
 	stone.global_position = global_position
 	stone.setup(last_direction)
@@ -79,6 +96,16 @@ func _throw_stone() -> void:
 	get_tree().create_timer(0.8).timeout.connect(func():
 		can_throw_stone = true
 	)
+
+func add_stones(amount: int) -> void:
+	stone_count = clampi(stone_count + amount, 0, max_stones)
+	_sync_hud_stones()
+
+func _sync_hud_stones() -> void:
+	stone_count_changed.emit(stone_count)
+	var hud = get_tree().get_first_node_in_group("hud")
+	if hud and hud.has_method("update_stone_count"):
+		hud.update_stone_count(stone_count)
 
 func set_movement_enabled(enabled: bool) -> void:
 	can_move = enabled

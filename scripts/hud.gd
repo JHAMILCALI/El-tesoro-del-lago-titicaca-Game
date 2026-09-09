@@ -12,6 +12,7 @@ signal menu_requested
 @onready var menu_button: Button = $Control/AlphaCompletePanel/VBoxContainer/MenuButton
 @onready var detection_container: Control = $Control/DetectionContainer
 @onready var detection_bar_label: Label = $Control/DetectionContainer/DetectionBarLabel
+@onready var stone_count_label: Label = $Control/StoneCountPanel/StoneCountLabel
 
 func _ready() -> void:
 	add_to_group("hud")
@@ -32,6 +33,10 @@ func _ready() -> void:
 func update_objective(text: String) -> void:
 	if objective_label:
 		objective_label.text = "OBJETIVO:\n" + text
+
+func update_stone_count(count: int) -> void:
+	if stone_count_label:
+		stone_count_label.text = "PIEDRAS: " + str(count) + "  [Q]"
 
 func update_detection_progress(ratio: float) -> void:
 	if not detection_container or not detection_bar_label:
