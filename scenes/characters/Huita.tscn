@@ -2,17 +2,18 @@
 
 [ext_resource type="Script" path="res://scripts/huita.gd" id="1_huita"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_huita_area"]
-radius = 45.0
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_huita_body"]
 radius = 16.0
 
-[node name="Huita" type="Area2D"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_huita_area"]
+radius = 55.0
+
+[node name="Huita" type="CharacterBody2D"]
+z_index = 9
 script = ExtResource("1_huita")
 
-[node name="AreaCollisionShape" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_huita_area")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_huita_body")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_left = -16.0
@@ -31,7 +32,7 @@ theme_override_font_sizes/font_size = 12
 text = "Huita"
 horizontal_alignment = 1
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="InteractionArea" type="Area2D" parent="."]
 
-[node name="BodyCollisionShape" type="CollisionShape2D" parent="StaticBody2D"]
-shape = SubResource("CircleShape2D_huita_body")
+[node name="AreaCollisionShape" type="CollisionShape2D" parent="InteractionArea"]
+shape = SubResource("CircleShape2D_huita_area")

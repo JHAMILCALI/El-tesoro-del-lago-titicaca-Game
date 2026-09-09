@@ -10,19 +10,25 @@
 [ext_resource type="PackedScene" path="res://scenes/objects/PickableStone.tscn" id="8_stone_pickup"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_horizontal"]
-size = Vector2(4200, 100)
+size = Vector2(3700, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_top_wall_left"]
+size = Vector2(1500, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_top_wall_right"]
+size = Vector2(1600, 100)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_vertical"]
-size = Vector2(100, 600)
+size = Vector2(100, 1000)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_rock_obstacle"]
-size = Vector2(80, 120)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hide_zone"]
-size = Vector2(140, 90)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_obstacle"]
+size = Vector2(80, 80)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_trigger_area"]
 radius = 90.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hide_zone"]
+size = Vector2(140, 90)
 
 [node name="Level01_Convoy" type="Node2D"]
 script = ExtResource("1_level")
@@ -30,46 +36,109 @@ script = ExtResource("1_level")
 [node name="Terrain" type="Node2D" parent="."]
 
 [node name="Background" type="ColorRect" parent="Terrain"]
-offset_left = -200.0
-offset_top = -200.0
-offset_right = 4050.0
-offset_bottom = 1450.0
-color = Color(0.18, 0.26, 0.15, 1)
-
-[node name="Path" type="ColorRect" parent="Terrain"]
-offset_left = 50.0
-offset_top = 270.0
+offset_left = -300.0
+offset_top = -1200.0
 offset_right = 3800.0
-offset_bottom = 450.0
-color = Color(0.42, 0.32, 0.2, 1)
+offset_bottom = 900.0
+color = Color(0.22, 0.28, 0.18, 1)
+
+[node name="MainPath" type="ColorRect" parent="Terrain"]
+offset_left = 50.0
+offset_top = 260.0
+offset_right = 3300.0
+offset_bottom = 460.0
+color = Color(0.45, 0.35, 0.22, 1)
+
+[node name="NorthPath" type="ColorRect" parent="Terrain"]
+offset_left = 1500.0
+offset_top = -700.0
+offset_right = 1700.0
+offset_bottom = 260.0
+color = Color(0.45, 0.35, 0.22, 1)
+
+[node name="DockEnvironment" type="Node2D" parent="."]
+
+[node name="LakeWater" type="ColorRect" parent="DockEnvironment"]
+offset_left = 600.0
+offset_top = -1150.0
+offset_right = 2600.0
+offset_bottom = -700.0
+color = Color(0.12, 0.4, 0.75, 1)
+
+[node name="WoodenPier" type="ColorRect" parent="DockEnvironment"]
+offset_left = 1560.0
+offset_top = -780.0
+offset_right = 1640.0
+offset_bottom = -650.0
+color = Color(0.45, 0.3, 0.15, 1)
+
+[node name="BoatVisual" type="Node2D" parent="DockEnvironment"]
+position = Vector2(1600, -780)
+
+[node name="Hull" type="ColorRect" parent="DockEnvironment/BoatVisual"]
+offset_left = -35.0
+offset_top = -18.0
+offset_right = 35.0
+offset_bottom = 18.0
+color = Color(0.55, 0.35, 0.15, 1)
+
+[node name="Bow" type="ColorRect" parent="DockEnvironment/BoatVisual"]
+offset_left = 18.0
+offset_top = -12.0
+offset_right = 35.0
+offset_bottom = 12.0
+color = Color(0.8, 0.6, 0.3, 1)
+
+[node name="Label" type="Label" parent="DockEnvironment/BoatVisual"]
+offset_left = -50.0
+offset_top = -42.0
+offset_right = 50.0
+offset_bottom = -20.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "BOTE DE ESCAPE"
+horizontal_alignment = 1
 
 [node name="Boundaries" type="Node2D" parent="."]
 
-[node name="TopWall" type="StaticBody2D" parent="Boundaries"]
-position = Vector2(1900, 200)
+[node name="TopWallLeft" type="StaticBody2D" parent="Boundaries"]
+position = Vector2(750, 210)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/TopWall"]
-shape = SubResource("RectangleShape2D_wall_horizontal")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/TopWallLeft"]
+shape = SubResource("RectangleShape2D_top_wall_left")
 
-[node name="ColorRect" type="ColorRect" parent="Boundaries/TopWall"]
-offset_left = -2100.0
+[node name="ColorRect" type="ColorRect" parent="Boundaries/TopWallLeft"]
+offset_left = -750.0
 offset_top = -50.0
-offset_right = 2100.0
+offset_right = 750.0
 offset_bottom = 50.0
-color = Color(0.12, 0.16, 0.1, 1)
+color = Color(0.15, 0.18, 0.12, 1)
+
+[node name="TopWallRight" type="StaticBody2D" parent="Boundaries"]
+position = Vector2(2500, 210)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/TopWallRight"]
+shape = SubResource("RectangleShape2D_top_wall_right")
+
+[node name="ColorRect" type="ColorRect" parent="Boundaries/TopWallRight"]
+offset_left = -800.0
+offset_top = -50.0
+offset_right = 800.0
+offset_bottom = 50.0
+color = Color(0.15, 0.18, 0.12, 1)
 
 [node name="BottomWall" type="StaticBody2D" parent="Boundaries"]
-position = Vector2(1900, 520)
+position = Vector2(1650, 510)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/BottomWall"]
 shape = SubResource("RectangleShape2D_wall_horizontal")
 
 [node name="ColorRect" type="ColorRect" parent="Boundaries/BottomWall"]
-offset_left = -2100.0
+offset_left = -1850.0
 offset_top = -50.0
-offset_right = 2100.0
+offset_right = 1850.0
 offset_bottom = 50.0
-color = Color(0.12, 0.16, 0.1, 1)
+color = Color(0.15, 0.18, 0.12, 1)
 
 [node name="LeftWall" type="StaticBody2D" parent="Boundaries"]
 position = Vector2(0, 360)
@@ -77,79 +146,106 @@ position = Vector2(0, 360)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/LeftWall"]
 shape = SubResource("RectangleShape2D_wall_vertical")
 
-[node name="RightWall" type="StaticBody2D" parent="Boundaries"]
-position = Vector2(3900, 360)
+[node name="NorthLeftWall" type="StaticBody2D" parent="Boundaries"]
+position = Vector2(1450, -220)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/RightWall"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/NorthLeftWall"]
 shape = SubResource("RectangleShape2D_wall_vertical")
 
-[node name="Obstacles" type="Node2D" parent="."]
+[node name="ColorRect" type="ColorRect" parent="Boundaries/NorthLeftWall"]
+offset_left = -50.0
+offset_top = -500.0
+offset_right = 50.0
+offset_bottom = 500.0
+color = Color(0.15, 0.18, 0.12, 1)
 
-[node name="ObstacleRock1" type="StaticBody2D" parent="Obstacles"]
-position = Vector2(850, 360)
+[node name="NorthRightWall" type="StaticBody2D" parent="Boundaries"]
+position = Vector2(1750, -220)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/ObstacleRock1"]
-shape = SubResource("RectangleShape2D_rock_obstacle")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/NorthRightWall"]
+shape = SubResource("RectangleShape2D_wall_vertical")
 
-[node name="ColorRect" type="ColorRect" parent="Obstacles/ObstacleRock1"]
+[node name="ColorRect" type="ColorRect" parent="Boundaries/NorthRightWall"]
+offset_left = -50.0
+offset_top = -500.0
+offset_right = 50.0
+offset_bottom = 500.0
+color = Color(0.15, 0.18, 0.12, 1)
+
+[node name="RockBarrierNorth" type="StaticBody2D" parent="Boundaries"]
+position = Vector2(1600, 210)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/RockBarrierNorth"]
+shape = SubResource("RectangleShape2D_obstacle")
+
+[node name="ColorRect" type="ColorRect" parent="Boundaries/RockBarrierNorth"]
 offset_left = -40.0
-offset_top = -60.0
+offset_top = -40.0
 offset_right = 40.0
-offset_bottom = 60.0
-color = Color(0.4, 0.4, 0.4, 1)
+offset_bottom = 40.0
+color = Color(0.5, 0.35, 0.2, 1)
 
-[node name="Label" type="Label" parent="Obstacles/ObstacleRock1"]
-offset_left = -35.0
-offset_top = -10.0
-offset_right = 35.0
-offset_bottom = 10.0
+[node name="Label" type="Label" parent="Boundaries/RockBarrierNorth"]
+offset_left = -60.0
+offset_top = -30.0
+offset_right = 60.0
+offset_bottom = -10.0
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
 theme_override_font_sizes/font_size = 10
-text = "MURO 1"
+text = "PASO BLOQUEADO"
 horizontal_alignment = 1
 
-[node name="ObstacleRock2" type="StaticBody2D" parent="Obstacles"]
-position = Vector2(2000, 310)
+[node name="ObstacleRock1" type="StaticBody2D" parent="Boundaries"]
+position = Vector2(450, 310)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/ObstacleRock2"]
-shape = SubResource("RectangleShape2D_rock_obstacle")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/ObstacleRock1"]
+shape = SubResource("RectangleShape2D_obstacle")
 
-[node name="ColorRect" type="ColorRect" parent="Obstacles/ObstacleRock2"]
+[node name="ColorRect" type="ColorRect" parent="Boundaries/ObstacleRock1"]
 offset_left = -40.0
-offset_top = -60.0
+offset_top = -40.0
 offset_right = 40.0
-offset_bottom = 60.0
-color = Color(0.4, 0.4, 0.4, 1)
+offset_bottom = 40.0
+color = Color(0.35, 0.35, 0.35, 1)
 
-[node name="Label" type="Label" parent="Obstacles/ObstacleRock2"]
-offset_left = -35.0
-offset_top = -10.0
-offset_right = 35.0
-offset_bottom = 10.0
-theme_override_font_sizes/font_size = 10
-text = "MURO 2"
-horizontal_alignment = 1
+[node name="ObstacleRock2" type="StaticBody2D" parent="Boundaries"]
+position = Vector2(1100, 420)
 
-[node name="ObstacleRock3" type="StaticBody2D" parent="Obstacles"]
-position = Vector2(2450, 410)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/ObstacleRock2"]
+shape = SubResource("RectangleShape2D_obstacle")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/ObstacleRock3"]
-shape = SubResource("RectangleShape2D_rock_obstacle")
-
-[node name="ColorRect" type="ColorRect" parent="Obstacles/ObstacleRock3"]
+[node name="ColorRect" type="ColorRect" parent="Boundaries/ObstacleRock2"]
 offset_left = -40.0
-offset_top = -60.0
+offset_top = -40.0
 offset_right = 40.0
-offset_bottom = 60.0
-color = Color(0.4, 0.4, 0.4, 1)
+offset_bottom = 40.0
+color = Color(0.35, 0.35, 0.35, 1)
 
-[node name="Label" type="Label" parent="Obstacles/ObstacleRock3"]
-offset_left = -35.0
-offset_top = -10.0
-offset_right = 35.0
-offset_bottom = 10.0
-theme_override_font_sizes/font_size = 10
-text = "MURO 3"
-horizontal_alignment = 1
+[node name="ObstacleRock3" type="StaticBody2D" parent="Boundaries"]
+position = Vector2(1900, 310)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/ObstacleRock3"]
+shape = SubResource("RectangleShape2D_obstacle")
+
+[node name="ColorRect" type="ColorRect" parent="Boundaries/ObstacleRock3"]
+offset_left = -40.0
+offset_top = -40.0
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.35, 0.35, 0.35, 1)
+
+[node name="ObstacleRock4" type="StaticBody2D" parent="Boundaries"]
+position = Vector2(2750, 420)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/ObstacleRock4"]
+shape = SubResource("RectangleShape2D_obstacle")
+
+[node name="ColorRect" type="ColorRect" parent="Boundaries/ObstacleRock4"]
+offset_left = -40.0
+offset_top = -40.0
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.35, 0.35, 0.35, 1)
 
 [node name="Checkpoints" type="Node2D" parent="."]
 
@@ -192,6 +288,19 @@ theme_override_font_sizes/font_size = 11
 text = "CHECKPOINT 2 — CASA"
 horizontal_alignment = 1
 
+[node name="CheckpointEscort" type="Node2D" parent="Checkpoints"]
+position = Vector2(1600, 360)
+
+[node name="Label" type="Label" parent="Checkpoints/CheckpointEscort"]
+offset_left = -60.0
+offset_top = 25.0
+offset_right = 60.0
+offset_bottom = 45.0
+theme_override_colors/font_color = Color(0.3, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "CHECKPOINT ESCOLTA"
+horizontal_alignment = 1
+
 [node name="Areas" type="Node2D" parent="."]
 
 [node name="TutorialTriggerArea" type="Area2D" parent="Areas"]
@@ -199,6 +308,28 @@ position = Vector2(650, 360)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/TutorialTriggerArea"]
 shape = SubResource("CircleShape2D_trigger_area")
+
+[node name="SecretConvoArea" type="Area2D" parent="Areas"]
+position = Vector2(2500, 360)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/SecretConvoArea"]
+shape = SubResource("CircleShape2D_trigger_area")
+
+[node name="DockArea" type="Area2D" parent="Areas"]
+position = Vector2(1600, -720)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/DockArea"]
+shape = SubResource("CircleShape2D_trigger_area")
+
+[node name="Label" type="Label" parent="Areas/DockArea"]
+offset_left = -60.0
+offset_top = 45.0
+offset_right = 60.0
+offset_bottom = 65.0
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 11
+text = "MUELLE NORTE / BOTE [E]"
+horizontal_alignment = 1
 
 [node name="HideZone1" type="Area2D" parent="Areas"]
 position = Vector2(620, 310)
@@ -213,16 +344,6 @@ offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="Label" type="Label" parent="Areas/HideZone1"]
-offset_left = -60.0
-offset_top = -10.0
-offset_right = 60.0
-offset_bottom = 10.0
-theme_override_colors/font_color = Color(0.7, 1, 0.7, 1)
-theme_override_font_sizes/font_size = 11
-text = "HIDE AREA 1"
-horizontal_alignment = 1
-
 [node name="HideZone2" type="Area2D" parent="Areas"]
 position = Vector2(930, 420)
 
@@ -235,16 +356,6 @@ offset_top = -45.0
 offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
-
-[node name="Label" type="Label" parent="Areas/HideZone2"]
-offset_left = -60.0
-offset_top = -10.0
-offset_right = 60.0
-offset_bottom = 10.0
-theme_override_colors/font_color = Color(0.7, 1, 0.7, 1)
-theme_override_font_sizes/font_size = 11
-text = "HIDE AREA 2"
-horizontal_alignment = 1
 
 [node name="HideZone3" type="Area2D" parent="Areas"]
 position = Vector2(1220, 310)
@@ -259,16 +370,6 @@ offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="Label" type="Label" parent="Areas/HideZone3"]
-offset_left = -60.0
-offset_top = -10.0
-offset_right = 60.0
-offset_bottom = 10.0
-theme_override_colors/font_color = Color(0.7, 1, 0.7, 1)
-theme_override_font_sizes/font_size = 11
-text = "HIDE AREA 3"
-horizontal_alignment = 1
-
 [node name="HideZone4" type="Area2D" parent="Areas"]
 position = Vector2(1450, 420)
 
@@ -281,16 +382,6 @@ offset_top = -45.0
 offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
-
-[node name="Label" type="Label" parent="Areas/HideZone4"]
-offset_left = -60.0
-offset_top = -10.0
-offset_right = 60.0
-offset_bottom = 10.0
-theme_override_colors/font_color = Color(0.7, 1, 0.7, 1)
-theme_override_font_sizes/font_size = 11
-text = "HIDE AREA 4"
-horizontal_alignment = 1
 
 [node name="HideZone5" type="Area2D" parent="Areas"]
 position = Vector2(2380, 420)
@@ -305,16 +396,6 @@ offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="Label" type="Label" parent="Areas/HideZone5"]
-offset_left = -60.0
-offset_top = -10.0
-offset_right = 60.0
-offset_bottom = 10.0
-theme_override_colors/font_color = Color(0.7, 1, 0.7, 1)
-theme_override_font_sizes/font_size = 11
-text = "HIDE AREA 5"
-horizontal_alignment = 1
-
 [node name="HideZone6" type="Area2D" parent="Areas"]
 position = Vector2(2860, 310)
 
@@ -328,75 +409,44 @@ offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="Label" type="Label" parent="Areas/HideZone6"]
-offset_left = -60.0
-offset_top = -10.0
-offset_right = 60.0
-offset_bottom = 10.0
-theme_override_colors/font_color = Color(0.7, 1, 0.7, 1)
-theme_override_font_sizes/font_size = 11
-text = "HIDE AREA 6"
-horizontal_alignment = 1
+[node name="HideZoneNorth1" type="Area2D" parent="Areas"]
+position = Vector2(1520, -100)
 
-[node name="PatrolLabels" type="Node2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZoneNorth1"]
+shape = SubResource("RectangleShape2D_hide_zone")
 
-[node name="LabelP1A" type="Label" parent="PatrolLabels"]
-offset_left = 930.0
-offset_top = 240.0
-offset_right = 1010.0
-offset_bottom = 260.0
-theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
-theme_override_font_sizes/font_size = 10
-text = "PATROL 1 A"
+[node name="ColorRect" type="ColorRect" parent="Areas/HideZoneNorth1"]
+offset_left = -70.0
+offset_top = -45.0
+offset_right = 70.0
+offset_bottom = 45.0
+color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="LabelP1B" type="Label" parent="PatrolLabels"]
-offset_left = 1380.0
-offset_top = 240.0
-offset_right = 1460.0
-offset_bottom = 260.0
-theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
-theme_override_font_sizes/font_size = 10
-text = "PATROL 1 B"
+[node name="HideZoneNorth2" type="Area2D" parent="Areas"]
+position = Vector2(1680, -350)
 
-[node name="LabelP2A" type="Label" parent="PatrolLabels"]
-offset_left = 2080.0
-offset_top = 240.0
-offset_right = 2160.0
-offset_bottom = 260.0
-theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
-theme_override_font_sizes/font_size = 10
-text = "PATROL 2 A"
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZoneNorth2"]
+shape = SubResource("RectangleShape2D_hide_zone")
 
-[node name="LabelP2B" type="Label" parent="PatrolLabels"]
-offset_left = 2530.0
-offset_top = 240.0
-offset_right = 2610.0
-offset_bottom = 260.0
-theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
-theme_override_font_sizes/font_size = 10
-text = "PATROL 2 B"
+[node name="ColorRect" type="ColorRect" parent="Areas/HideZoneNorth2"]
+offset_left = -70.0
+offset_top = -45.0
+offset_right = 70.0
+offset_bottom = 45.0
+color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="SecretConvoArea" type="Area2D" parent="Areas"]
-position = Vector2(2500, 360)
+[node name="HideZoneNorth3" type="Area2D" parent="Areas"]
+position = Vector2(1520, -550)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/SecretConvoArea"]
-shape = SubResource("CircleShape2D_trigger_area")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZoneNorth3"]
+shape = SubResource("RectangleShape2D_hide_zone")
 
-[node name="Label" type="Label" parent="Areas/SecretConvoArea"]
-offset_left = -60.0
-offset_top = 45.0
-offset_right = 60.0
-offset_bottom = 65.0
-theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
-theme_override_font_sizes/font_size = 10
-text = "ZONA CONVERSACIÓN"
-horizontal_alignment = 1
-
-[node name="FinalEscapeArea" type="Area2D" parent="Areas"]
-position = Vector2(150, 360)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/FinalEscapeArea"]
-shape = SubResource("CircleShape2D_trigger_area")
+[node name="ColorRect" type="ColorRect" parent="Areas/HideZoneNorth3"]
+offset_left = -70.0
+offset_top = -45.0
+offset_right = 70.0
+offset_bottom = 45.0
+color = Color(0.1, 0.38, 0.12, 0.85)
 
 [node name="SpanishSoldiers" type="Node2D" parent="."]
 
@@ -438,6 +488,32 @@ theme_override_font_sizes/font_size = 10
 text = "Español 2"
 horizontal_alignment = 1
 
+[node name="PickableStones" type="Node2D" parent="."]
+
+[node name="PickableStone1" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+position = Vector2(400, 360)
+
+[node name="PickableStone2" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+position = Vector2(850, 430)
+
+[node name="PickableStone3" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+position = Vector2(1700, 310)
+
+[node name="PickableStone4" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+position = Vector2(2300, 430)
+
+[node name="PickableStone5" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+position = Vector2(2900, 360)
+
+[node name="PickableStoneNorth1" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+position = Vector2(1600, 50)
+
+[node name="PickableStoneNorth2" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+position = Vector2(1650, -250)
+
+[node name="PickableStoneNorth3" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+position = Vector2(1550, -500)
+
 [node name="HouseInterior" parent="." instance=ExtResource("7_house")]
 position = Vector2(3500, 360)
 
@@ -457,27 +533,15 @@ position = Vector2(2150, 300)
 point_a = Vector2(2150, 300)
 point_b = Vector2(2700, 300)
 
-[node name="SpanishPatrolEscape" parent="." instance=ExtResource("4_patrol")]
-position = Vector2(2000, 360)
-point_a = Vector2(1500, 360)
-point_b = Vector2(2400, 360)
+[node name="SpanishPatrolNorth1" parent="." instance=ExtResource("4_patrol")]
+position = Vector2(1600, -150)
+point_a = Vector2(1520, -150)
+point_b = Vector2(1680, -150)
 
-[node name="PickableStones" type="Node2D" parent="."]
-
-[node name="PickableStone1" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
-position = Vector2(400, 360)
-
-[node name="PickableStone2" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
-position = Vector2(850, 430)
-
-[node name="PickableStone3" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
-position = Vector2(1700, 310)
-
-[node name="PickableStone4" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
-position = Vector2(2300, 430)
-
-[node name="PickableStone5" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
-position = Vector2(2900, 360)
+[node name="SpanishPatrolNorth2" parent="." instance=ExtResource("4_patrol")]
+position = Vector2(1600, -450)
+point_a = Vector2(1600, -350)
+point_b = Vector2(1600, -550)
 
 [node name="HUD" parent="." instance=ExtResource("5_hud")]
 
