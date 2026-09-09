@@ -3,14 +3,25 @@ class_name Pasco
 
 @export var walk_speed: float = 180.0
 @export var run_speed: float = 280.0
+@export var stone_travel_distance: float = 180.0
 
 var can_move: bool = true
 var is_hidden: bool = false
 var hide_area_count: int = 0
+var last_direction: Vector2 = Vector2.RIGHT
+var can_throw_stone: bool = true
+
+var stone_scene: PackedScene = preload("res://scenes/objects/Stone.tscn")
+
+@onready var aim_line: Line2D = $AimLine
+@onready var aim_target: Node2D = $AimTarget
 
 func _ready() -> void:
 	add_to_group("player")
 	_ensure_input_actions()
+
+func _process(_delta: float) -> void:
+	_update_aim_indicator()
 
 func _physics_process(_delta: float) -> void:
 	if not can_move:
@@ -23,10 +34,51 @@ func _physics_process(_delta: float) -> void:
 
 	if input_vector != Vector2.ZERO:
 		velocity = input_vector.normalized() * current_speed
+		last_direction = input_vector.normalized()
 	else:
 		velocity = Vector2.ZERO
 
 	move_and_slide()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("throw_stone") and can_throw_stone and can_move:
+		get_viewport().set_input_as_handled()
+		_throw_stone()
+
+func _update_aim_indicator() -> void:
+	if not aim_line or not aim_target:
+		return
+
+	var is_aim_visible = can_throw_stone and can_move
+	aim_line.visible = is_aim_visible
+	aim_target.visible = is_aim_visible
+
+	if not is_aim_visible:
+		return
+
+	var start_pos := Vector2.ZERO
+	var end_pos := last_direction.normalized() * stone_travel_distance
+
+	aim_line.clear_points()
+	aim_line.add_point(start_pos)
+	aim_line.add_point(end_pos)
+
+	aim_target.position = end_pos
+	aim_target.rotation = last_direction.angle()
+
+func _throw_stone() -> void:
+	if not stone_scene:
+		return
+
+	can_throw_stone = false
+	var stone = stone_scene.instantiate()
+	stone.global_position = global_position
+	stone.setup(last_direction)
+	get_parent().add_child(stone)
+
+	get_tree().create_timer(0.8).timeout.connect(func():
+		can_throw_stone = true
+	)
 
 func set_movement_enabled(enabled: bool) -> void:
 	can_move = enabled
@@ -53,6 +105,7 @@ func _ensure_input_actions() -> void:
 		"move_right": [KEY_D, KEY_RIGHT],
 		"run": [KEY_SHIFT],
 		"interact": [KEY_E, KEY_ENTER],
+		"throw_stone": [KEY_Q],
 		"pause": [KEY_ESCAPE]
 	}
 	for action_name in actions:
