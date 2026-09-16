@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/boat_prototype.gd" id="1_boat"]
+[ext_resource type="PackedScene" path="res://scenes/characters/Pasco.tscn" id="2_pasco"]
+[ext_resource type="PackedScene" path="res://scenes/characters/Huita.tscn" id="3_huita"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_boat"]
 size = Vector2(40, 24)
@@ -77,6 +79,14 @@ horizontal_alignment = 1
 
 [node name="Camera2D" type="Camera2D" parent="Boat"]
 position_smoothing_enabled = true
+
+[node name="Passengers" type="Node2D" parent="Boat"]
+
+[node name="Pasco" parent="Boat/Passengers" instance=ExtResource("2_pasco")]
+position = Vector2(-18, 0)
+
+[node name="Huita" parent="Boat/Passengers" instance=ExtResource("3_huita")]
+position = Vector2(15, 0)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

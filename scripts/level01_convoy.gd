@@ -50,6 +50,7 @@ var has_treasure: bool = false
 var has_seen_tutorial: bool = false
 var has_heard_secret_convo: bool = false
 var is_near_dock_boat: bool = false
+var is_changing_to_boat_level: bool = false
 
 func _ready() -> void:
 	last_checkpoint_pos = start_checkpoint.global_position
@@ -58,6 +59,7 @@ func _ready() -> void:
 
 	hud.restart_requested.connect(_on_restart_requested)
 	hud.menu_requested.connect(_on_menu_requested)
+	hud.next_level_requested.connect(_on_next_level_requested)
 
 	if huita:
 		huita.interaction_requested.connect(_on_huita_interaction)
@@ -295,6 +297,28 @@ func _on_boat_board_requested() -> void:
 		hud.show_temporary_notification("¡NIVEL 1 COMPLETADO! TESORO A SALVO EN EL LAGO TITICACA", 4.5)
 		hud.show_alpha_complete()
 	, CONNECT_ONE_SHOT)
+
+func _on_next_level_requested() -> void:
+	if story_state != StoryState.LEVEL_COMPLETED or is_changing_to_boat_level:
+		return
+
+	is_changing_to_boat_level = true
+	hud.hide_alpha_complete()
+	hud.hide_interaction_prompt()
+	hud.update_objective("Pasco y Huita suben a la barca.")
+	if pasco:
+		pasco.set_movement_enabled(false)
+	if huita:
+		huita.stop_following()
+
+	var boat_visual: Node2D = $DockEnvironment/BoatVisual
+	var boarding_tween := create_tween().set_parallel(true)
+	if pasco:
+		boarding_tween.tween_property(pasco, "global_position", boat_visual.global_position + Vector2(-18.0, 0.0), 0.65)
+	if huita:
+		boarding_tween.tween_property(huita, "global_position", boat_visual.global_position + Vector2(15.0, 0.0), 0.65)
+	await boarding_tween.finished
+	get_tree().change_scene_to_file("res://scenes/prototypes/BoatPrototype.tscn")
 
 func _on_hide_zone_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):

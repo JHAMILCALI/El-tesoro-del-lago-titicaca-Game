@@ -10,6 +10,16 @@ var can_move: bool = true
 func _ready() -> void:
 	add_to_group("player")
 	_ensure_input_actions()
+	_disable_passenger_controls()
+
+func _disable_passenger_controls() -> void:
+	for passenger_name in ["Pasco", "Huita"]:
+		var passenger := get_node_or_null("Passengers/" + passenger_name)
+		if passenger:
+			passenger.process_mode = Node.PROCESS_MODE_DISABLED
+			if passenger is CollisionObject2D:
+				passenger.collision_layer = 0
+				passenger.collision_mask = 0
 
 func _physics_process(_delta: float) -> void:
 	if not can_move:

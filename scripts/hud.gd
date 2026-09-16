@@ -3,11 +3,13 @@ class_name HUD
 
 signal restart_requested
 signal menu_requested
+signal next_level_requested
 
 @onready var objective_label: Label = $Control/ObjectiveLabel
 @onready var interaction_prompt: Label = $Control/InteractionPrompt
 @onready var notification_label: Label = $Control/NotificationLabel
 @onready var alpha_complete_panel: Panel = $Control/AlphaCompletePanel
+@onready var next_level_button: Button = $Control/AlphaCompletePanel/VBoxContainer/NextLevelButton
 @onready var restart_button: Button = $Control/AlphaCompletePanel/VBoxContainer/RestartButton
 @onready var menu_button: Button = $Control/AlphaCompletePanel/VBoxContainer/MenuButton
 @onready var detection_container: Control = $Control/DetectionContainer
@@ -20,7 +22,7 @@ func _ready() -> void:
 	if control_node is Control:
 		control_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		for child in control_node.get_children():
-			if child is Control and child not in [restart_button, menu_button] and not child.get_parent() == alpha_complete_panel:
+			if child is Control and child not in [next_level_button, restart_button, menu_button] and not child.get_parent() == alpha_complete_panel:
 				child.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	if interaction_prompt:
@@ -34,6 +36,8 @@ func _ready() -> void:
 
 	if restart_button:
 		restart_button.pressed.connect(_on_restart_pressed)
+	if next_level_button:
+		next_level_button.pressed.connect(_on_next_level_pressed)
 	if menu_button:
 		menu_button.pressed.connect(_on_menu_pressed)
 
@@ -90,8 +94,15 @@ func show_alpha_complete() -> void:
 	if pasco and pasco.has_method("set_movement_enabled"):
 		pasco.set_movement_enabled(false)
 
+func hide_alpha_complete() -> void:
+	if alpha_complete_panel:
+		alpha_complete_panel.visible = false
+
 func _on_restart_pressed() -> void:
 	restart_requested.emit()
+
+func _on_next_level_pressed() -> void:
+	next_level_requested.emit()
 
 func _on_menu_pressed() -> void:
 	menu_requested.emit()
