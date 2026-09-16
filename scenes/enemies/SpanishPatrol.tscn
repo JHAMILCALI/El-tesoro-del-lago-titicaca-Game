@@ -43,6 +43,8 @@ text = "⚠ ALERTA"
 horizontal_alignment = 1
 
 [node name="DetectionArea" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 2
 
 [node name="DetectionCollisionShape" type="CollisionShape2D" parent="DetectionArea"]
 shape = SubResource("ConvexPolygonShape2D_detection")

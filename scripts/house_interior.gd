@@ -62,31 +62,31 @@ func get_treasure_checkpoint_position() -> Vector2:
 	return treasure_checkpoint.global_position
 
 func _on_door_body_entered(body: Node2D) -> void:
-	if body is Pasco:
+	if body.is_in_group("player"):
 		player_near_door = true
 		door_proximity_changed.emit(true)
 
 func _on_door_body_exited(body: Node2D) -> void:
-	if body is Pasco:
+	if body.is_in_group("player"):
 		player_near_door = false
 		door_proximity_changed.emit(false)
 
 func _on_exit_body_entered(body: Node2D) -> void:
-	if body is Pasco:
+	if body.is_in_group("player"):
 		player_near_exit = true
 		exit_proximity_changed.emit(true)
 
 func _on_exit_body_exited(body: Node2D) -> void:
-	if body is Pasco:
+	if body.is_in_group("player"):
 		player_near_exit = false
 		exit_proximity_changed.emit(false)
 
 func _on_treasure_body_entered(body: Node2D) -> void:
-	if body is Pasco and treasure_available:
+	if body.is_in_group("player") and treasure_available:
 		player_near_treasure = true
 		treasure_proximity_changed.emit(true)
 
 func _on_treasure_body_exited(body: Node2D) -> void:
-	if body is Pasco:
+	if body.is_in_group("player"):
 		player_near_treasure = false
 		treasure_proximity_changed.emit(false)

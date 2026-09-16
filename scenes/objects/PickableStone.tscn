@@ -6,6 +6,8 @@
 radius = 28.0
 
 [node name="PickableStone" type="Area2D"]
+collision_layer = 16
+collision_mask = 2
 script = ExtResource("1_pickable")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

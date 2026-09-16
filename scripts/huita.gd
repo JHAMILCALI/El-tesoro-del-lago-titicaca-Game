@@ -5,43 +5,84 @@ signal interaction_requested
 signal player_proximity_changed(is_near: bool)
 
 @export var follow_speed: float = 165.0
-@export var stop_distance: float = 55.0
+@export var follow_distance: float = 70.0
+@export var stop_distance: float = 45.0
+@export var formation_offset: float = 55.0
+@export var overlap_distance: float = 25.0
+@export var recovery_distance: float = 300.0
+@export var recovery_delay: float = 2.0
 
 var is_player_near: bool = false
 var is_following: bool = false
 var is_hidden: bool = false
 var target_player: CharacterBody2D = null
+var stuck_time: float = 0.0
+var previous_position: Vector2
 
 @onready var interaction_area: Area2D = $InteractionArea
 @onready var label: Label = $Label
 
 func _ready() -> void:
 	add_to_group("allies")
+	add_to_group("npc")
+	previous_position = global_position
 	if interaction_area:
 		interaction_area.body_entered.connect(_on_body_entered)
 		interaction_area.body_exited.connect(_on_body_exited)
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if not is_following or not target_player:
 		velocity = Vector2.ZERO
 		move_and_slide()
+		stuck_time = 0.0
+		previous_position = global_position
 		return
 
 	is_hidden = target_player.get("is_hidden") == true
-	var dist = global_position.distance_to(target_player.global_position)
-	if dist > stop_distance:
-		var dir = (target_player.global_position - global_position).normalized()
-		velocity = dir * follow_speed
-		rotation = lerp_angle(rotation, dir.angle(), _delta * 6.0)
+	var player_direction := _get_player_direction()
+	var player_distance := global_position.distance_to(target_player.global_position)
+	var follow_target := target_player.global_position - player_direction * formation_offset
+
+	# Huita follows a point behind Pasco, never Pasco's exact centre.  The small
+	# overlap correction keeps her readable when Pasco walks through her.
+	if player_distance < overlap_distance:
+		follow_target = target_player.global_position - player_direction * follow_distance
+
+	var distance_to_target := global_position.distance_to(follow_target)
+	if distance_to_target > stop_distance:
+		var direction := (follow_target - global_position).normalized()
+		velocity = direction * follow_speed
+		rotation = lerp_angle(rotation, direction.angle(), delta * 6.0)
 	else:
 		velocity = Vector2.ZERO
 
 	move_and_slide()
+	_update_stuck_recovery(delta, player_distance, player_direction)
+	previous_position = global_position
+
+func _get_player_direction() -> Vector2:
+	var player_direction: Vector2 = target_player.get("last_direction")
+	return player_direction.normalized() if player_direction.length_squared() > 0.001 else Vector2.DOWN
+
+func _update_stuck_recovery(delta: float, player_distance: float, player_direction: Vector2) -> void:
+	var is_trying_to_move := velocity.length_squared() > 1.0
+	var barely_moved := global_position.distance_to(previous_position) < 2.0 * delta
+	if player_distance > recovery_distance and is_trying_to_move and barely_moved:
+		stuck_time += delta
+	else:
+		stuck_time = 0.0
+
+	if stuck_time >= recovery_delay:
+		global_position = target_player.global_position - player_direction * follow_distance
+		velocity = Vector2.ZERO
+		stuck_time = 0.0
 
 func start_following(player: CharacterBody2D) -> void:
 	target_player = player
 	is_following = true
 	is_player_near = false
+	stuck_time = 0.0
+	previous_position = global_position
 	var hud = get_tree().get_first_node_in_group("hud")
 	if hud and hud.has_method("hide_interaction_prompt"):
 		hud.hide_interaction_prompt()
@@ -49,6 +90,7 @@ func start_following(player: CharacterBody2D) -> void:
 func stop_following() -> void:
 	is_following = false
 	velocity = Vector2.ZERO
+	stuck_time = 0.0
 
 func _unhandled_input(event: InputEvent) -> void:
 	if is_following:
@@ -60,7 +102,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if is_following:
 		return
-	if body is Pasco:
+	if body.is_in_group("player"):
 		is_player_near = true
 		player_proximity_changed.emit(true)
 		var hud = get_tree().get_first_node_in_group("hud")
@@ -70,7 +112,7 @@ func _on_body_entered(body: Node2D) -> void:
 func _on_body_exited(body: Node2D) -> void:
 	if is_following:
 		return
-	if body is Pasco:
+	if body.is_in_group("player"):
 		is_player_near = false
 		player_proximity_changed.emit(false)
 		var hud = get_tree().get_first_node_in_group("hud")

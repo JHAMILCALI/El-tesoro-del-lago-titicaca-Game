@@ -108,7 +108,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			_on_boat_board_requested()
 
 func _on_tutorial_trigger_entered(body: Node2D) -> void:
-	if body is not Pasco or has_seen_tutorial:
+	if not body.is_in_group("player") or has_seen_tutorial:
 		return
 
 	has_seen_tutorial = true
@@ -178,7 +178,7 @@ func _on_huita_second_dialogue() -> void:
 	, CONNECT_ONE_SHOT)
 
 func _on_secret_convo_area_entered(body: Node2D) -> void:
-	if body is Pasco and not has_heard_secret_convo and story_state >= StoryState.TREASURE_QUEST_ACTIVE and story_state < StoryState.SECRET_CONVO_HEARD:
+	if body.is_in_group("player") and not has_heard_secret_convo and story_state >= StoryState.TREASURE_QUEST_ACTIVE and story_state < StoryState.SECRET_CONVO_HEARD:
 		has_heard_secret_convo = true
 		story_state = StoryState.SECRET_CONVO_HEARD
 
@@ -267,7 +267,7 @@ func _on_treasure_requested() -> void:
 	, CONNECT_ONE_SHOT)
 
 func _on_dock_area_entered(body: Node2D) -> void:
-	if body is Pasco:
+	if body.is_in_group("player"):
 		is_near_dock_boat = true
 		if story_state >= StoryState.ESCORT_HUITA_TO_DOCK and story_state < StoryState.LEVEL_COMPLETED:
 			story_state = StoryState.DOCK_REACHED_BOAT_BOARD
@@ -275,7 +275,7 @@ func _on_dock_area_entered(body: Node2D) -> void:
 			hud.show_interaction_prompt("[E] EMBARCAR EN LA BARCA")
 
 func _on_dock_area_exited(body: Node2D) -> void:
-	if body is Pasco:
+	if body.is_in_group("player"):
 		is_near_dock_boat = false
 		hud.hide_interaction_prompt()
 
@@ -297,12 +297,12 @@ func _on_boat_board_requested() -> void:
 	, CONNECT_ONE_SHOT)
 
 func _on_hide_zone_entered(body: Node2D) -> void:
-	if body is Pasco:
+	if body.is_in_group("player"):
 		body.enter_hide_area()
 		hud.show_temporary_notification("OCULTO", 1.5)
 
 func _on_hide_zone_exited(body: Node2D) -> void:
-	if body is Pasco:
+	if body.is_in_group("player"):
 		body.exit_hide_area()
 
 func _on_player_captured() -> void:

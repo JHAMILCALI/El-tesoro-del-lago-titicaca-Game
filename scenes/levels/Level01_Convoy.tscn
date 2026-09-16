@@ -1,6 +1,6 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene format=3 uid="uid://brho7h7lry3sj"]
 
-[ext_resource type="Script" path="res://scripts/level01_convoy.gd" id="1_level"]
+[ext_resource type="Script" uid="uid://coi0sqi4xiek3" path="res://scripts/level01_convoy.gd" id="1_level"]
 [ext_resource type="PackedScene" path="res://scenes/characters/Pasco.tscn" id="2_pasco"]
 [ext_resource type="PackedScene" path="res://scenes/characters/Huita.tscn" id="3_huita"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/SpanishPatrol.tscn" id="4_patrol"]
@@ -9,14 +9,14 @@
 [ext_resource type="PackedScene" path="res://scenes/levels/HouseInterior.tscn" id="7_house"]
 [ext_resource type="PackedScene" path="res://scenes/objects/PickableStone.tscn" id="8_stone_pickup"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_horizontal"]
-size = Vector2(3700, 100)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_top_wall_left"]
 size = Vector2(1500, 100)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_top_wall_right"]
 size = Vector2(1600, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_horizontal"]
+size = Vector2(3700, 100)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_vertical"]
 size = Vector2(100, 1000)
@@ -30,66 +30,66 @@ radius = 90.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hide_zone"]
 size = Vector2(140, 90)
 
-[node name="Level01_Convoy" type="Node2D"]
+[node name="Level01_Convoy" type="Node2D" unique_id=902698703]
 script = ExtResource("1_level")
 
-[node name="Terrain" type="Node2D" parent="."]
+[node name="Terrain" type="Node2D" parent="." unique_id=315711161]
 
-[node name="Background" type="ColorRect" parent="Terrain"]
+[node name="Background" type="ColorRect" parent="Terrain" unique_id=2123770517]
 offset_left = -300.0
 offset_top = -1200.0
 offset_right = 3800.0
 offset_bottom = 900.0
 color = Color(0.22, 0.28, 0.18, 1)
 
-[node name="MainPath" type="ColorRect" parent="Terrain"]
+[node name="MainPath" type="ColorRect" parent="Terrain" unique_id=2020889220]
 offset_left = 50.0
 offset_top = 260.0
 offset_right = 3300.0
 offset_bottom = 460.0
 color = Color(0.45, 0.35, 0.22, 1)
 
-[node name="NorthPath" type="ColorRect" parent="Terrain"]
+[node name="NorthPath" type="ColorRect" parent="Terrain" unique_id=484332233]
 offset_left = 1500.0
 offset_top = -700.0
 offset_right = 1700.0
 offset_bottom = 260.0
 color = Color(0.45, 0.35, 0.22, 1)
 
-[node name="DockEnvironment" type="Node2D" parent="."]
+[node name="DockEnvironment" type="Node2D" parent="." unique_id=511001719]
 
-[node name="LakeWater" type="ColorRect" parent="DockEnvironment"]
+[node name="LakeWater" type="ColorRect" parent="DockEnvironment" unique_id=1975494336]
 offset_left = 600.0
 offset_top = -1150.0
 offset_right = 2600.0
 offset_bottom = -700.0
 color = Color(0.12, 0.4, 0.75, 1)
 
-[node name="WoodenPier" type="ColorRect" parent="DockEnvironment"]
+[node name="WoodenPier" type="ColorRect" parent="DockEnvironment" unique_id=1971902843]
 offset_left = 1560.0
 offset_top = -780.0
 offset_right = 1640.0
 offset_bottom = -650.0
 color = Color(0.45, 0.3, 0.15, 1)
 
-[node name="BoatVisual" type="Node2D" parent="DockEnvironment"]
+[node name="BoatVisual" type="Node2D" parent="DockEnvironment" unique_id=625970483]
 position = Vector2(1600, -780)
 
-[node name="Hull" type="ColorRect" parent="DockEnvironment/BoatVisual"]
+[node name="Hull" type="ColorRect" parent="DockEnvironment/BoatVisual" unique_id=1994692363]
 offset_left = -35.0
 offset_top = -18.0
 offset_right = 35.0
 offset_bottom = 18.0
 color = Color(0.55, 0.35, 0.15, 1)
 
-[node name="Bow" type="ColorRect" parent="DockEnvironment/BoatVisual"]
+[node name="Bow" type="ColorRect" parent="DockEnvironment/BoatVisual" unique_id=1330188601]
 offset_left = 18.0
 offset_top = -12.0
 offset_right = 35.0
 offset_bottom = 12.0
 color = Color(0.8, 0.6, 0.3, 1)
 
-[node name="Label" type="Label" parent="DockEnvironment/BoatVisual"]
+[node name="Label" type="Label" parent="DockEnvironment/BoatVisual" unique_id=82043296]
 offset_left = -50.0
 offset_top = -42.0
 offset_right = 50.0
@@ -99,93 +99,93 @@ theme_override_font_sizes/font_size = 13
 text = "BOTE DE ESCAPE"
 horizontal_alignment = 1
 
-[node name="Boundaries" type="Node2D" parent="."]
+[node name="Boundaries" type="Node2D" parent="." unique_id=1094220063]
 
-[node name="TopWallLeft" type="StaticBody2D" parent="Boundaries"]
+[node name="TopWallLeft" type="StaticBody2D" parent="Boundaries" unique_id=897083504]
 position = Vector2(750, 210)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/TopWallLeft"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/TopWallLeft" unique_id=1542293438]
 shape = SubResource("RectangleShape2D_top_wall_left")
 
-[node name="ColorRect" type="ColorRect" parent="Boundaries/TopWallLeft"]
+[node name="ColorRect" type="ColorRect" parent="Boundaries/TopWallLeft" unique_id=637427252]
 offset_left = -750.0
 offset_top = -50.0
 offset_right = 750.0
 offset_bottom = 50.0
 color = Color(0.15, 0.18, 0.12, 1)
 
-[node name="TopWallRight" type="StaticBody2D" parent="Boundaries"]
+[node name="TopWallRight" type="StaticBody2D" parent="Boundaries" unique_id=1660164876]
 position = Vector2(2500, 210)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/TopWallRight"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/TopWallRight" unique_id=1123699618]
 shape = SubResource("RectangleShape2D_top_wall_right")
 
-[node name="ColorRect" type="ColorRect" parent="Boundaries/TopWallRight"]
+[node name="ColorRect" type="ColorRect" parent="Boundaries/TopWallRight" unique_id=332099881]
 offset_left = -800.0
 offset_top = -50.0
 offset_right = 800.0
 offset_bottom = 50.0
 color = Color(0.15, 0.18, 0.12, 1)
 
-[node name="BottomWall" type="StaticBody2D" parent="Boundaries"]
+[node name="BottomWall" type="StaticBody2D" parent="Boundaries" unique_id=1589954477]
 position = Vector2(1650, 510)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/BottomWall"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/BottomWall" unique_id=2035969245]
 shape = SubResource("RectangleShape2D_wall_horizontal")
 
-[node name="ColorRect" type="ColorRect" parent="Boundaries/BottomWall"]
+[node name="ColorRect" type="ColorRect" parent="Boundaries/BottomWall" unique_id=535887525]
 offset_left = -1850.0
 offset_top = -50.0
 offset_right = 1850.0
 offset_bottom = 50.0
 color = Color(0.15, 0.18, 0.12, 1)
 
-[node name="LeftWall" type="StaticBody2D" parent="Boundaries"]
+[node name="LeftWall" type="StaticBody2D" parent="Boundaries" unique_id=1326275230]
 position = Vector2(0, 360)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/LeftWall"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/LeftWall" unique_id=564778021]
 shape = SubResource("RectangleShape2D_wall_vertical")
 
-[node name="NorthLeftWall" type="StaticBody2D" parent="Boundaries"]
+[node name="NorthLeftWall" type="StaticBody2D" parent="Boundaries" unique_id=1351055798]
 position = Vector2(1450, -220)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/NorthLeftWall"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/NorthLeftWall" unique_id=1587723012]
 shape = SubResource("RectangleShape2D_wall_vertical")
 
-[node name="ColorRect" type="ColorRect" parent="Boundaries/NorthLeftWall"]
+[node name="ColorRect" type="ColorRect" parent="Boundaries/NorthLeftWall" unique_id=1190546675]
 offset_left = -50.0
 offset_top = -500.0
 offset_right = 50.0
 offset_bottom = 500.0
 color = Color(0.15, 0.18, 0.12, 1)
 
-[node name="NorthRightWall" type="StaticBody2D" parent="Boundaries"]
+[node name="NorthRightWall" type="StaticBody2D" parent="Boundaries" unique_id=1487800993]
 position = Vector2(1750, -220)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/NorthRightWall"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/NorthRightWall" unique_id=2049108135]
 shape = SubResource("RectangleShape2D_wall_vertical")
 
-[node name="ColorRect" type="ColorRect" parent="Boundaries/NorthRightWall"]
+[node name="ColorRect" type="ColorRect" parent="Boundaries/NorthRightWall" unique_id=583277662]
 offset_left = -50.0
 offset_top = -500.0
 offset_right = 50.0
 offset_bottom = 500.0
 color = Color(0.15, 0.18, 0.12, 1)
 
-[node name="RockBarrierNorth" type="StaticBody2D" parent="Boundaries"]
+[node name="RockBarrierNorth" type="StaticBody2D" parent="Boundaries" unique_id=1317048432]
 position = Vector2(1600, 210)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/RockBarrierNorth"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/RockBarrierNorth" unique_id=2095661933]
 shape = SubResource("RectangleShape2D_obstacle")
 
-[node name="ColorRect" type="ColorRect" parent="Boundaries/RockBarrierNorth"]
+[node name="ColorRect" type="ColorRect" parent="Boundaries/RockBarrierNorth" unique_id=1310333076]
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
 offset_bottom = 40.0
 color = Color(0.5, 0.35, 0.2, 1)
 
-[node name="Label" type="Label" parent="Boundaries/RockBarrierNorth"]
+[node name="Label" type="Label" parent="Boundaries/RockBarrierNorth" unique_id=1237300753]
 offset_left = -60.0
 offset_top = -30.0
 offset_right = 60.0
@@ -195,64 +195,64 @@ theme_override_font_sizes/font_size = 10
 text = "PASO BLOQUEADO"
 horizontal_alignment = 1
 
-[node name="ObstacleRock1" type="StaticBody2D" parent="Boundaries"]
+[node name="ObstacleRock1" type="StaticBody2D" parent="Boundaries" unique_id=888235678]
 position = Vector2(450, 310)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/ObstacleRock1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/ObstacleRock1" unique_id=850729798]
 shape = SubResource("RectangleShape2D_obstacle")
 
-[node name="ColorRect" type="ColorRect" parent="Boundaries/ObstacleRock1"]
+[node name="ColorRect" type="ColorRect" parent="Boundaries/ObstacleRock1" unique_id=1101123631]
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
 offset_bottom = 40.0
 color = Color(0.35, 0.35, 0.35, 1)
 
-[node name="ObstacleRock2" type="StaticBody2D" parent="Boundaries"]
+[node name="ObstacleRock2" type="StaticBody2D" parent="Boundaries" unique_id=1752059040]
 position = Vector2(1100, 420)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/ObstacleRock2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/ObstacleRock2" unique_id=1383854007]
 shape = SubResource("RectangleShape2D_obstacle")
 
-[node name="ColorRect" type="ColorRect" parent="Boundaries/ObstacleRock2"]
+[node name="ColorRect" type="ColorRect" parent="Boundaries/ObstacleRock2" unique_id=1813846758]
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
 offset_bottom = 40.0
 color = Color(0.35, 0.35, 0.35, 1)
 
-[node name="ObstacleRock3" type="StaticBody2D" parent="Boundaries"]
+[node name="ObstacleRock3" type="StaticBody2D" parent="Boundaries" unique_id=980442040]
 position = Vector2(1900, 310)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/ObstacleRock3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/ObstacleRock3" unique_id=53212740]
 shape = SubResource("RectangleShape2D_obstacle")
 
-[node name="ColorRect" type="ColorRect" parent="Boundaries/ObstacleRock3"]
+[node name="ColorRect" type="ColorRect" parent="Boundaries/ObstacleRock3" unique_id=1975693581]
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
 offset_bottom = 40.0
 color = Color(0.35, 0.35, 0.35, 1)
 
-[node name="ObstacleRock4" type="StaticBody2D" parent="Boundaries"]
+[node name="ObstacleRock4" type="StaticBody2D" parent="Boundaries" unique_id=1789625045]
 position = Vector2(2750, 420)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/ObstacleRock4"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/ObstacleRock4" unique_id=20301391]
 shape = SubResource("RectangleShape2D_obstacle")
 
-[node name="ColorRect" type="ColorRect" parent="Boundaries/ObstacleRock4"]
+[node name="ColorRect" type="ColorRect" parent="Boundaries/ObstacleRock4" unique_id=2029109873]
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
 offset_bottom = 40.0
 color = Color(0.35, 0.35, 0.35, 1)
 
-[node name="Checkpoints" type="Node2D" parent="."]
+[node name="Checkpoints" type="Node2D" parent="." unique_id=1629081762]
 
-[node name="StartCheckpoint" type="Node2D" parent="Checkpoints"]
+[node name="StartCheckpoint" type="Node2D" parent="Checkpoints" unique_id=1421986607]
 position = Vector2(150, 360)
 
-[node name="Label" type="Label" parent="Checkpoints/StartCheckpoint"]
+[node name="Label" type="Label" parent="Checkpoints/StartCheckpoint" unique_id=1524624181]
 offset_left = -50.0
 offset_top = 25.0
 offset_right = 50.0
@@ -262,10 +262,10 @@ theme_override_font_sizes/font_size = 11
 text = "CHECKPOINT 0"
 horizontal_alignment = 1
 
-[node name="CheckpointHuita" type="Node2D" parent="Checkpoints"]
+[node name="CheckpointHuita" type="Node2D" parent="Checkpoints" unique_id=639908486]
 position = Vector2(1600, 360)
 
-[node name="Label" type="Label" parent="Checkpoints/CheckpointHuita"]
+[node name="Label" type="Label" parent="Checkpoints/CheckpointHuita" unique_id=733994868]
 offset_left = -50.0
 offset_top = 25.0
 offset_right = 50.0
@@ -275,10 +275,10 @@ theme_override_font_sizes/font_size = 11
 text = "CHECKPOINT 1"
 horizontal_alignment = 1
 
-[node name="CheckpointHouse" type="Node2D" parent="Checkpoints"]
+[node name="CheckpointHouse" type="Node2D" parent="Checkpoints" unique_id=1284854679]
 position = Vector2(3120, 360)
 
-[node name="Label" type="Label" parent="Checkpoints/CheckpointHouse"]
+[node name="Label" type="Label" parent="Checkpoints/CheckpointHouse" unique_id=2003663957]
 offset_left = -50.0
 offset_top = 25.0
 offset_right = 50.0
@@ -288,10 +288,10 @@ theme_override_font_sizes/font_size = 11
 text = "CHECKPOINT 2 — CASA"
 horizontal_alignment = 1
 
-[node name="CheckpointEscort" type="Node2D" parent="Checkpoints"]
+[node name="CheckpointEscort" type="Node2D" parent="Checkpoints" unique_id=714118108]
 position = Vector2(1600, 360)
 
-[node name="Label" type="Label" parent="Checkpoints/CheckpointEscort"]
+[node name="Label" type="Label" parent="Checkpoints/CheckpointEscort" unique_id=1744017678]
 offset_left = -60.0
 offset_top = 25.0
 offset_right = 60.0
@@ -301,27 +301,33 @@ theme_override_font_sizes/font_size = 11
 text = "CHECKPOINT ESCOLTA"
 horizontal_alignment = 1
 
-[node name="Areas" type="Node2D" parent="."]
+[node name="Areas" type="Node2D" parent="." unique_id=389205373]
 
-[node name="TutorialTriggerArea" type="Area2D" parent="Areas"]
+[node name="TutorialTriggerArea" type="Area2D" parent="Areas" unique_id=2099066073]
 position = Vector2(650, 360)
+collision_layer = 16
+collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/TutorialTriggerArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/TutorialTriggerArea" unique_id=1160828965]
 shape = SubResource("CircleShape2D_trigger_area")
 
-[node name="SecretConvoArea" type="Area2D" parent="Areas"]
+[node name="SecretConvoArea" type="Area2D" parent="Areas" unique_id=1259147068]
 position = Vector2(2500, 360)
+collision_layer = 16
+collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/SecretConvoArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/SecretConvoArea" unique_id=31931032]
 shape = SubResource("CircleShape2D_trigger_area")
 
-[node name="DockArea" type="Area2D" parent="Areas"]
+[node name="DockArea" type="Area2D" parent="Areas" unique_id=925135128]
 position = Vector2(1600, -720)
+collision_layer = 16
+collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/DockArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/DockArea" unique_id=410259937]
 shape = SubResource("CircleShape2D_trigger_area")
 
-[node name="Label" type="Label" parent="Areas/DockArea"]
+[node name="Label" type="Label" parent="Areas/DockArea" unique_id=866810025]
 offset_left = -60.0
 offset_top = 45.0
 offset_right = 60.0
@@ -331,136 +337,154 @@ theme_override_font_sizes/font_size = 11
 text = "MUELLE NORTE / BOTE [E]"
 horizontal_alignment = 1
 
-[node name="HideZone1" type="Area2D" parent="Areas"]
+[node name="HideZone1" type="Area2D" parent="Areas" unique_id=1862381387]
 position = Vector2(620, 310)
+collision_layer = 16
+collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZone1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZone1" unique_id=1331386588]
 shape = SubResource("RectangleShape2D_hide_zone")
 
-[node name="ColorRect" type="ColorRect" parent="Areas/HideZone1"]
+[node name="ColorRect" type="ColorRect" parent="Areas/HideZone1" unique_id=232089446]
 offset_left = -70.0
 offset_top = -45.0
 offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="HideZone2" type="Area2D" parent="Areas"]
+[node name="HideZone2" type="Area2D" parent="Areas" unique_id=1755648292]
 position = Vector2(930, 420)
+collision_layer = 16
+collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZone2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZone2" unique_id=308801563]
 shape = SubResource("RectangleShape2D_hide_zone")
 
-[node name="ColorRect" type="ColorRect" parent="Areas/HideZone2"]
+[node name="ColorRect" type="ColorRect" parent="Areas/HideZone2" unique_id=1904607162]
 offset_left = -70.0
 offset_top = -45.0
 offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="HideZone3" type="Area2D" parent="Areas"]
+[node name="HideZone3" type="Area2D" parent="Areas" unique_id=67570734]
 position = Vector2(1220, 310)
+collision_layer = 16
+collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZone3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZone3" unique_id=384640596]
 shape = SubResource("RectangleShape2D_hide_zone")
 
-[node name="ColorRect" type="ColorRect" parent="Areas/HideZone3"]
+[node name="ColorRect" type="ColorRect" parent="Areas/HideZone3" unique_id=376465000]
 offset_left = -70.0
 offset_top = -45.0
 offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="HideZone4" type="Area2D" parent="Areas"]
+[node name="HideZone4" type="Area2D" parent="Areas" unique_id=1100035396]
 position = Vector2(1450, 420)
+collision_layer = 16
+collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZone4"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZone4" unique_id=332504192]
 shape = SubResource("RectangleShape2D_hide_zone")
 
-[node name="ColorRect" type="ColorRect" parent="Areas/HideZone4"]
+[node name="ColorRect" type="ColorRect" parent="Areas/HideZone4" unique_id=499005070]
 offset_left = -70.0
 offset_top = -45.0
 offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="HideZone5" type="Area2D" parent="Areas"]
+[node name="HideZone5" type="Area2D" parent="Areas" unique_id=1186753405]
 position = Vector2(2380, 420)
+collision_layer = 16
+collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZone5"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZone5" unique_id=1179997929]
 shape = SubResource("RectangleShape2D_hide_zone")
 
-[node name="ColorRect" type="ColorRect" parent="Areas/HideZone5"]
+[node name="ColorRect" type="ColorRect" parent="Areas/HideZone5" unique_id=1569753765]
 offset_left = -70.0
 offset_top = -45.0
 offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="HideZone6" type="Area2D" parent="Areas"]
+[node name="HideZone6" type="Area2D" parent="Areas" unique_id=1900890388]
 position = Vector2(2860, 310)
+collision_layer = 16
+collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZone6"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZone6" unique_id=534375610]
 shape = SubResource("RectangleShape2D_hide_zone")
 
-[node name="ColorRect" type="ColorRect" parent="Areas/HideZone6"]
+[node name="ColorRect" type="ColorRect" parent="Areas/HideZone6" unique_id=38763209]
 offset_left = -70.0
 offset_top = -45.0
 offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="HideZoneNorth1" type="Area2D" parent="Areas"]
+[node name="HideZoneNorth1" type="Area2D" parent="Areas" unique_id=1894388336]
 position = Vector2(1520, -100)
+collision_layer = 16
+collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZoneNorth1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZoneNorth1" unique_id=2014134283]
 shape = SubResource("RectangleShape2D_hide_zone")
 
-[node name="ColorRect" type="ColorRect" parent="Areas/HideZoneNorth1"]
+[node name="ColorRect" type="ColorRect" parent="Areas/HideZoneNorth1" unique_id=1466034923]
 offset_left = -70.0
 offset_top = -45.0
 offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="HideZoneNorth2" type="Area2D" parent="Areas"]
+[node name="HideZoneNorth2" type="Area2D" parent="Areas" unique_id=519451995]
 position = Vector2(1680, -350)
+collision_layer = 16
+collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZoneNorth2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZoneNorth2" unique_id=405835210]
 shape = SubResource("RectangleShape2D_hide_zone")
 
-[node name="ColorRect" type="ColorRect" parent="Areas/HideZoneNorth2"]
+[node name="ColorRect" type="ColorRect" parent="Areas/HideZoneNorth2" unique_id=429662969]
 offset_left = -70.0
 offset_top = -45.0
 offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="HideZoneNorth3" type="Area2D" parent="Areas"]
+[node name="HideZoneNorth3" type="Area2D" parent="Areas" unique_id=2083270650]
 position = Vector2(1520, -550)
+collision_layer = 16
+collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZoneNorth3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/HideZoneNorth3" unique_id=1900655565]
 shape = SubResource("RectangleShape2D_hide_zone")
 
-[node name="ColorRect" type="ColorRect" parent="Areas/HideZoneNorth3"]
+[node name="ColorRect" type="ColorRect" parent="Areas/HideZoneNorth3" unique_id=1771429623]
 offset_left = -70.0
 offset_top = -45.0
 offset_right = 70.0
 offset_bottom = 45.0
 color = Color(0.1, 0.38, 0.12, 0.85)
 
-[node name="SpanishSoldiers" type="Node2D" parent="."]
+[node name="SpanishSoldiers" type="Node2D" parent="." unique_id=229336580]
 
-[node name="SpanishSoldier1" type="StaticBody2D" parent="SpanishSoldiers"]
+[node name="SpanishSoldier1" type="StaticBody2D" parent="SpanishSoldiers" unique_id=74502778]
 position = Vector2(2530, 330)
 
-[node name="ColorRect" type="ColorRect" parent="SpanishSoldiers/SpanishSoldier1"]
+[node name="ColorRect" type="ColorRect" parent="SpanishSoldiers/SpanishSoldier1" unique_id=872033604]
 offset_left = -14.0
 offset_top = -14.0
 offset_right = 14.0
 offset_bottom = 14.0
 color = Color(0.85, 0.25, 0.25, 1)
 
-[node name="Label" type="Label" parent="SpanishSoldiers/SpanishSoldier1"]
+[node name="Label" type="Label" parent="SpanishSoldiers/SpanishSoldier1" unique_id=1734447273]
 offset_left = -45.0
 offset_top = -30.0
 offset_right = 45.0
@@ -469,17 +493,17 @@ theme_override_font_sizes/font_size = 10
 text = "Español 1"
 horizontal_alignment = 1
 
-[node name="SpanishSoldier2" type="StaticBody2D" parent="SpanishSoldiers"]
+[node name="SpanishSoldier2" type="StaticBody2D" parent="SpanishSoldiers" unique_id=7480207]
 position = Vector2(2530, 390)
 
-[node name="ColorRect" type="ColorRect" parent="SpanishSoldiers/SpanishSoldier2"]
+[node name="ColorRect" type="ColorRect" parent="SpanishSoldiers/SpanishSoldier2" unique_id=623628953]
 offset_left = -14.0
 offset_top = -14.0
 offset_right = 14.0
 offset_bottom = 14.0
 color = Color(0.85, 0.25, 0.25, 1)
 
-[node name="Label" type="Label" parent="SpanishSoldiers/SpanishSoldier2"]
+[node name="Label" type="Label" parent="SpanishSoldiers/SpanishSoldier2" unique_id=1824824315]
 offset_left = -45.0
 offset_top = -30.0
 offset_right = 45.0
@@ -488,61 +512,61 @@ theme_override_font_sizes/font_size = 10
 text = "Español 2"
 horizontal_alignment = 1
 
-[node name="PickableStones" type="Node2D" parent="."]
+[node name="PickableStones" type="Node2D" parent="." unique_id=553334777]
 
-[node name="PickableStone1" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+[node name="PickableStone1" parent="PickableStones" unique_id=1264696603 instance=ExtResource("8_stone_pickup")]
 position = Vector2(400, 360)
 
-[node name="PickableStone2" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+[node name="PickableStone2" parent="PickableStones" unique_id=1412914553 instance=ExtResource("8_stone_pickup")]
 position = Vector2(850, 430)
 
-[node name="PickableStone3" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+[node name="PickableStone3" parent="PickableStones" unique_id=1518656154 instance=ExtResource("8_stone_pickup")]
 position = Vector2(1700, 310)
 
-[node name="PickableStone4" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+[node name="PickableStone4" parent="PickableStones" unique_id=132335913 instance=ExtResource("8_stone_pickup")]
 position = Vector2(2300, 430)
 
-[node name="PickableStone5" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+[node name="PickableStone5" parent="PickableStones" unique_id=1580164131 instance=ExtResource("8_stone_pickup")]
 position = Vector2(2900, 360)
 
-[node name="PickableStoneNorth1" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+[node name="PickableStoneNorth1" parent="PickableStones" unique_id=1997216287 instance=ExtResource("8_stone_pickup")]
 position = Vector2(1600, 50)
 
-[node name="PickableStoneNorth2" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+[node name="PickableStoneNorth2" parent="PickableStones" unique_id=738886543 instance=ExtResource("8_stone_pickup")]
 position = Vector2(1650, -250)
 
-[node name="PickableStoneNorth3" parent="PickableStones" instance=ExtResource("8_stone_pickup")]
+[node name="PickableStoneNorth3" parent="PickableStones" unique_id=1206424596 instance=ExtResource("8_stone_pickup")]
 position = Vector2(1550, -500)
 
-[node name="HouseInterior" parent="." instance=ExtResource("7_house")]
+[node name="HouseInterior" parent="." unique_id=536354515 instance=ExtResource("7_house")]
 position = Vector2(3500, 360)
 
-[node name="Pasco" parent="." instance=ExtResource("2_pasco")]
+[node name="Pasco" parent="." unique_id=1667170844 instance=ExtResource("2_pasco")]
 position = Vector2(150, 360)
 
-[node name="Huita" parent="." instance=ExtResource("3_huita")]
+[node name="Huita" parent="." unique_id=484757491 instance=ExtResource("3_huita")]
 position = Vector2(1600, 360)
 
-[node name="SpanishPatrol1" parent="." instance=ExtResource("4_patrol")]
+[node name="SpanishPatrol1" parent="." unique_id=621179696 instance=ExtResource("4_patrol")]
 position = Vector2(950, 360)
 point_a = Vector2(950, 360)
 point_b = Vector2(1400, 360)
 
-[node name="SpanishPatrol2" parent="." instance=ExtResource("4_patrol")]
+[node name="SpanishPatrol2" parent="." unique_id=459953378 instance=ExtResource("4_patrol")]
 position = Vector2(2150, 300)
 point_a = Vector2(2150, 300)
 point_b = Vector2(2700, 300)
 
-[node name="SpanishPatrolNorth1" parent="." instance=ExtResource("4_patrol")]
+[node name="SpanishPatrolNorth1" parent="." unique_id=1954897072 instance=ExtResource("4_patrol")]
 position = Vector2(1600, -150)
 point_a = Vector2(1520, -150)
 point_b = Vector2(1680, -150)
 
-[node name="SpanishPatrolNorth2" parent="." instance=ExtResource("4_patrol")]
+[node name="SpanishPatrolNorth2" parent="." unique_id=852366681 instance=ExtResource("4_patrol")]
 position = Vector2(1600, -450)
 point_a = Vector2(1600, -350)
 point_b = Vector2(1600, -550)
 
-[node name="HUD" parent="." instance=ExtResource("5_hud")]
+[node name="HUD" parent="." unique_id=1718876460 instance=ExtResource("5_hud")]
 
-[node name="DialogueBox" parent="." instance=ExtResource("6_dialogue")]
+[node name="DialogueBox" parent="." unique_id=662807709 instance=ExtResource("6_dialogue")]
