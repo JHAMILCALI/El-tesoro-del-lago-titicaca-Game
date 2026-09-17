@@ -18,7 +18,9 @@
 - **[COMPLETADO]** Sistema de checkpoints (Inicio, Huita, Casa, Tesoro)
 - **[COMPLETADO]** HUD dinámico con objetivos narrativos, notificaciones temporales (`OCULTO`, `RUIDO DETECTADO`, `ALERTA`, etc.) y modal final
 - **[COMPLETADO]** Menú Principal navegable (Jugar Nivel 1, Prototipo Barca, Salir)
-- **[COMPLETADO]** Prototipo independiente de la Barca (`BoatPrototype.tscn`) con aceleración por remo (Shift)
+- **[COMPLETADO]** Nivel 2 completo: travesía navegable del Lago Titicaca, con salida narrativa, muelle, rutas alternativas, islas, rocas, corrientes, niebla sagrada, alerta y santuario final.
+- **[COMPLETADO]** Barca evolucionada: aceleración, frenado, velocidad visible, resistencia de remo y respuesta a impactos/corrientes.
+- **[COMPLETADO]** Persecución naval: tres barcas enemigas con estados de patrulla, persecución y pérdida de rastro en la zona sagrada.
 
 ---
 
@@ -46,6 +48,8 @@
 - `scenes/main/MainMenu.tscn`
 - `scenes/levels/Level01_Convoy.tscn`
 - `scenes/levels/HouseInterior.tscn`
+- `scenes/levels/LakeLevel02.tscn`
+- `scenes/levels/Level03_Transition.tscn`
 - `scenes/characters/Pasco.tscn`
 - `scenes/characters/Huita.tscn`
 - `scenes/enemies/SpanishPatrol.tscn`

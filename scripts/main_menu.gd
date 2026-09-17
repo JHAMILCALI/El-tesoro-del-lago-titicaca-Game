@@ -7,7 +7,7 @@ extends Control
 @onready var background_music: AudioStreamPlayer = $BackgroundMusic
 
 var level_01_scene: PackedScene = preload("res://scenes/levels/Level01_Convoy.tscn")
-var boat_scene: PackedScene = preload("res://scenes/prototypes/BoatPrototype.tscn")
+var boat_scene: PackedScene = preload("res://scenes/levels/LakeLevel02.tscn")
 
 func _ready() -> void:
 	if background_video:
@@ -47,11 +47,11 @@ func _on_play_pressed() -> void:
 		get_tree().change_scene_to_file("res://scenes/levels/Level01_Convoy.tscn")
 
 func _on_boat_pressed() -> void:
-	print("[MainMenu] Cargando Prototipo de Barca...")
+	print("[MainMenu] Cargando Nivel 2: Travesía del Titicaca...")
 	if boat_scene:
 		get_tree().change_scene_to_packed(boat_scene)
 	else:
-		get_tree().change_scene_to_file("res://scenes/prototypes/BoatPrototype.tscn")
+		get_tree().change_scene_to_file("res://scenes/levels/LakeLevel02.tscn")
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()

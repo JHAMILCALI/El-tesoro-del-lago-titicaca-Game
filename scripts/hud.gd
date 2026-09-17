@@ -15,6 +15,12 @@ signal next_level_requested
 @onready var detection_container: Control = $Control/DetectionContainer
 @onready var detection_bar_label: Label = $Control/DetectionContainer/DetectionBarLabel
 @onready var stone_count_label: Label = $Control/StoneCountPanel/StoneCountLabel
+@onready var rowing_container: Control = $Control/RowingContainer
+@onready var rowing_bar_label: Label = $Control/RowingContainer/RowingBarLabel
+@onready var alert_container: Control = $Control/AlertContainer
+@onready var alert_bar_label: Label = $Control/AlertContainer/AlertBarLabel
+@onready var speed_label: Label = $Control/SpeedPanel/SpeedLabel
+@onready var minimap_panel: Control = $Control/MiniMapPanel
 
 func _ready() -> void:
 	add_to_group("hud")
@@ -33,6 +39,14 @@ func _ready() -> void:
 		alpha_complete_panel.visible = false
 	if detection_container:
 		detection_container.visible = false
+	if rowing_container:
+		rowing_container.visible = false
+	if alert_container:
+		alert_container.visible = false
+	if speed_label:
+		speed_label.visible = false
+	if minimap_panel:
+		minimap_panel.visible = false
 
 	if restart_button:
 		restart_button.pressed.connect(_on_restart_pressed)
@@ -69,6 +83,38 @@ func update_detection_progress(ratio: float) -> void:
 		bar_str += "]"
 		detection_bar_label.text = bar_str
 
+func show_lake_hud(show: bool = true) -> void:
+	if rowing_container:
+		rowing_container.visible = show
+	if alert_container:
+		alert_container.visible = show
+	if speed_label:
+		speed_label.visible = show
+	if minimap_panel:
+		minimap_panel.visible = show
+	if stone_count_label:
+		stone_count_label.get_parent().visible = not show
+
+func update_stamina(current: float, maximum: float) -> void:
+	if not rowing_bar_label:
+		return
+	rowing_bar_label.text = _block_bar(current / maximum)
+
+func update_alert(ratio: float) -> void:
+	if alert_bar_label:
+		alert_bar_label.text = _block_bar(ratio)
+
+func update_speed(current_speed: float) -> void:
+	if speed_label:
+		speed_label.text = "VELOCIDAD: " + str(int(round(current_speed)))
+
+func _block_bar(ratio: float) -> String:
+	var filled := clampi(int(round(clampf(ratio, 0.0, 1.0) * 10.0)), 0, 10)
+	var result := ""
+	for i in range(10):
+		result += "█" if i < filled else "░"
+	return result
+
 func show_interaction_prompt(prompt_text: String = "[E] HABLAR") -> void:
 	if interaction_prompt:
 		interaction_prompt.text = prompt_text
@@ -93,6 +139,21 @@ func show_alpha_complete() -> void:
 	var pasco = get_tree().get_first_node_in_group("player")
 	if pasco and pasco.has_method("set_movement_enabled"):
 		pasco.set_movement_enabled(false)
+
+func show_level_complete(title: String, message: String) -> void:
+	if alpha_complete_panel:
+		alpha_complete_panel.visible = true
+		var title_label = alpha_complete_panel.get_node_or_null("TitleLabel") as Label
+		var message_label = alpha_complete_panel.get_node_or_null("MessageLabel") as Label
+		var next_button = alpha_complete_panel.get_node_or_null("VBoxContainer/NextLevelButton") as Button
+		var restart = alpha_complete_panel.get_node_or_null("VBoxContainer/RestartButton") as Button
+		if title_label: title_label.text = title
+		if message_label: message_label.text = message
+		if next_button: next_button.text = "PREPARAR NIVEL 3"
+		if restart: restart.text = "REINICIAR NIVEL 2"
+	var player = get_tree().get_first_node_in_group("player")
+	if player and player.has_method("set_movement_enabled"):
+		player.set_movement_enabled(false)
 
 func hide_alpha_complete() -> void:
 	if alpha_complete_panel:

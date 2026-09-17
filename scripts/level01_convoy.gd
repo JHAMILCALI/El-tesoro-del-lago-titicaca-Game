@@ -318,7 +318,7 @@ func _on_next_level_requested() -> void:
 	if huita:
 		boarding_tween.tween_property(huita, "global_position", boat_visual.global_position + Vector2(15.0, 0.0), 0.65)
 	await boarding_tween.finished
-	get_tree().change_scene_to_file("res://scenes/prototypes/BoatPrototype.tscn")
+	get_tree().change_scene_to_file("res://scenes/levels/LakeLevel02.tscn")
 
 func _on_hide_zone_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):

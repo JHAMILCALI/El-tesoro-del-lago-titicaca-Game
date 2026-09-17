@@ -1,0 +1,229 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://scripts/lake_level_02.gd" id="1_level"]
+[ext_resource type="PackedScene" path="res://scenes/prototypes/BoatPrototype.tscn" id="2_boat"]
+[ext_resource type="PackedScene" path="res://scenes/ui/HUD.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/DialogueBox.tscn" id="4_dialogue"]
+[ext_resource type="Script" path="res://scripts/alert_system.gd" id="5_alert"]
+[ext_resource type="Script" path="res://scripts/water_obstacle.gd" id="6_obstacle"]
+[ext_resource type="Script" path="res://scripts/current_zone.gd" id="7_current"]
+[ext_resource type="Script" path="res://scripts/enemy_boat.gd" id="8_enemy"]
+
+[sub_resource type="CircleShape2D" id="CircleRock"]
+radius = 42.0
+[sub_resource type="RectangleShape2D" id="RectangleCurrent"]
+size = Vector2(380, 180)
+[sub_resource type="RectangleShape2D" id="RectangleArea"]
+size = Vector2(520, 500)
+[sub_resource type="CircleShape2D" id="CircleFinish"]
+radius = 110.0
+[sub_resource type="RectangleShape2D" id="EnemyShape"]
+size = Vector2(42, 24)
+
+[node name="LakeLevel02" type="Node2D"]
+script = ExtResource("1_level")
+
+[node name="LakeWater" type="ColorRect" parent="."]
+offset_left = -1000.0
+offset_top = -1600.0
+offset_right = 10000.0
+offset_bottom = 1900.0
+color = Color(0.055, 0.21, 0.36, 1)
+mouse_filter = 2
+
+[node name="WaterBands" type="Node2D" parent="."]
+[node name="Band1" type="ColorRect" parent="WaterBands"]
+offset_left = -800.0
+offset_top = -900.0
+offset_right = 9800.0
+offset_bottom = -850.0
+color = Color(0.08, 0.31, 0.5, 0.45)
+[node name="Band2" type="ColorRect" parent="WaterBands"]
+offset_left = -800.0
+offset_top = -100.0
+offset_right = 9800.0
+offset_bottom = -55.0
+color = Color(0.1, 0.35, 0.55, 0.35)
+[node name="Band3" type="ColorRect" parent="WaterBands"]
+offset_left = -800.0
+offset_top = 600.0
+offset_right = 9800.0
+offset_bottom = 650.0
+color = Color(0.08, 0.29, 0.48, 0.45)
+
+[node name="DepartureShore" type="ColorRect" parent="."]
+offset_left = -700.0
+offset_top = 180.0
+offset_right = 600.0
+offset_bottom = 720.0
+color = Color(0.16, 0.27, 0.16, 1)
+[node name="DepartureDock" type="ColorRect" parent="."]
+offset_left = -45.0
+offset_top = 80.0
+offset_right = 45.0
+offset_bottom = 320.0
+color = Color(0.43, 0.25, 0.12, 1)
+[node name="DockLabel" type="Label" parent="."]
+position = Vector2(-100, 330)
+theme_override_colors/font_color = Color(0.9, 0.78, 0.45, 1)
+text = "MUELLE DE PARTIDA"
+
+[node name="Islands" type="Node2D" parent="."]
+[node name="IslandA" type="ColorRect" parent="Islands"]
+offset_left = 620.0
+offset_top = -300.0
+offset_right = 960.0
+offset_bottom = 80.0
+color = Color(0.2, 0.42, 0.19, 1)
+[node name="IslandALabel" type="Label" parent="Islands/IslandA"]
+position = Vector2(80, 170)
+text = "ISLA ESCONDIDA"
+[node name="IslandB" type="ColorRect" parent="Islands"]
+offset_left = 1250.0
+offset_top = 220.0
+offset_right = 1580.0
+offset_bottom = 570.0
+color = Color(0.18, 0.38, 0.16, 1)
+[node name="IslandC" type="ColorRect" parent="Islands"]
+offset_left = 1850.0
+offset_top = -600.0
+offset_right = 2140.0
+offset_bottom = -280.0
+color = Color(0.17, 0.35, 0.15, 1)
+[node name="SanctuaryLand" type="ColorRect" parent="."]
+offset_left = 8750.0
+offset_top = -700.0
+offset_right = 9650.0
+offset_bottom = 100.0
+color = Color(0.24, 0.38, 0.18, 1)
+[node name="SanctuaryLabel" type="Label" parent="."]
+position = Vector2(8940, -260)
+theme_override_colors/font_color = Color(1, 0.87, 0.42, 1)
+theme_override_font_sizes/font_size = 20
+text = "SANTUARIO"
+
+[node name="Obstacles" type="Node2D" parent="."]
+[node name="Rock1" type="Area2D" parent="Obstacles"]
+position = Vector2(390, -100)
+script = ExtResource("6_obstacle")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Rock1"]
+shape = SubResource("CircleRock")
+[node name="Visual" type="Polygon2D" parent="Obstacles/Rock1"]
+polygon = PackedVector2Array(-40, -28, 10, -44, 42, -8, 25, 39, -28, 35, -45, 3)
+color = Color(0.3, 0.34, 0.35, 1)
+[node name="Rock2" type="Area2D" parent="Obstacles"]
+position = Vector2(1120, -240)
+script = ExtResource("6_obstacle")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Rock2"]
+shape = SubResource("CircleRock")
+[node name="Visual" type="Polygon2D" parent="Obstacles/Rock2"]
+polygon = PackedVector2Array(-40, -28, 10, -44, 42, -8, 25, 39, -28, 35, -45, 3)
+color = Color(0.3, 0.34, 0.35, 1)
+[node name="Rock3" type="Area2D" parent="Obstacles"]
+position = Vector2(1690, 0)
+script = ExtResource("6_obstacle")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Rock3"]
+shape = SubResource("CircleRock")
+[node name="Visual" type="Polygon2D" parent="Obstacles/Rock3"]
+polygon = PackedVector2Array(-40, -28, 10, -44, 42, -8, 25, 39, -28, 35, -45, 3)
+color = Color(0.3, 0.34, 0.35, 1)
+[node name="Rock4" type="Area2D" parent="Obstacles"]
+position = Vector2(2300, -330)
+script = ExtResource("6_obstacle")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Rock4"]
+shape = SubResource("CircleRock")
+[node name="Visual" type="Polygon2D" parent="Obstacles/Rock4"]
+polygon = PackedVector2Array(-40, -28, 10, -44, 42, -8, 25, 39, -28, 35, -45, 3)
+color = Color(0.3, 0.34, 0.35, 1)
+
+[node name="Current1" type="Area2D" parent="."]
+position = Vector2(1050, 120)
+script = ExtResource("7_current")
+force = Vector2(110, -45)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Current1"]
+shape = SubResource("RectangleCurrent")
+[node name="Visual" type="ColorRect" parent="Current1"]
+offset_left = -190.0
+offset_top = -90.0
+offset_right = 190.0
+offset_bottom = 90.0
+color = Color(0.3, 0.75, 0.9, 0.18)
+
+[node name="Areas" type="Node2D" parent="."]
+[node name="OpenWaterZone" type="Area2D" parent="Areas"]
+position = Vector2(1520, -50)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/OpenWaterZone"]
+shape = SubResource("RectangleArea")
+[node name="EnemyTrigger" type="Area2D" parent="Areas"]
+position = Vector2(500, -150)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/EnemyTrigger"]
+shape = SubResource("RectangleArea")
+[node name="SacredZone" type="Area2D" parent="Areas"]
+position = Vector2(7600, -250)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/SacredZone"]
+shape = SubResource("RectangleArea")
+[node name="Fog" type="ColorRect" parent="Areas/SacredZone"]
+offset_left = -260.0
+offset_top = -250.0
+offset_right = 260.0
+offset_bottom = 250.0
+color = Color(0.24, 0.3, 0.4, 0.32)
+[node name="FogLabel" type="Label" parent="Areas/SacredZone"]
+position = Vector2(-130, -20)
+theme_override_colors/font_color = Color(0.75, 0.82, 0.95, 1)
+text = "ZONA SAGRADA DEL LAGO"
+[node name="FinishArea" type="Area2D" parent="Areas" groups=["lake_destination"]]
+position = Vector2(8920, -250)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/FinishArea"]
+shape = SubResource("CircleFinish")
+
+[node name="BoatPrototype" parent="." instance=ExtResource("2_boat")]
+
+[node name="Enemies" type="Node2D" parent="."]
+[node name="EnemyBoat1" type="CharacterBody2D" parent="Enemies"]
+position = Vector2(980, 310)
+script = ExtResource("8_enemy")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemies/EnemyBoat1"]
+shape = SubResource("EnemyShape")
+[node name="Hull" type="ColorRect" parent="Enemies/EnemyBoat1"]
+offset_left = -21.0
+offset_top = -12.0
+offset_right = 21.0
+offset_bottom = 12.0
+color = Color(0.75, 0.12, 0.1, 1)
+[node name="Label" type="Label" parent="Enemies/EnemyBoat1"]
+position = Vector2(-35, -35)
+text = "ESPAÑOL"
+[node name="EnemyBoat2" type="CharacterBody2D" parent="Enemies"]
+position = Vector2(1450, -610)
+script = ExtResource("8_enemy")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemies/EnemyBoat2"]
+shape = SubResource("EnemyShape")
+[node name="Hull" type="ColorRect" parent="Enemies/EnemyBoat2"]
+offset_left = -21.0
+offset_top = -12.0
+offset_right = 21.0
+offset_bottom = 12.0
+color = Color(0.75, 0.12, 0.1, 1)
+[node name="Label" type="Label" parent="Enemies/EnemyBoat2"]
+position = Vector2(-35, -35)
+text = "ESPAÑOL"
+[node name="EnemyBoat3" type="CharacterBody2D" parent="Enemies"]
+position = Vector2(1900, 420)
+script = ExtResource("8_enemy")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemies/EnemyBoat3"]
+shape = SubResource("EnemyShape")
+[node name="Hull" type="ColorRect" parent="Enemies/EnemyBoat3"]
+offset_left = -21.0
+offset_top = -12.0
+offset_right = 21.0
+offset_bottom = 12.0
+color = Color(0.75, 0.12, 0.1, 1)
+[node name="Label" type="Label" parent="Enemies/EnemyBoat3"]
+position = Vector2(-35, -35)
+text = "ESPAÑOL"
+
+[node name="AlertSystem" type="Node" parent="."]
+script = ExtResource("5_alert")
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+[node name="DialogueBox" parent="." instance=ExtResource("4_dialogue")]

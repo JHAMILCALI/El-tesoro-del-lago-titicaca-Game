@@ -68,7 +68,7 @@ offset_bottom = 270.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 20
-text = "Prototipo Alpha 0.1 — Semana 2"
+text = "Alpha extendido — La travesía continúa"
 horizontal_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1859433710]
@@ -96,7 +96,7 @@ text = "JUGAR NIVEL 1"
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "PROTOTIPO BARCA"
+text = "JUGAR NIVEL 2 — LAGO"
 
 [node name="QuitButton" type="Button" parent="VBoxContainer" unique_id=471939160]
 custom_minimum_size = Vector2(0, 45)
