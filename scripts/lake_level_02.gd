@@ -147,7 +147,12 @@ func _on_player_caught(caught_enemy: EnemyBoat) -> void:
 		return
 	capture_in_progress = true
 	boat.set_movement_enabled(false)
-	show_notification("¡Una barca española te atrapó! Regresas al muelle en 3 segundos.", 3.0)
+	# Al capturar, toda la persecución se congela: no hay giros ni empujones bruscos.
+	for enemy in enemy_boats:
+		if enemy is EnemyBoat:
+			enemy.velocity = Vector2.ZERO
+			enemy.set_physics_process(false)
+	show_notification("¡Te atrapamos! Regresas al muelle en 3 segundos.", 3.0)
 	await get_tree().create_timer(3.0).timeout
 	boat.global_position = start_position
 	boat.velocity = Vector2.ZERO
@@ -161,6 +166,7 @@ func _on_player_caught(caught_enemy: EnemyBoat) -> void:
 	for patrol_enemy in enemy_boats:
 		if patrol_enemy is EnemyBoat:
 			patrol_enemy.reset_to_patrol()
+			patrol_enemy.set_physics_process(true)
 	active_captor = null
 	boat.set_movement_enabled(true)
 	capture_in_progress = false
