@@ -1,11 +1,22 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/stone.gd" id="1_stone"]
+[ext_resource type="Texture2D" path="res://assets/tiles/piedra 1.png" id="2_stones"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_thrown_stone"]
+atlas = ExtResource("2_stones")
+region = Rect2(190, 410, 140, 150)
 
 [node name="Stone" type="Node2D"]
 script = ExtResource("1_stone")
 
+[node name="StoneSprite" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = SubResource("AtlasTexture_thrown_stone")
+scale = Vector2(0.14, 0.14)
+
 [node name="ColorRect" type="ColorRect" parent="."]
+visible = false
 offset_left = -6.0
 offset_top = -6.0
 offset_right = 6.0
@@ -13,6 +24,7 @@ offset_bottom = 6.0
 color = Color(0.7, 0.7, 0.75, 1)
 
 [node name="Shadow" type="ColorRect" parent="."]
+visible = false
 offset_left = -5.0
 offset_top = 6.0
 offset_right = 5.0
