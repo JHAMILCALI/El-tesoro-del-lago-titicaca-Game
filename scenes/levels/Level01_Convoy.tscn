@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/DialogueBox.tscn" id="6_dialogue"]
 [ext_resource type="PackedScene" path="res://scenes/levels/HouseInterior.tscn" id="7_house"]
 [ext_resource type="PackedScene" path="res://scenes/objects/PickableStone.tscn" id="8_stone_pickup"]
+[ext_resource type="PackedScene" path="res://scenes/levels/Level01TerrainVisual.tscn" id="9_terrain_visual"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_top_wall_left"]
 size = Vector2(1500, 100)
@@ -38,7 +39,10 @@ script = ExtResource("1_level")
 
 [node name="Terrain" type="Node2D" parent="." unique_id=315711161]
 
+[node name="Level01TerrainVisual" parent="Terrain" instance=ExtResource("9_terrain_visual")]
+
 [node name="Background" type="ColorRect" parent="Terrain" unique_id=2123770517]
+visible = false
 offset_left = -300.0
 offset_top = -1200.0
 offset_right = 3800.0
@@ -46,6 +50,7 @@ offset_bottom = 900.0
 color = Color(0.22, 0.28, 0.18, 1)
 
 [node name="MainPath" type="ColorRect" parent="Terrain" unique_id=2020889220]
+visible = false
 offset_left = 50.0
 offset_top = 260.0
 offset_right = 3300.0
@@ -53,6 +58,7 @@ offset_bottom = 460.0
 color = Color(0.45, 0.35, 0.22, 1)
 
 [node name="NorthPath" type="ColorRect" parent="Terrain" unique_id=484332233]
+visible = false
 offset_left = 1500.0
 offset_top = -700.0
 offset_right = 1700.0
@@ -62,6 +68,7 @@ color = Color(0.45, 0.35, 0.22, 1)
 [node name="DockEnvironment" type="Node2D" parent="." unique_id=511001719]
 
 [node name="LakeWater" type="ColorRect" parent="DockEnvironment" unique_id=1975494336]
+visible = false
 offset_left = 600.0
 offset_top = -1150.0
 offset_right = 2600.0
