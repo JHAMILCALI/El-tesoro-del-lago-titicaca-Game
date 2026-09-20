@@ -24,6 +24,9 @@ size = Vector2(100, 1000)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_obstacle"]
 size = Vector2(80, 80)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_north_gate"]
+size = Vector2(220, 110)
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_trigger_area"]
 radius = 90.0
 
@@ -176,20 +179,20 @@ color = Color(0.15, 0.18, 0.12, 1)
 position = Vector2(1600, 210)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/RockBarrierNorth" unique_id=2095661933]
-shape = SubResource("RectangleShape2D_obstacle")
+shape = SubResource("RectangleShape2D_north_gate")
 
 [node name="ColorRect" type="ColorRect" parent="Boundaries/RockBarrierNorth" unique_id=1310333076]
-offset_left = -40.0
-offset_top = -40.0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = -110.0
+offset_top = -55.0
+offset_right = 110.0
+offset_bottom = 55.0
 color = Color(0.5, 0.35, 0.2, 1)
 
 [node name="Label" type="Label" parent="Boundaries/RockBarrierNorth" unique_id=1237300753]
-offset_left = -60.0
-offset_top = -30.0
-offset_right = 60.0
-offset_bottom = -10.0
+offset_left = -100.0
+offset_top = -15.0
+offset_right = 100.0
+offset_bottom = 5.0
 theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
 theme_override_font_sizes/font_size = 10
 text = "PASO BLOQUEADO"

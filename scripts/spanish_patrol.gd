@@ -1,7 +1,7 @@
 extends CharacterBody2D
 class_name SpanishPatrol
 
-enum State { PATROL, SUSPICIOUS, INVESTIGATE, RETURN, ALERT, CAPTURE }
+enum State { PATROL, SUSPICIOUS, INVESTIGATE, RETURN, ALERT, CAPTURE, UNCONSCIOUS }
 
 signal player_captured
 
@@ -19,6 +19,7 @@ var is_player_in_area: bool = false
 var detection_timer: float = 0.0
 var state_timer: float = 0.0
 var is_waiting_at_waypoint: bool = false
+var unconscious_time_remaining: float = 0.0
 
 @onready var alert_label: Label = $AlertLabel
 @onready var detection_visual: Polygon2D = $DetectionArea/DetectionVisual
@@ -50,6 +51,39 @@ func _physics_process(delta: float) -> void:
 			_process_alert(delta)
 		State.CAPTURE:
 			_process_capture()
+		State.UNCONSCIOUS:
+			_process_unconscious(delta)
+
+func _process_unconscious(delta: float) -> void:
+	velocity = Vector2.ZERO
+	unconscious_time_remaining = maxf(0.0, unconscious_time_remaining - delta)
+	if alert_label:
+		alert_label.visible = true
+		alert_label.text = "DESMAYADO " + str(int(ceil(unconscious_time_remaining))) + "s"
+	if unconscious_time_remaining <= 0.0:
+		current_state = State.PATROL
+		is_waiting_at_waypoint = false
+		var detection_area = get_node_or_null("DetectionArea") as Area2D
+		if detection_area:
+			detection_area.monitoring = true
+		if alert_label:
+			alert_label.visible = false
+
+func knock_out(duration: float = 8.0) -> void:
+	if current_state == State.UNCONSCIOUS:
+		unconscious_time_remaining = maxf(unconscious_time_remaining, duration)
+		return
+	current_state = State.UNCONSCIOUS
+	unconscious_time_remaining = duration
+	detection_timer = 0.0
+	is_player_in_area = false
+	velocity = Vector2.ZERO
+	var detection_area = get_node_or_null("DetectionArea") as Area2D
+	if detection_area:
+		detection_area.monitoring = false
+	if alert_label:
+		alert_label.visible = true
+		alert_label.text = "DESMAYADO 8s"
 
 func _process_patrol(delta: float) -> void:
 	if alert_label:
@@ -176,6 +210,8 @@ func reset_patrol() -> void:
 		alert_label.visible = false
 
 func on_noise_heard(noise_pos: Vector2) -> void:
+	if current_state == State.UNCONSCIOUS:
+		return
 	if current_state in [State.PATROL, State.RETURN, State.SUSPICIOUS]:
 		investigate_target_pos = noise_pos
 		state_timer = 0.0
@@ -193,8 +229,12 @@ func _update_vision_cone_color() -> void:
 			detection_visual.color = Color(1.0, 0.5, 0.1, 0.35)
 		State.ALERT, State.CAPTURE:
 			detection_visual.color = Color(1.0, 0.15, 0.15, 0.5)
+		State.UNCONSCIOUS:
+			detection_visual.color = Color(0.4, 0.4, 0.4, 0.08)
 
 func _check_player_detection(delta: float) -> void:
+	if current_state == State.UNCONSCIOUS:
+		return
 	if not is_player_in_area:
 		if current_state == State.ALERT:
 			current_state = State.PATROL
