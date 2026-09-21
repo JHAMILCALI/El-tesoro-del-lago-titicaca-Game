@@ -1,7 +1,8 @@
-[gd_scene load_steps=23 format=3]
+[gd_scene load_steps=28 format=3]
 
 [ext_resource type="Script" path="res://scripts/spanish_patrol.gd" id="1_patrol"]
 [ext_resource type="Texture2D" path="res://assets/sprites/spanish_patrol_walk.png" id="2_patrol_walk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/spanish_patrol_faint.png" id="3_patrol_faint"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_patrol_body"]
 radius = 16.0
@@ -73,8 +74,41 @@ region = Rect2(627, 941, 313, 313)
 atlas = ExtResource("2_patrol_walk")
 region = Rect2(941, 941, 313, 313)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_faint_0"]
+atlas = ExtResource("3_patrol_faint")
+region = Rect2(0, 0, 313, 313)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_faint_1"]
+atlas = ExtResource("3_patrol_faint")
+region = Rect2(314, 0, 313, 313)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_faint_2"]
+atlas = ExtResource("3_patrol_faint")
+region = Rect2(627, 0, 313, 313)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_faint_3"]
+atlas = ExtResource("3_patrol_faint")
+region = Rect2(941, 0, 313, 313)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_patrol_walk"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_faint_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_faint_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_faint_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_faint_3")
+}],
+"loop": false,
+"name": &"faint",
+"speed": 6.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_down_0")

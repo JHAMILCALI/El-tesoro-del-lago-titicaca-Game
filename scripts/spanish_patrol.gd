@@ -86,6 +86,8 @@ func knock_out(duration: float = 8.0) -> void:
 	detection_timer = 0.0
 	is_player_in_area = false
 	velocity = Vector2.ZERO
+	if animated_sprite:
+		animated_sprite.play(&"faint")
 	if detection_area:
 		detection_area.monitoring = false
 	if alert_label:
@@ -229,6 +231,11 @@ func _turn_to_angle(target_angle: float, weight: float) -> void:
 
 func _update_walk_animation(movement: Vector2) -> void:
 	if not animated_sprite:
+		return
+
+	if current_state == State.UNCONSCIOUS:
+		if animated_sprite.animation != &"faint":
+			animated_sprite.play(&"faint")
 		return
 
 	var is_moving := movement.length_squared() > 0.01
