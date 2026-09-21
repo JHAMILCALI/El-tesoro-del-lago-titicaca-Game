@@ -20,6 +20,7 @@ var stone_scene: PackedScene = preload("res://scenes/objects/Stone.tscn")
 
 @onready var aim_line: Line2D = $AimLine
 @onready var aim_target: Node2D = $AimTarget
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 func _ready() -> void:
 	add_to_group("player")
@@ -33,6 +34,7 @@ func _process(_delta: float) -> void:
 func _physics_process(_delta: float) -> void:
 	if not can_move:
 		velocity = Vector2.ZERO
+		_update_walk_animation(Vector2.ZERO)
 		move_and_slide()
 		return
 
@@ -45,7 +47,26 @@ func _physics_process(_delta: float) -> void:
 	else:
 		velocity = Vector2.ZERO
 
+	_update_walk_animation(input_vector)
 	move_and_slide()
+
+func _update_walk_animation(direction: Vector2) -> void:
+	if not animated_sprite:
+		return
+
+	if direction == Vector2.ZERO:
+		animated_sprite.stop()
+		animated_sprite.frame = 0
+		return
+
+	var animation_name: StringName
+	if absf(direction.x) > absf(direction.y):
+		animation_name = &"walk_right" if direction.x > 0.0 else &"walk_left"
+	else:
+		animation_name = &"walk_down" if direction.y > 0.0 else &"walk_up"
+
+	if animated_sprite.animation != animation_name or not animated_sprite.is_playing():
+		animated_sprite.play(animation_name)
 
 func _unhandled_input(event: InputEvent) -> void:
 	_handle_throw_input(event)
