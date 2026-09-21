@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dl41260butqcg"
-path="res://.godot/imported/tierrra.png-2305a65904755edbe6302089c4d3993d.ctex"
+uid="uid://bip7kjt8r2076"
+path="res://.godot/imported/bordes.png-c73c5ccca57672dbe5a41938feed2c0c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scenes/levels/tierrra.png"
-dest_files=["res://.godot/imported/tierrra.png-2305a65904755edbe6302089c4d3993d.ctex"]
+source_file="res://assets/tiles/bordes.png"
+dest_files=["res://.godot/imported/bordes.png-c73c5ccca57672dbe5a41938feed2c0c.ctex"]
 
 [params]
 
