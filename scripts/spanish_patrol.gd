@@ -20,17 +20,24 @@ var detection_timer: float = 0.0
 var state_timer: float = 0.0
 var is_waiting_at_waypoint: bool = false
 var unconscious_time_remaining: float = 0.0
+var facing_direction: Vector2 = Vector2.RIGHT
 
 @onready var alert_label: Label = $AlertLabel
+@onready var detection_area: Area2D = $DetectionArea
 @onready var detection_visual: Polygon2D = $DetectionArea/DetectionVisual
 @onready var raycast: RayCast2D = $RayCast2D
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 func _ready() -> void:
 	add_to_group("enemies")
 	target_point = point_b
+	var initial_direction := (target_point - global_position).normalized()
+	if initial_direction != Vector2.ZERO:
+		facing_direction = initial_direction
+		detection_area.rotation = facing_direction.angle()
+	_update_walk_animation(Vector2.ZERO)
 	if alert_label:
 		alert_label.visible = false
-	var detection_area = get_node_or_null("DetectionArea")
 	if detection_area:
 		detection_area.body_entered.connect(_on_detection_body_entered)
 		detection_area.body_exited.connect(_on_detection_body_exited)
@@ -54,6 +61,8 @@ func _physics_process(delta: float) -> void:
 		State.UNCONSCIOUS:
 			_process_unconscious(delta)
 
+	_update_walk_animation(velocity)
+
 func _process_unconscious(delta: float) -> void:
 	velocity = Vector2.ZERO
 	unconscious_time_remaining = maxf(0.0, unconscious_time_remaining - delta)
@@ -63,7 +72,6 @@ func _process_unconscious(delta: float) -> void:
 	if unconscious_time_remaining <= 0.0:
 		current_state = State.PATROL
 		is_waiting_at_waypoint = false
-		var detection_area = get_node_or_null("DetectionArea") as Area2D
 		if detection_area:
 			detection_area.monitoring = true
 		if alert_label:
@@ -78,7 +86,6 @@ func knock_out(duration: float = 8.0) -> void:
 	detection_timer = 0.0
 	is_player_in_area = false
 	velocity = Vector2.ZERO
-	var detection_area = get_node_or_null("DetectionArea") as Area2D
 	if detection_area:
 		detection_area.monitoring = false
 	if alert_label:
@@ -92,7 +99,7 @@ func _process_patrol(delta: float) -> void:
 	if is_waiting_at_waypoint:
 		velocity = Vector2.ZERO
 		state_timer += delta
-		rotation = lerp_angle(rotation, (target_point - global_position).angle(), delta * 3.0)
+		_turn_toward(target_point - global_position, delta * 3.0)
 		if state_timer >= waypoint_wait_duration:
 			is_waiting_at_waypoint = false
 			state_timer = 0.0
@@ -104,7 +111,7 @@ func _process_patrol(delta: float) -> void:
 	move_and_slide()
 
 	if direction != Vector2.ZERO:
-		rotation = lerp_angle(rotation, direction.angle(), delta * 7.0)
+		_turn_toward(direction, delta * 7.0)
 
 	if global_position.distance_to(target_point) < 12.0:
 		target_point = point_a if target_point == point_b else point_b
@@ -117,8 +124,7 @@ func _process_suspicious(delta: float) -> void:
 	velocity = Vector2.ZERO
 	move_and_slide()
 
-	var look_angle = (investigate_target_pos - global_position).angle()
-	rotation = lerp_angle(rotation, look_angle, delta * 9.0)
+	_turn_toward(investigate_target_pos - global_position, delta * 9.0)
 
 	if alert_label:
 		alert_label.visible = true
@@ -141,12 +147,12 @@ func _process_investigate(delta: float) -> void:
 		velocity = direction * investigate_speed
 		move_and_slide()
 		if direction != Vector2.ZERO:
-			rotation = lerp_angle(rotation, direction.angle(), delta * 7.0)
+			_turn_toward(direction, delta * 7.0)
 	else:
 		velocity = Vector2.ZERO
 		state_timer += delta
 		# Look side to side
-		rotation = lerp_angle(rotation, direction.angle() + sin(state_timer * 6.0) * 0.5, delta * 5.0)
+		_turn_to_angle(direction.angle() + sin(state_timer * 6.0) * 0.5, delta * 5.0)
 		if state_timer >= 1.8:
 			state_timer = 0.0
 			current_state = State.RETURN
@@ -163,7 +169,7 @@ func _process_return(delta: float) -> void:
 	move_and_slide()
 
 	if direction != Vector2.ZERO:
-		rotation = lerp_angle(rotation, direction.angle(), delta * 7.0)
+		_turn_toward(direction, delta * 7.0)
 
 	if global_position.distance_to(target_point) < 15.0:
 		if alert_label:
@@ -178,8 +184,7 @@ func _process_alert(delta: float) -> void:
 
 	var pasco = get_tree().get_first_node_in_group("player")
 	if pasco:
-		var look_angle = (pasco.global_position - global_position).angle()
-		rotation = lerp_angle(rotation, look_angle, delta * 10.0)
+		_turn_toward(pasco.global_position - global_position, delta * 10.0)
 
 	if alert_label:
 		alert_label.visible = true
@@ -208,6 +213,44 @@ func reset_patrol() -> void:
 	is_waiting_at_waypoint = false
 	if alert_label:
 		alert_label.visible = false
+
+func _turn_toward(direction: Vector2, weight: float) -> void:
+	if direction == Vector2.ZERO:
+		return
+	_turn_to_angle(direction.angle(), weight)
+
+func _turn_to_angle(target_angle: float, weight: float) -> void:
+	var turn_weight := clampf(weight, 0.0, 1.0)
+	if detection_area:
+		detection_area.rotation = lerp_angle(detection_area.rotation, target_angle, turn_weight)
+		facing_direction = Vector2.RIGHT.rotated(detection_area.rotation)
+	else:
+		facing_direction = Vector2.RIGHT.rotated(target_angle)
+
+func _update_walk_animation(movement: Vector2) -> void:
+	if not animated_sprite:
+		return
+
+	var is_moving := movement.length_squared() > 0.01
+	var visual_direction := movement.normalized() if is_moving else facing_direction
+	var animation_name := _directional_animation(&"walk", visual_direction)
+
+	if is_moving:
+		if animated_sprite.animation != animation_name or not animated_sprite.is_playing():
+			animated_sprite.play(animation_name)
+	else:
+		if animated_sprite.animation != animation_name or animated_sprite.is_playing():
+			animated_sprite.play(animation_name)
+			animated_sprite.pause()
+			animated_sprite.frame = 0
+
+func _directional_animation(prefix: StringName, direction: Vector2) -> StringName:
+	var suffix := "down"
+	if absf(direction.x) > absf(direction.y):
+		suffix = "right" if direction.x > 0.0 else "left"
+	elif direction.y < 0.0:
+		suffix = "up"
+	return StringName(String(prefix) + "_" + suffix)
 
 func on_noise_heard(noise_pos: Vector2) -> void:
 	if current_state == State.UNCONSCIOUS:
