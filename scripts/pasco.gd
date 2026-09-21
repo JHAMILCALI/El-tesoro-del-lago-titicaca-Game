@@ -3,6 +3,10 @@ class_name Pasco
 
 signal stone_count_changed(new_count: int)
 
+const THROW_RELEASE_DELAY := 0.1
+const THROW_RECOVERY_COOLDOWN := 0.55
+const STONE_SPAWN_OFFSET := 18.0
+
 @export var walk_speed: float = 180.0
 @export var run_speed: float = 280.0
 @export var stone_travel_distance: float = 220.0
@@ -14,6 +18,7 @@ var is_hidden: bool = false
 var hide_area_count: int = 0
 var last_direction: Vector2 = Vector2.RIGHT
 var can_throw_stone: bool = true
+var is_throwing: bool = false
 var stone_count: int = 3
 
 var stone_scene: PackedScene = preload("res://scenes/objects/Stone.tscn")
@@ -26,12 +31,18 @@ func _ready() -> void:
 	add_to_group("player")
 	stone_count = initial_stones
 	_ensure_input_actions()
+	_play_idle_animation(last_direction)
 	call_deferred("_sync_hud_stones")
 
 func _process(_delta: float) -> void:
 	_update_aim_indicator()
 
 func _physics_process(_delta: float) -> void:
+	if is_throwing:
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
+
 	if not can_move:
 		velocity = Vector2.ZERO
 		_update_walk_animation(Vector2.ZERO)
@@ -55,18 +66,30 @@ func _update_walk_animation(direction: Vector2) -> void:
 		return
 
 	if direction == Vector2.ZERO:
-		animated_sprite.stop()
-		animated_sprite.frame = 0
+		_play_idle_animation(last_direction)
 		return
 
-	var animation_name: StringName
-	if absf(direction.x) > absf(direction.y):
-		animation_name = &"walk_right" if direction.x > 0.0 else &"walk_left"
-	else:
-		animation_name = &"walk_down" if direction.y > 0.0 else &"walk_up"
+	var animation_name := _directional_animation(&"walk", direction)
 
 	if animated_sprite.animation != animation_name or not animated_sprite.is_playing():
 		animated_sprite.play(animation_name)
+
+func _play_idle_animation(direction: Vector2) -> void:
+	if not animated_sprite:
+		return
+	var animation_name := _directional_animation(&"idle", direction)
+	if animated_sprite.animation != animation_name or animated_sprite.is_playing():
+		animated_sprite.play(animation_name)
+		animated_sprite.pause()
+		animated_sprite.frame = 0
+
+func _directional_animation(prefix: StringName, direction: Vector2) -> StringName:
+	var suffix := "down"
+	if absf(direction.x) > absf(direction.y):
+		suffix = "right" if direction.x > 0.0 else "left"
+	elif direction.y < 0.0:
+		suffix = "up"
+	return StringName(String(prefix) + "_" + suffix)
 
 func _unhandled_input(event: InputEvent) -> void:
 	_handle_throw_input(event)
@@ -137,19 +160,31 @@ func _throw_stone() -> void:
 	if not stone_scene or stone_count <= 0:
 		return
 
-	var aim_info = _get_mouse_aim()
+	var aim_info := _get_mouse_aim()
+	var throw_direction: Vector2 = aim_info.dir
+	last_direction = throw_direction
 	can_throw_stone = false
+	is_throwing = true
+	velocity = Vector2.ZERO
 	stone_count -= 1
 	_sync_hud_stones()
+	animated_sprite.play(_directional_animation(&"throw", throw_direction))
 
-	var stone = stone_scene.instantiate()
-	stone.global_position = global_position
-	stone.setup(aim_info.dir, aim_info.dist)
+	await get_tree().create_timer(THROW_RELEASE_DELAY).timeout
+	if not is_inside_tree():
+		return
+
+	var stone := stone_scene.instantiate()
+	stone.global_position = global_position + (throw_direction * STONE_SPAWN_OFFSET)
+	stone.setup(throw_direction, aim_info.dist)
 	get_parent().add_child(stone)
 
-	get_tree().create_timer(0.8).timeout.connect(func():
+	await animated_sprite.animation_finished
+	is_throwing = false
+	_play_idle_animation(last_direction)
+	await get_tree().create_timer(THROW_RECOVERY_COOLDOWN).timeout
+	if is_inside_tree():
 		can_throw_stone = true
-	)
 
 func add_stones(amount: int) -> void:
 	stone_count = clampi(stone_count + amount, 0, max_stones)
