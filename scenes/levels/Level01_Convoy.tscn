@@ -228,6 +228,12 @@ offset_right = 50.0
 offset_bottom = 500.0
 color = Color(0.14901961, 0.18039216, 0.12156863, 0)
 
+[node name="RightWall" type="StaticBody2D" parent="Boundaries"]
+position = Vector2(3650, 360)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/RightWall"]
+shape = SubResource("RectangleShape2D_wall_vertical")
+
 [node name="RockBarrierNorth" type="StaticBody2D" parent="Boundaries" unique_id=1317048432]
 position = Vector2(1600, 210)
 

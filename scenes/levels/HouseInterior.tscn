@@ -2,6 +2,10 @@
 
 [ext_resource type="Script" uid="uid://dofypgmco4vc2" path="res://scripts/house_interior.gd" id="1_house"]
 [ext_resource type="Texture2D" uid="uid://dvt5e8nijhmlu" path="res://assets/tiles/casa 1.png" id="2_house_tile"]
+[ext_resource type="Texture2D" path="res://assets/tiles/casa_interior.png" id="3_interior_bg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_right_wall"]
+size = Vector2(60, 400)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_house_body"]
 size = Vector2(268, 247)
@@ -25,6 +29,13 @@ radius = 48.0
 script = ExtResource("1_house")
 
 [node name="Exterior" type="Node2D" parent="." unique_id=2080731248]
+
+[node name="HouseRightWall" type="StaticBody2D" parent="Exterior" unique_id=603211893]
+position = Vector2(170, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Exterior/HouseRightWall" unique_id=1611987743]
+position = Vector2(-87, 205)
+shape = SubResource("RectangleShape2D_right_wall")
 
 [node name="HouseBody" type="StaticBody2D" parent="Exterior" unique_id=2144710648]
 
@@ -105,17 +116,25 @@ horizontal_alignment = 1
 position = Vector2(22, 144)
 
 [node name="Interior" type="Node2D" parent="." unique_id=498220458]
-position = Vector2(0, 760)
+position = Vector2(47, 981)
+
+[node name="InteriorSprite" type="Sprite2D" parent="Interior" unique_id=815682121]
+texture_filter = 1
+scale = Vector2(0.52, 0.48)
+texture = ExtResource("3_interior_bg")
 
 [node name="Floor" type="ColorRect" parent="Interior" unique_id=319325896]
+visible = false
 offset_left = -260.0
 offset_top = -180.0
 offset_right = 260.0
 offset_bottom = 180.0
 mouse_filter = 2
 color = Color(0.32, 0.24, 0.16, 1)
+metadata/_edit_use_anchors_ = true
 
 [node name="InteriorLabel" type="Label" parent="Interior" unique_id=1259797324]
+visible = false
 offset_left = -120.0
 offset_top = -155.0
 offset_right = 120.0
@@ -124,6 +143,7 @@ theme_override_colors/font_color = Color(1, 0.9, 0.7, 1)
 theme_override_font_sizes/font_size = 18
 text = "INTERIOR DE LA CASA"
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="Walls" type="Node2D" parent="Interior" unique_id=787415583]
 
@@ -134,11 +154,13 @@ position = Vector2(0, -180)
 shape = SubResource("RectangleShape2D_wall_horizontal")
 
 [node name="Visual" type="ColorRect" parent="Interior/Walls/TopWall" unique_id=1857179950]
+visible = false
 offset_left = -260.0
 offset_top = -17.0
 offset_right = 260.0
 offset_bottom = 17.0
 color = Color(0.18, 0.13, 0.09, 1)
+metadata/_edit_use_anchors_ = true
 
 [node name="BottomWall" type="StaticBody2D" parent="Interior/Walls" unique_id=1073676171]
 position = Vector2(0, 180)
@@ -147,11 +169,13 @@ position = Vector2(0, 180)
 shape = SubResource("RectangleShape2D_wall_horizontal")
 
 [node name="Visual" type="ColorRect" parent="Interior/Walls/BottomWall" unique_id=939403664]
+visible = false
 offset_left = -260.0
 offset_top = -17.0
 offset_right = 260.0
 offset_bottom = 17.0
 color = Color(0.18, 0.13, 0.09, 1)
+metadata/_edit_use_anchors_ = true
 
 [node name="LeftWall" type="StaticBody2D" parent="Interior/Walls" unique_id=1378048022]
 position = Vector2(-260, 0)
@@ -160,11 +184,13 @@ position = Vector2(-260, 0)
 shape = SubResource("RectangleShape2D_wall_vertical")
 
 [node name="Visual" type="ColorRect" parent="Interior/Walls/LeftWall" unique_id=672108600]
+visible = false
 offset_left = -17.0
 offset_top = -180.0
 offset_right = 17.0
 offset_bottom = 180.0
 color = Color(0.18, 0.13, 0.09, 1)
+metadata/_edit_use_anchors_ = true
 
 [node name="RightWall" type="StaticBody2D" parent="Interior/Walls" unique_id=35467146]
 position = Vector2(260, 0)
@@ -173,27 +199,32 @@ position = Vector2(260, 0)
 shape = SubResource("RectangleShape2D_wall_vertical")
 
 [node name="Visual" type="ColorRect" parent="Interior/Walls/RightWall" unique_id=1241367436]
+visible = false
 offset_left = -17.0
 offset_top = -180.0
 offset_right = 17.0
 offset_bottom = 180.0
 color = Color(0.18, 0.13, 0.09, 1)
+metadata/_edit_use_anchors_ = true
 
 [node name="ExitArea" type="Area2D" parent="Interior" unique_id=1077301890]
-position = Vector2(-190, 0)
+position = Vector2(0, 170)
 collision_layer = 16
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interior/ExitArea" unique_id=1662348187]
+position = Vector2(5, 5)
 shape = SubResource("CircleShape2D_exit")
 
 [node name="DebugVisual" type="ColorRect" parent="Interior/ExitArea" unique_id=803606362]
+visible = false
 offset_left = -35.0
 offset_top = -45.0
 offset_right = 35.0
 offset_bottom = 45.0
 mouse_filter = 2
 color = Color(0.3, 0.7, 1, 0.3)
+metadata/_edit_use_anchors_ = true
 
 [node name="DebugLabel" type="Label" parent="Interior/ExitArea" unique_id=358668743]
 offset_left = -65.0
@@ -204,9 +235,10 @@ theme_override_colors/font_color = Color(0.55, 0.85, 1, 1)
 theme_override_font_sizes/font_size = 11
 text = "SALIDA [E]"
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="InteriorSpawn" type="Marker2D" parent="Interior" unique_id=1317018715]
-position = Vector2(-120, 0)
+position = Vector2(-1, 176)
 
 [node name="TreasureArea" type="Area2D" parent="Interior" unique_id=30876570]
 position = Vector2(110, 0)
@@ -223,6 +255,7 @@ offset_right = 22.0
 offset_bottom = 22.0
 mouse_filter = 2
 color = Color(1, 0.75, 0.08, 1)
+metadata/_edit_use_anchors_ = true
 
 [node name="TreasureLabel" type="Label" parent="Interior/TreasureArea" unique_id=289288754]
 offset_left = -60.0
@@ -233,6 +266,7 @@ theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
 theme_override_font_sizes/font_size = 16
 text = "TESORO"
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="TriggerLabel" type="Label" parent="Interior/TreasureArea" unique_id=829476489]
 offset_left = -75.0
@@ -243,6 +277,7 @@ theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
 theme_override_font_sizes/font_size = 10
 text = "ZONA DEL TESORO"
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="TreasureCheckpoint" type="Marker2D" parent="Interior" unique_id=838305259]
 position = Vector2(35, 0)
@@ -256,3 +291,4 @@ theme_override_colors/font_color = Color(0.3, 0.8, 1, 1)
 theme_override_font_sizes/font_size = 11
 text = "CHECKPOINT 3"
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
