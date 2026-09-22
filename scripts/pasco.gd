@@ -208,8 +208,11 @@ func play_treasure_pickup_animation() -> void:
 	is_collecting_treasure = true
 	can_move = false
 	velocity = Vector2.ZERO
-	animated_sprite.play(&"collect_treasure")
-	var timer := get_tree().create_timer(1.6)
+	if animated_sprite.sprite_frames.has_animation(&"pack_treasure"):
+		animated_sprite.play(&"pack_treasure")
+	else:
+		animated_sprite.play(&"collect_treasure")
+	var timer := get_tree().create_timer(3.0)
 	timer.timeout.connect(func() -> void:
 		is_collecting_treasure = false
 		can_move = true
