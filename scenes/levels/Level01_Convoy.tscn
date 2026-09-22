@@ -13,6 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://c27ev1ea5kbd1" path="res://assets/tiles/piedra 2.png" id="11_rock_barrier"]
 [ext_resource type="Texture2D" uid="uid://kxsw65tfgmme" path="res://assets/tiles/arbusto 1.png" id="12_bushes_01"]
 [ext_resource type="Texture2D" uid="uid://bgm55qqeqlggm" path="res://assets/tiles/arbusto 2.png" id="13_bushes_02"]
+[ext_resource type="Texture2D" path="res://assets/sprites/boat_empty.png" id="14_boat_empty"]
+[ext_resource type="Texture2D" path="res://assets/sprites/boat_crewed.png" id="15_boat_crewed"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_top_wall_left"]
 size = Vector2(1500, 100)
@@ -77,6 +79,54 @@ region = Rect2(1448, 0, 724, 724)
 [sub_resource type="AtlasTexture" id="AtlasTexture_bush_02_c"]
 atlas = ExtResource("13_bushes_02")
 region = Rect2(1448, 0, 724, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_boat_empty_0"]
+atlas = ExtResource("14_boat_empty")
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_boat_crewed_0"]
+atlas = ExtResource("15_boat_crewed")
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_boat_crewed_1"]
+atlas = ExtResource("15_boat_crewed")
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_boat_crewed_2"]
+atlas = ExtResource("15_boat_crewed")
+region = Rect2(0, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_boat_crewed_3"]
+atlas = ExtResource("15_boat_crewed")
+region = Rect2(512, 512, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_boat"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_boat_empty_0")
+}],
+"loop": true,
+"name": &"empty",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_boat_crewed_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_boat_crewed_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_boat_crewed_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_boat_crewed_3")
+}],
+"loop": true,
+"name": &"crewed",
+"speed": 6.0
+}]
 
 [node name="Level01_Convoy" type="Node2D" unique_id=902698703]
 script = ExtResource("1_level")
@@ -729,3 +779,13 @@ point_b = Vector2(1600, -550)
 [node name="HUD" parent="." unique_id=1718876460 instance=ExtResource("5_hud")]
 
 [node name="DialogueBox" parent="." unique_id=662807709 instance=ExtResource("6_dialogue")]
+
+[node name="DockEnvironment" type="Node2D" parent="."]
+position = Vector2(1600, -780)
+
+[node name="BoatVisual" type="AnimatedSprite2D" parent="DockEnvironment"]
+texture_filter = 1
+scale = Vector2(0.22, 0.22)
+sprite_frames = SubResource("SpriteFrames_boat")
+animation = &"empty"
+autoplay = "empty"

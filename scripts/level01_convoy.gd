@@ -308,19 +308,37 @@ func _on_next_level_requested() -> void:
 	is_changing_to_boat_level = true
 	hud.hide_alpha_complete()
 	hud.hide_interaction_prompt()
-	hud.update_objective("Pasco y Huita suben a la barca.")
+	hud.update_objective("Zarpando por el lago Titicaca con el tesoro...")
 	if pasco:
 		pasco.set_movement_enabled(false)
 	if huita:
 		huita.stop_following()
 
-	var boat_visual: Node2D = $DockEnvironment/BoatVisual
+	var boat_visual: Node2D = get_node_or_null("DockEnvironment/BoatVisual")
+	var target_boat_pos := boat_visual.global_position if boat_visual else Vector2(1600, -780)
+
 	var boarding_tween := create_tween().set_parallel(true)
 	if pasco:
-		boarding_tween.tween_property(pasco, "global_position", boat_visual.global_position + Vector2(-18.0, 0.0), 0.65)
+		boarding_tween.tween_property(pasco, "global_position", target_boat_pos, 0.65)
 	if huita:
-		boarding_tween.tween_property(huita, "global_position", boat_visual.global_position + Vector2(15.0, 0.0), 0.65)
+		boarding_tween.tween_property(huita, "global_position", target_boat_pos, 0.65)
 	await boarding_tween.finished
+
+	if pasco:
+		pasco.visible = false
+	if huita:
+		huita.visible = false
+
+	if boat_visual and boat_visual is AnimatedSprite2D:
+		boat_visual.play(&"crewed")
+
+	var sail_tween := create_tween()
+	if boat_visual:
+		sail_tween.tween_property(boat_visual, "global_position", target_boat_pos + Vector2(0, -400), 2.5)
+		await sail_tween.finished
+	else:
+		await get_tree().create_timer(1.0).timeout
+
 	get_tree().change_scene_to_file("res://scenes/levels/LakeLevel02.tscn")
 
 func _on_hide_zone_entered(body: Node2D) -> void:
