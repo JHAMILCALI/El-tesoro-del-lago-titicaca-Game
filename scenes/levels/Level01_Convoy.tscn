@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/enemies/SpanishPatrol.tscn" id="4_patrol"]
 [ext_resource type="PackedScene" path="res://scenes/ui/HUD.tscn" id="5_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/DialogueBox.tscn" id="6_dialogue"]
-[ext_resource type="PackedScene" path="res://scenes/levels/HouseInterior.tscn" id="7_house"]
+[ext_resource type="PackedScene" uid="uid://11dv3xgrfx8r" path="res://scenes/levels/HouseInterior.tscn" id="7_house"]
 [ext_resource type="PackedScene" path="res://scenes/objects/PickableStone.tscn" id="8_stone_pickup"]
 [ext_resource type="PackedScene" uid="uid://bk57lwpoajrsg" path="res://scenes/levels/Level01TerrainVisual.tscn" id="9_terrain_visual"]
 [ext_resource type="Texture2D" uid="uid://djfis7mrk25ub" path="res://assets/tiles/piedra 1.png" id="10_rocks"]
@@ -18,10 +18,10 @@
 size = Vector2(1500, 100)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_top_wall_right"]
-size = Vector2(1600, 100)
+size = Vector2(1719, 100)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_horizontal"]
-size = Vector2(3700, 100)
+size = Vector2(3807, 100)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_vertical"]
 size = Vector2(100, 1000)
@@ -172,6 +172,7 @@ color = Color(0.14901961, 0.18039216, 0.12156863, 0)
 position = Vector2(2500, 210)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/TopWallRight" unique_id=1123699618]
+position = Vector2(59.5, 0)
 shape = SubResource("RectangleShape2D_top_wall_right")
 
 [node name="ColorRect" type="ColorRect" parent="Boundaries/TopWallRight" unique_id=332099881]
@@ -185,6 +186,7 @@ color = Color(0.14901961, 0.18039216, 0.12156863, 0)
 position = Vector2(1650, 510)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/BottomWall" unique_id=2035969245]
+position = Vector2(53.5, 0)
 shape = SubResource("RectangleShape2D_wall_horizontal")
 
 [node name="ColorRect" type="ColorRect" parent="Boundaries/BottomWall" unique_id=535887525]
@@ -686,7 +688,7 @@ position = Vector2(1650, -250)
 position = Vector2(1550, -500)
 
 [node name="HouseInterior" parent="." unique_id=536354515 instance=ExtResource("7_house")]
-position = Vector2(3500, 360)
+position = Vector2(3541, 216)
 
 [node name="Pasco" parent="." unique_id=1667170844 instance=ExtResource("2_pasco")]
 position = Vector2(150, 360)
