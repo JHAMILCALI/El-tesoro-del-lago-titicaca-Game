@@ -20,6 +20,7 @@ var last_direction: Vector2 = Vector2.RIGHT
 var can_throw_stone: bool = true
 var is_throwing: bool = false
 var is_collecting_treasure: bool = false
+var has_treasure: bool = false
 var stone_count: int = 3
 
 var stone_scene: PackedScene = preload("res://scenes/objects/Stone.tscn")
@@ -90,7 +91,12 @@ func _directional_animation(prefix: StringName, direction: Vector2) -> StringNam
 		suffix = "right" if direction.x > 0.0 else "left"
 	elif direction.y < 0.0:
 		suffix = "up"
-	return StringName(String(prefix) + "_" + suffix)
+	var base_name := StringName(String(prefix) + "_" + suffix)
+	if has_treasure:
+		var carrying_name := StringName(String(base_name) + "_carrying")
+		if animated_sprite and animated_sprite.sprite_frames and animated_sprite.sprite_frames.has_animation(carrying_name):
+			return carrying_name
+	return base_name
 
 func _unhandled_input(event: InputEvent) -> void:
 	_handle_throw_input(event)
@@ -214,6 +220,7 @@ func play_treasure_pickup_animation() -> void:
 		animated_sprite.play(&"collect_treasure")
 	var timer := get_tree().create_timer(3.0)
 	timer.timeout.connect(func() -> void:
+		has_treasure = true
 		is_collecting_treasure = false
 		can_move = true
 		_play_idle_animation(last_direction)
