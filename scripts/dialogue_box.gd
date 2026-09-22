@@ -44,10 +44,20 @@ func start_dialogue(lines: Array) -> void:
 func _show_current_line() -> void:
 	if line_index < current_lines.size():
 		var line_data: Dictionary = current_lines[line_index]
-		speaker_label.text = line_data.get("speaker", "")
+		var speaker: String = line_data.get("speaker", "")
+		speaker_label.text = speaker
 		text_label.text = line_data.get("text", "")
 		if next_prompt:
 			next_prompt.text = "[Presiona E o Enter para continuar]"
+
+		for node in get_tree().get_nodes_in_group("npc"):
+			if node is Huita:
+				if speaker == "Huita":
+					var pasco = get_tree().get_first_node_in_group("player")
+					var look_pos = pasco.global_position if pasco else Vector2.ZERO
+					node.start_talking(look_pos)
+				else:
+					node.stop_talking()
 	else:
 		_end_dialogue()
 
@@ -63,6 +73,10 @@ func _end_dialogue() -> void:
 	visible = false
 	if panel:
 		panel.visible = false
+
+	for node in get_tree().get_nodes_in_group("npc"):
+		if node is Huita:
+			node.stop_talking()
 
 	var pasco = get_tree().get_first_node_in_group("player")
 	if pasco and pasco.has_method("set_movement_enabled"):

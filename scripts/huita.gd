@@ -15,12 +15,15 @@ signal player_proximity_changed(is_near: bool)
 var is_player_near: bool = false
 var is_following: bool = false
 var is_hidden: bool = false
+var is_talking: bool = false
 var target_player: CharacterBody2D = null
 var stuck_time: float = 0.0
 var previous_position: Vector2
+var facing_direction: Vector2 = Vector2.DOWN
 
 @onready var interaction_area: Area2D = $InteractionArea
 @onready var label: Label = $Label
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 func _ready() -> void:
 	add_to_group("allies")
@@ -29,6 +32,7 @@ func _ready() -> void:
 	if interaction_area:
 		interaction_area.body_entered.connect(_on_body_entered)
 		interaction_area.body_exited.connect(_on_body_exited)
+	_update_animation(Vector2.ZERO)
 
 func _physics_process(delta: float) -> void:
 	if not is_following or not target_player:
@@ -36,6 +40,7 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		stuck_time = 0.0
 		previous_position = global_position
+		_update_animation(Vector2.ZERO)
 		return
 
 	is_hidden = target_player.get("is_hidden") == true
@@ -43,8 +48,6 @@ func _physics_process(delta: float) -> void:
 	var player_distance := global_position.distance_to(target_player.global_position)
 	var follow_target := target_player.global_position - player_direction * formation_offset
 
-	# Huita follows a point behind Pasco, never Pasco's exact centre.  The small
-	# overlap correction keeps her readable when Pasco walks through her.
 	if player_distance < overlap_distance:
 		follow_target = target_player.global_position - player_direction * follow_distance
 
@@ -52,13 +55,53 @@ func _physics_process(delta: float) -> void:
 	if distance_to_target > stop_distance:
 		var direction := (follow_target - global_position).normalized()
 		velocity = direction * follow_speed
-		rotation = lerp_angle(rotation, direction.angle(), delta * 6.0)
+		facing_direction = direction
 	else:
 		velocity = Vector2.ZERO
 
 	move_and_slide()
+	_update_animation(velocity)
 	_update_stuck_recovery(delta, player_distance, player_direction)
 	previous_position = global_position
+
+func start_talking(look_at_pos: Vector2 = Vector2.ZERO) -> void:
+	is_talking = true
+	if look_at_pos != Vector2.ZERO:
+		facing_direction = (look_at_pos - global_position).normalized()
+	_update_animation(Vector2.ZERO)
+
+func stop_talking() -> void:
+	is_talking = false
+	_update_animation(velocity)
+
+func _update_animation(movement: Vector2) -> void:
+	if not animated_sprite:
+		return
+
+	if is_talking:
+		var talk_anim := _directional_animation(&"talk", facing_direction)
+		if animated_sprite.animation != talk_anim or not animated_sprite.is_playing():
+			animated_sprite.play(talk_anim)
+		return
+
+	var is_moving := movement.length_squared() > 1.0
+	if is_moving:
+		facing_direction = movement.normalized()
+		var walk_anim := _directional_animation(&"walk", facing_direction)
+		if animated_sprite.animation != walk_anim or not animated_sprite.is_playing():
+			animated_sprite.play(walk_anim)
+	else:
+		var idle_anim := _directional_animation(&"idle", facing_direction)
+		if animated_sprite.animation != idle_anim:
+			animated_sprite.play(idle_anim)
+
+func _directional_animation(prefix: StringName, direction: Vector2) -> StringName:
+	var suffix := "down"
+	if absf(direction.x) > absf(direction.y):
+		suffix = "right" if direction.x > 0.0 else "left"
+	elif direction.y < 0.0:
+		suffix = "up"
+	return StringName(String(prefix) + "_" + suffix)
 
 func _get_player_direction() -> Vector2:
 	var player_direction: Vector2 = target_player.get("last_direction")
@@ -91,6 +134,7 @@ func stop_following() -> void:
 	is_following = false
 	velocity = Vector2.ZERO
 	stuck_time = 0.0
+	_update_animation(Vector2.ZERO)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if is_following:
