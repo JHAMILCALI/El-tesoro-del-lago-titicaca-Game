@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dofypgmco4vc2" path="res://scripts/house_interior.gd" id="1_house"]
 [ext_resource type="Texture2D" uid="uid://dvt5e8nijhmlu" path="res://assets/tiles/casa 1.png" id="2_house_tile"]
 [ext_resource type="Texture2D" path="res://assets/tiles/casa_interior.png" id="3_interior_bg"]
+[ext_resource type="Texture2D" path="res://assets/sprites/treasure_chest.png" id="4_treasure_chest"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_right_wall"]
 size = Vector2(60, 400)
@@ -24,6 +25,47 @@ radius = 52.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_treasure"]
 radius = 48.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chest_sparkle_0"]
+atlas = ExtResource("4_treasure_chest")
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chest_sparkle_1"]
+atlas = ExtResource("4_treasure_chest")
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chest_sparkle_2"]
+atlas = ExtResource("4_treasure_chest")
+region = Rect2(0, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chest_empty"]
+atlas = ExtResource("4_treasure_chest")
+region = Rect2(512, 512, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_treasure_chest"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chest_empty")
+}],
+"loop": true,
+"name": &"empty",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chest_sparkle_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chest_sparkle_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chest_sparkle_2")
+}],
+"loop": true,
+"name": &"sparkle",
+"speed": 4.0
+}]
 
 [node name="HouseInterior" type="Node2D" unique_id=295096835]
 script = ExtResource("1_house")
@@ -248,7 +290,16 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interior/TreasureArea" unique_id=280920347]
 shape = SubResource("CircleShape2D_treasure")
 
+[node name="TreasureChestSprite" type="AnimatedSprite2D" parent="Interior/TreasureArea"]
+texture_filter = 1
+position = Vector2(0, -10)
+scale = Vector2(0.18, 0.18)
+sprite_frames = SubResource("SpriteFrames_treasure_chest")
+animation = &"sparkle"
+autoplay = "sparkle"
+
 [node name="TreasureVisual" type="ColorRect" parent="Interior/TreasureArea" unique_id=1394003709]
+visible = false
 offset_left = -22.0
 offset_top = -22.0
 offset_right = 22.0

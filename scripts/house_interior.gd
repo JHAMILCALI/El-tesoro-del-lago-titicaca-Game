@@ -12,6 +12,7 @@ signal treasure_proximity_changed(is_near: bool)
 @onready var interior_exit_area: Area2D = $Interior/ExitArea
 @onready var treasure_area: Area2D = $Interior/TreasureArea
 @onready var treasure_visual: ColorRect = $Interior/TreasureArea/TreasureVisual
+@onready var treasure_chest_sprite: AnimatedSprite2D = $Interior/TreasureArea/TreasureChestSprite
 @onready var treasure_label: Label = $Interior/TreasureArea/TreasureLabel
 @onready var interior_spawn: Marker2D = $Interior/InteriorSpawn
 @onready var exterior_spawn: Marker2D = $Exterior/ExteriorSpawn
@@ -29,6 +30,8 @@ func _ready() -> void:
 	interior_exit_area.body_exited.connect(_on_exit_body_exited)
 	treasure_area.body_entered.connect(_on_treasure_body_entered)
 	treasure_area.body_exited.connect(_on_treasure_body_exited)
+	if treasure_chest_sprite:
+		treasure_chest_sprite.play(&"sparkle" if treasure_available else &"empty")
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_action_pressed("interact") or event.is_echo():
@@ -47,10 +50,15 @@ func _unhandled_input(event: InputEvent) -> void:
 func collect_treasure() -> void:
 	treasure_available = false
 	player_near_treasure = false
-	treasure_visual.visible = false
-	treasure_label.visible = false
-	treasure_area.monitoring = false
-	treasure_area.monitorable = false
+	if treasure_visual:
+		treasure_visual.visible = false
+	if treasure_chest_sprite:
+		treasure_chest_sprite.play(&"empty")
+	if treasure_label:
+		treasure_label.text = "TESORO RECOGIDO"
+	if treasure_area:
+		treasure_area.monitoring = false
+		treasure_area.monitorable = false
 
 func get_interior_spawn_position() -> Vector2:
 	return interior_spawn.global_position
