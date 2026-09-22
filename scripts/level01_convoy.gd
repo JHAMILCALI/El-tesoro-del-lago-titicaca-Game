@@ -259,8 +259,11 @@ func _on_treasure_requested() -> void:
 	last_checkpoint_pos = house.get_treasure_checkpoint_position()
 	hud.hide_interaction_prompt()
 
+	if pasco and pasco.has_method("play_treasure_pickup_animation"):
+		pasco.play_treasure_pickup_animation()
+
 	var lines: Array = [
-		{"speaker": "Pasco", "text": "Lo encontré."}
+		{"speaker": "Pasco", "text": "¡Lo encontré! La máscara de oro Inca."}
 	]
 	dialogue_box.start_dialogue(lines)
 	dialogue_box.dialogue_finished.connect(func() -> void:

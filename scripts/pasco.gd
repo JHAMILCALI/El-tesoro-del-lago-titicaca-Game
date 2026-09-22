@@ -19,6 +19,7 @@ var hide_area_count: int = 0
 var last_direction: Vector2 = Vector2.RIGHT
 var can_throw_stone: bool = true
 var is_throwing: bool = false
+var is_collecting_treasure: bool = false
 var stone_count: int = 3
 
 var stone_scene: PackedScene = preload("res://scenes/objects/Stone.tscn")
@@ -38,7 +39,7 @@ func _process(_delta: float) -> void:
 	_update_aim_indicator()
 
 func _physics_process(_delta: float) -> void:
-	if is_throwing:
+	if is_collecting_treasure or is_throwing:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
@@ -62,7 +63,7 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide()
 
 func _update_walk_animation(direction: Vector2) -> void:
-	if not animated_sprite:
+	if not animated_sprite or is_collecting_treasure:
 		return
 
 	if direction == Vector2.ZERO:
@@ -200,6 +201,20 @@ func set_movement_enabled(enabled: bool) -> void:
 	can_move = enabled
 	if not enabled:
 		velocity = Vector2.ZERO
+
+func play_treasure_pickup_animation() -> void:
+	if not animated_sprite:
+		return
+	is_collecting_treasure = true
+	can_move = false
+	velocity = Vector2.ZERO
+	animated_sprite.play(&"collect_treasure")
+	var timer := get_tree().create_timer(1.6)
+	timer.timeout.connect(func() -> void:
+		is_collecting_treasure = false
+		can_move = true
+		_play_idle_animation(last_direction)
+	)
 
 func enter_hide_area() -> void:
 	hide_area_count += 1
