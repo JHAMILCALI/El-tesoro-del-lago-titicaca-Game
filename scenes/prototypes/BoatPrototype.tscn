@@ -1,13 +1,26 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=4 uid="uid://6gb7h1l3kx70"]
 
-[ext_resource type="Script" path="res://scripts/boat_prototype.gd" id="1_boat"]
-[ext_resource type="Texture2D" path="res://assets/sprites/boat_crewed.png" id="4_boat_sprite"]
+[ext_resource type="Script" uid="uid://dm7og8w2nwwxm" path="res://scripts/boat_prototype.gd" id="1_boat"]
+[ext_resource type="Texture2D" uid="uid://bip7kjt8r2076" path="res://assets/tiles/bordes.png" id="1_e0nwj"]
+[ext_resource type="Texture2D" uid="uid://q7nv7ws0s0qg" path="res://assets/sprites/boat_crewed.png" id="4_boat_sprite"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_boat"]
-size = Vector2(48, 28)
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7bekm"]
+texture = ExtResource("1_e0nwj")
+margins = Vector2i(0, 10)
+texture_region_size = Vector2i(104, 102)
+11:2/0 = 0
+11:1/0 = 0
+7:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_puouq"]
+tile_size = Vector2i(104, 102)
+sources/0 = SubResource("TileSetAtlasSource_7bekm")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rock"]
 size = Vector2(80, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_boat"]
+size = Vector2(48, 28)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_crewed_0"]
 atlas = ExtResource("4_boat_sprite")
@@ -40,28 +53,30 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_crewed_3")
 }],
-"loop": true,
+"loop": 1,
 "name": &"rowing",
 "speed": 6.0
 }]
 
-[node name="BoatPrototype" type="Node2D"]
+[node name="BoatPrototype" type="Node2D" unique_id=386862067]
 
-[node name="WaterBackground" type="ColorRect" parent="."]
+[node name="WaterBackground" type="ColorRect" parent="." unique_id=2140337027]
+visible = false
 offset_left = -2000.0
 offset_top = -2000.0
 offset_right = 2000.0
 offset_bottom = 2000.0
 color = Color(0.12, 0.4, 0.7, 1)
 
-[node name="NorthernShore" type="ColorRect" parent="."]
-offset_left = -900.0
-offset_top = 240.0
-offset_right = 900.0
-offset_bottom = 900.0
-color = Color(0.22, 0.28, 0.18, 1)
+[node name="NorthernShore" type="Node2D" parent="." unique_id=1666145218]
+position = Vector2(-900, 240)
 
-[node name="ShoreLabel" type="Label" parent="NorthernShore"]
+[node name="Ground" type="TileMapLayer" parent="NorthernShore" unique_id=1400538286]
+texture_filter = 1
+tile_map_data = PackedByteArray("AAAAAAAAAAALAAIAAAABAAAAAAALAAIAAAACAAAAAAALAAIAAAADAAAAAAAHAAEAAAAEAAAAAAALAAIAAAAFAAAAAAALAAIAAAAGAAAAAAALAAIAAAAHAAAAAAALAAEAAAAIAAAAAAALAAIAAAAJAAAAAAAHAAEAAAAKAAAAAAAHAAEAAAALAAAAAAALAAEAAAAMAAAAAAALAAIAAAANAAAAAAALAAIAAAAOAAAAAAALAAIAAAAPAAAAAAALAAIAAAAQAAAAAAALAAIAAAARAAAAAAALAAIAAAAAAAEAAAALAAIAAAABAAEAAAALAAEAAAACAAEAAAALAAIAAAADAAEAAAALAAIAAAAEAAEAAAALAAIAAAAFAAEAAAALAAIAAAAGAAEAAAALAAIAAAAHAAEAAAALAAIAAAAIAAEAAAALAAEAAAAJAAEAAAALAAIAAAAKAAEAAAAHAAEAAAALAAEAAAALAAIAAAAMAAEAAAALAAIAAAANAAEAAAALAAEAAAAOAAEAAAAHAAEAAAAPAAEAAAALAAEAAAAQAAEAAAALAAIAAAARAAEAAAALAAIAAAAAAAIAAAAHAAEAAAABAAIAAAALAAIAAAACAAIAAAALAAIAAAADAAIAAAALAAIAAAAEAAIAAAALAAIAAAAFAAIAAAALAAIAAAAGAAIAAAAHAAEAAAAHAAIAAAALAAIAAAAIAAIAAAALAAIAAAAJAAIAAAALAAIAAAAKAAIAAAALAAEAAAALAAIAAAALAAIAAAAMAAIAAAALAAIAAAANAAIAAAAHAAEAAAAOAAIAAAALAAIAAAAPAAIAAAALAAIAAAAQAAIAAAALAAIAAAARAAIAAAALAAIAAAAAAAMAAAALAAIAAAABAAMAAAALAAIAAAACAAMAAAALAAEAAAADAAMAAAALAAIAAAAEAAMAAAAHAAEAAAAFAAMAAAALAAIAAAAGAAMAAAALAAIAAAAHAAMAAAALAAIAAAAIAAMAAAALAAIAAAAJAAMAAAALAAIAAAAKAAMAAAALAAEAAAALAAMAAAALAAIAAAAMAAMAAAALAAIAAAANAAMAAAALAAIAAAAOAAMAAAALAAIAAAAPAAMAAAALAAIAAAAQAAMAAAALAAIAAAARAAMAAAALAAIAAAAAAAQAAAALAAIAAAABAAQAAAALAAIAAAACAAQAAAALAAIAAAADAAQAAAALAAIAAAAEAAQAAAALAAIAAAAFAAQAAAALAAEAAAAGAAQAAAALAAIAAAAHAAQAAAALAAIAAAAIAAQAAAAHAAEAAAAJAAQAAAALAAIAAAAKAAQAAAALAAIAAAALAAQAAAALAAIAAAAMAAQAAAALAAIAAAANAAQAAAALAAEAAAAOAAQAAAALAAIAAAAPAAQAAAALAAIAAAAQAAQAAAALAAIAAAARAAQAAAALAAIAAAAAAAUAAAALAAEAAAABAAUAAAALAAIAAAACAAUAAAALAAIAAAADAAUAAAALAAIAAAAEAAUAAAALAAIAAAAFAAUAAAALAAIAAAAGAAUAAAALAAIAAAAHAAUAAAALAAIAAAAIAAUAAAALAAIAAAAJAAUAAAALAAEAAAAKAAUAAAALAAEAAAALAAUAAAALAAIAAAAMAAUAAAALAAIAAAANAAUAAAALAAIAAAAOAAUAAAALAAIAAAAPAAUAAAALAAIAAAAQAAUAAAALAAIAAAARAAUAAAALAAIAAAAAAAYAAAALAAIAAAABAAYAAAALAAIAAAACAAYAAAALAAIAAAADAAYAAAALAAIAAAAEAAYAAAALAAIAAAAFAAYAAAALAAIAAAAGAAYAAAALAAIAAAAHAAYAAAALAAIAAAAIAAYAAAALAAIAAAAJAAYAAAALAAIAAAAKAAYAAAALAAIAAAALAAYAAAALAAEAAAAMAAYAAAALAAIAAAANAAYAAAALAAIAAAAOAAYAAAAHAAEAAAAPAAYAAAALAAIAAAAQAAYAAAALAAIAAAARAAYAAAALAAIAAAA=")
+tile_set = SubResource("TileSet_puouq")
+
+[node name="ShoreLabel" type="Label" parent="NorthernShore" unique_id=1254862606]
 offset_left = -120.0
 offset_top = 80.0
 offset_right = 120.0
@@ -71,66 +86,66 @@ theme_override_font_sizes/font_size = 14
 text = "MUELLE NORTE"
 horizontal_alignment = 1
 
-[node name="DepartureDock" type="Node2D" parent="."]
+[node name="DepartureDock" type="Node2D" parent="." unique_id=521455212]
 
-[node name="Pier" type="ColorRect" parent="DepartureDock"]
+[node name="Pier" type="ColorRect" parent="DepartureDock" unique_id=1555420930]
 offset_left = -45.0
 offset_top = 85.0
 offset_right = 45.0
 offset_bottom = 280.0
 color = Color(0.45, 0.3, 0.15, 1)
 
-[node name="PierEdgeLeft" type="ColorRect" parent="DepartureDock"]
+[node name="PierEdgeLeft" type="ColorRect" parent="DepartureDock" unique_id=764389263]
 offset_left = -50.0
 offset_top = 85.0
 offset_right = -45.0
 offset_bottom = 280.0
 color = Color(0.3, 0.18, 0.08, 1)
 
-[node name="PierEdgeRight" type="ColorRect" parent="DepartureDock"]
+[node name="PierEdgeRight" type="ColorRect" parent="DepartureDock" unique_id=612460223]
 offset_left = 45.0
 offset_top = 85.0
 offset_right = 50.0
 offset_bottom = 280.0
 color = Color(0.3, 0.18, 0.08, 1)
 
-[node name="Obstacles" type="Node2D" parent="."]
+[node name="Obstacles" type="Node2D" parent="." unique_id=1582725198]
 
-[node name="Island1" type="StaticBody2D" parent="Obstacles"]
+[node name="Island1" type="StaticBody2D" parent="Obstacles" unique_id=104092607]
 position = Vector2(300, -100)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Island1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Island1" unique_id=1093979098]
 shape = SubResource("RectangleShape2D_rock")
 
-[node name="ColorRect" type="ColorRect" parent="Obstacles/Island1"]
+[node name="ColorRect" type="ColorRect" parent="Obstacles/Island1" unique_id=1155636637]
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
 offset_bottom = 40.0
 color = Color(0.3, 0.5, 0.2, 1)
 
-[node name="Island2" type="StaticBody2D" parent="Obstacles"]
+[node name="Island2" type="StaticBody2D" parent="Obstacles" unique_id=1321542502]
 position = Vector2(-200, 200)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Island2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Island2" unique_id=1213626686]
 shape = SubResource("RectangleShape2D_rock")
 
-[node name="ColorRect" type="ColorRect" parent="Obstacles/Island2"]
+[node name="ColorRect" type="ColorRect" parent="Obstacles/Island2" unique_id=809656169]
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
 offset_bottom = 40.0
 color = Color(0.3, 0.5, 0.2, 1)
 
-[node name="Boat" type="CharacterBody2D" parent="."]
+[node name="Boat" type="CharacterBody2D" parent="." unique_id=447552329]
 position = Vector2(0, 55)
 rotation = -1.5708
 script = ExtResource("1_boat")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boat"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boat" unique_id=400597182]
 shape = SubResource("RectangleShape2D_boat")
 
-[node name="BoatSprite" type="AnimatedSprite2D" parent="Boat"]
+[node name="BoatSprite" type="AnimatedSprite2D" parent="Boat" unique_id=308465644]
 texture_filter = 1
 rotation = 1.5708
 scale = Vector2(0.2, 0.2)
@@ -138,12 +153,12 @@ sprite_frames = SubResource("SpriteFrames_boat_crewed")
 animation = &"rowing"
 autoplay = "rowing"
 
-[node name="Camera2D" type="Camera2D" parent="Boat"]
+[node name="Camera2D" type="Camera2D" parent="Boat" unique_id=13290536]
 position_smoothing_enabled = true
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=272521353]
 
-[node name="Instructions" type="Label" parent="CanvasLayer"]
+[node name="Instructions" type="Label" parent="CanvasLayer" unique_id=241501135]
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 500.0
