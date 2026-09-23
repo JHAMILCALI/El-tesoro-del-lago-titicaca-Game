@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/water_obstacle.gd" id="1_obstacle"]
+[ext_resource type="Texture2D" path="res://assets/tiles/lake_rock_cluster.png" id="2_rock"]
+
+[node name="LakeRockCluster" type="StaticBody2D" groups=["lake_rocks"]]
+collision_layer = 1
+collision_mask = 0
+script = ExtResource("1_obstacle")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-1.04782, 2.61954)
+scale = Vector2(0.1496881, 0.1496881)
+texture = ExtResource("2_rock")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-69.120, 10.418, -62.653, -7.832, -44.547, -32.261, -21.411, -43.038, -15.376, -43.038, 50.008, -15.017, 62.079, -4.239, 69.120, 13.005, 58.486, 26.369, 15.807, 41.601, 0.287, 43.038, -34.776, 37.147, -58.917, 24.932)

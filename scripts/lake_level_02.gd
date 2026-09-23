@@ -172,25 +172,9 @@ func _on_player_caught(caught_enemy: EnemyBoat) -> void:
 	capture_in_progress = false
 
 func _build_extended_lake() -> void:
-	# Rocas e islas separan rutas rápidas peligrosas de pasos más seguros.
-	for rock_position in [Vector2(2800, -180), Vector2(3200, 440), Vector2(3700, -510), Vector2(4100, 120), Vector2(4550, -360), Vector2(5200, 260), Vector2(5750, -550), Vector2(6100, 80), Vector2(6650, -260), Vector2(7200, 430), Vector2(7800, -170)]:
-		_add_rock(rock_position)
+	# Las rocas están instanciadas en la escena para poder editar sus gráficos y colisiones.
 	for current_data in [[Vector2(3500, 30), Vector2(150, -55)], [Vector2(5400, -180), Vector2(-130, 70)], [Vector2(7050, 140), Vector2(170, 25)]]:
 		_add_current(current_data[0], current_data[1])
-
-func _add_rock(rock_position: Vector2) -> void:
-	var rock := WaterObstacle.new()
-	rock.position = rock_position
-	var collision := CollisionShape2D.new()
-	var shape := CircleShape2D.new()
-	shape.radius = 48.0
-	collision.shape = shape
-	rock.add_child(collision)
-	var visual := Polygon2D.new()
-	visual.polygon = PackedVector2Array([-42, -26, -5, -48, 38, -24, 45, 20, 8, 45, -38, 30])
-	visual.color = Color(0.28, 0.33, 0.35, 1)
-	rock.add_child(visual)
-	$Obstacles.add_child(rock)
 
 func _add_current(current_position: Vector2, force: Vector2) -> void:
 	var current := CurrentZone.new()

@@ -6,11 +6,9 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/HUD.tscn" id="3_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/DialogueBox.tscn" id="4_dialogue"]
 [ext_resource type="Script" uid="uid://1f7nccfbg3tl" path="res://scripts/alert_system.gd" id="5_alert"]
-[ext_resource type="Script" uid="uid://dwper73cfiihe" path="res://scripts/water_obstacle.gd" id="6_obstacle"]
 [ext_resource type="Script" uid="uid://cr06d7m6kquxt" path="res://scripts/current_zone.gd" id="7_current"]
 [ext_resource type="Script" uid="uid://g15w0r46slpb" path="res://scripts/enemy_boat.gd" id="8_enemy"]
 [ext_resource type="Texture2D" uid="uid://b35gmnc0526fu" path="res://assets/sprites/spanish_patrol_boat.png" id="9_spanish_boat"]
-[ext_resource type="Texture2D" uid="uid://dxiii0wurd3oh" path="res://assets/tiles/water_rock.png" id="10_water_rock"]
 [ext_resource type="Texture2D" uid="uid://bruqhcr5xhiru" path="res://assets/tiles/sanctuary_temple.png" id="11_temple"]
 
 [ext_resource type="Shader" path="res://assets/tiles/departure_shore.gdshader" id="12_shore_shader"]
@@ -19,15 +17,16 @@
 [ext_resource type="Texture2D" path="res://assets/tiles/island_reeds.png" id="15_island_reeds"]
 [ext_resource type="Texture2D" path="res://assets/tiles/island_rocky.png" id="16_island_rocky"]
 
+[ext_resource type="PackedScene" path="res://scenes/objects/LakeRockRound.tscn" id="rock_round"]
+[ext_resource type="PackedScene" path="res://scenes/objects/LakeRockCluster.tscn" id="rock_cluster"]
+[ext_resource type="PackedScene" path="res://scenes/objects/LakeRockJagged.tscn" id="rock_jagged"]
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_departure_shore"]
 shader = ExtResource("12_shore_shader")
 shader_parameter/terrain_atlas = ExtResource("13_shore_atlas")
 shader_parameter/land_size = Vector2(1352, 612)
 shader_parameter/border_width = 104.0
 shader_parameter/corner_radius = 90.0
-
-[sub_resource type="CircleShape2D" id="CircleRock"]
-radius = 42.0
 
 [sub_resource type="RectangleShape2D" id="RectangleCurrent"]
 size = Vector2(380, 180)
@@ -208,53 +207,57 @@ texture = ExtResource("11_temple")
 
 [node name="Obstacles" type="Node2D" parent="." unique_id=52983123]
 
-[node name="Rock1" type="Area2D" parent="Obstacles" unique_id=2078099687]
+[node name="Rock1" parent="Obstacles" unique_id=2078099687 instance=ExtResource("rock_round")]
 position = Vector2(390, -100)
-script = ExtResource("6_obstacle")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Rock1" unique_id=1399391431]
-shape = SubResource("CircleRock")
-
-[node name="Sprite2D" type="Sprite2D" parent="Obstacles/Rock1" unique_id=1353583075]
-texture_filter = 1
-scale = Vector2(0.35, 0.35)
-texture = ExtResource("10_water_rock")
-
-[node name="Rock2" type="Area2D" parent="Obstacles" unique_id=1121275054]
+[node name="Rock2" parent="Obstacles" unique_id=951116237 instance=ExtResource("rock_cluster")]
 position = Vector2(1120, -240)
-script = ExtResource("6_obstacle")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Rock2" unique_id=951116237]
-shape = SubResource("CircleRock")
-
-[node name="Sprite2D" type="Sprite2D" parent="Obstacles/Rock2" unique_id=1636608330]
-texture_filter = 1
-scale = Vector2(0.35, 0.35)
-texture = ExtResource("10_water_rock")
-
-[node name="Rock3" type="Area2D" parent="Obstacles" unique_id=1225546943]
+[node name="Rock3" parent="Obstacles" unique_id=1225546943 instance=ExtResource("rock_jagged")]
 position = Vector2(1690, 0)
-script = ExtResource("6_obstacle")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Rock3" unique_id=1682867523]
-shape = SubResource("CircleRock")
-
-[node name="Sprite2D" type="Sprite2D" parent="Obstacles/Rock3" unique_id=1487652444]
-texture_filter = 1
-scale = Vector2(0.35, 0.35)
-texture = ExtResource("10_water_rock")
-
-[node name="Rock4" type="Area2D" parent="Obstacles" unique_id=872536570]
+[node name="Rock4" parent="Obstacles" unique_id=872536570 instance=ExtResource("rock_round")]
 position = Vector2(2300, -330)
-script = ExtResource("6_obstacle")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Rock4" unique_id=439295469]
-shape = SubResource("CircleRock")
+[node name="Rock5" parent="Obstacles" instance=ExtResource("rock_cluster")]
+position = Vector2(2800, -180)
 
-[node name="Sprite2D" type="Sprite2D" parent="Obstacles/Rock4" unique_id=1628625614]
-texture_filter = 1
-scale = Vector2(0.35, 0.35)
-texture = ExtResource("10_water_rock")
+[node name="Rock6" parent="Obstacles" instance=ExtResource("rock_jagged")]
+position = Vector2(3200, 440)
+scale = Vector2(1.1, 1.1)
+
+[node name="Rock7" parent="Obstacles" instance=ExtResource("rock_round")]
+position = Vector2(3700, -510)
+scale = Vector2(0.9, 0.9)
+
+[node name="Rock8" parent="Obstacles" instance=ExtResource("rock_cluster")]
+position = Vector2(4100, 120)
+
+[node name="Rock9" parent="Obstacles" instance=ExtResource("rock_jagged")]
+position = Vector2(4550, -360)
+scale = Vector2(1.1, 1.1)
+
+[node name="Rock10" parent="Obstacles" instance=ExtResource("rock_round")]
+position = Vector2(5200, 260)
+scale = Vector2(0.9, 0.9)
+
+[node name="Rock11" parent="Obstacles" instance=ExtResource("rock_cluster")]
+position = Vector2(5750, -550)
+
+[node name="Rock12" parent="Obstacles" instance=ExtResource("rock_jagged")]
+position = Vector2(6100, 80)
+scale = Vector2(1.1, 1.1)
+
+[node name="Rock13" parent="Obstacles" instance=ExtResource("rock_round")]
+position = Vector2(6650, -260)
+scale = Vector2(0.9, 0.9)
+
+[node name="Rock14" parent="Obstacles" instance=ExtResource("rock_cluster")]
+position = Vector2(7200, 430)
+
+[node name="Rock15" parent="Obstacles" instance=ExtResource("rock_jagged")]
+position = Vector2(7800, -170)
+scale = Vector2(1.1, 1.1)
 
 [node name="Current1" type="Area2D" parent="." unique_id=727397258]
 position = Vector2(1050, 120)

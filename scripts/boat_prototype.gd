@@ -40,7 +40,7 @@ func _physics_process(delta: float) -> void:
 	impact_cooldown = maxf(0.0, impact_cooldown - delta)
 	if not can_move:
 		velocity = external_force
-		move_and_slide()
+		_move_and_handle_obstacles()
 		return
 
 	var input_vector := Input.get_vector("move_left", "move_right", "move_up", "move_down")
@@ -61,9 +61,17 @@ func _physics_process(delta: float) -> void:
 
 	var direction := input_vector.normalized() if input_vector != Vector2.ZERO else Vector2.from_angle(rotation)
 	velocity = direction * velocidad_actual + external_force
-	move_and_slide()
+	_move_and_handle_obstacles()
 	external_force = external_force.move_toward(Vector2.ZERO, 100.0 * delta)
 	speed_changed.emit(velocidad_actual)
+
+func _move_and_handle_obstacles() -> void:
+	move_and_slide()
+	for index in get_slide_collision_count():
+		var collision := get_slide_collision(index)
+		var obstacle := collision.get_collider()
+		if obstacle is WaterObstacle:
+			obstacle.handle_boat_collision(self, collision.get_normal())
 
 func set_movement_enabled(enabled: bool) -> void:
 	can_move = enabled
@@ -73,17 +81,20 @@ func set_movement_enabled(enabled: bool) -> void:
 func apply_current(force: Vector2) -> void:
 	external_force = force
 
-func apply_impact(from_position: Vector2) -> void:
+func apply_impact(from_position: Vector2, collision_normal: Vector2 = Vector2.ZERO) -> bool:
 	if impact_cooldown > 0.0:
-		return
+		return false
 	impact_cooldown = 0.7
 	velocidad_actual *= 0.35
-	var push_direction := (global_position - from_position).normalized()
+	var push_direction := collision_normal.normalized()
+	if push_direction == Vector2.ZERO:
+		push_direction = (global_position - from_position).normalized()
 	if push_direction == Vector2.ZERO:
 		push_direction = Vector2.RIGHT
 	external_force = push_direction * 180.0
 	rotation += randf_range(-0.32, 0.32)
 	impact_received.emit()
+	return true
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
