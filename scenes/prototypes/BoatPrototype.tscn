@@ -1,14 +1,49 @@
 [gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/boat_prototype.gd" id="1_boat"]
-[ext_resource type="PackedScene" path="res://scenes/characters/Pasco.tscn" id="2_pasco"]
-[ext_resource type="PackedScene" path="res://scenes/characters/Huita.tscn" id="3_huita"]
+[ext_resource type="Texture2D" path="res://assets/sprites/boat_crewed.png" id="4_boat_sprite"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_boat"]
-size = Vector2(40, 24)
+size = Vector2(48, 28)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rock"]
 size = Vector2(80, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_crewed_0"]
+atlas = ExtResource("4_boat_sprite")
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_crewed_1"]
+atlas = ExtResource("4_boat_sprite")
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_crewed_2"]
+atlas = ExtResource("4_boat_sprite")
+region = Rect2(0, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_crewed_3"]
+atlas = ExtResource("4_boat_sprite")
+region = Rect2(512, 512, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_boat_crewed"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crewed_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crewed_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crewed_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crewed_3")
+}],
+"loop": true,
+"name": &"rowing",
+"speed": 6.0
+}]
 
 [node name="BoatPrototype" type="Node2D"]
 
@@ -95,39 +130,16 @@ script = ExtResource("1_boat")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boat"]
 shape = SubResource("RectangleShape2D_boat")
 
-[node name="HullRect" type="ColorRect" parent="Boat"]
-offset_left = -20.0
-offset_top = -12.0
-offset_right = 20.0
-offset_bottom = 12.0
-color = Color(0.55, 0.35, 0.15, 1)
-
-[node name="BowRect" type="ColorRect" parent="Boat"]
-offset_left = 10.0
-offset_top = -8.0
-offset_right = 20.0
-offset_bottom = 8.0
-color = Color(0.8, 0.6, 0.3, 1)
-
-[node name="Label" type="Label" parent="Boat"]
-offset_left = -30.0
-offset_top = -32.0
-offset_right = 30.0
-offset_bottom = -12.0
-theme_override_font_sizes/font_size = 12
-text = "Barca"
-horizontal_alignment = 1
+[node name="BoatSprite" type="AnimatedSprite2D" parent="Boat"]
+texture_filter = 1
+rotation = 1.5708
+scale = Vector2(0.2, 0.2)
+sprite_frames = SubResource("SpriteFrames_boat_crewed")
+animation = &"rowing"
+autoplay = "rowing"
 
 [node name="Camera2D" type="Camera2D" parent="Boat"]
 position_smoothing_enabled = true
-
-[node name="Passengers" type="Node2D" parent="Boat"]
-
-[node name="Pasco" parent="Boat/Passengers" instance=ExtResource("2_pasco")]
-position = Vector2(-18, 0)
-
-[node name="Huita" parent="Boat/Passengers" instance=ExtResource("3_huita")]
-position = Vector2(15, 0)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
