@@ -13,6 +13,19 @@
 [ext_resource type="Texture2D" uid="uid://dxiii0wurd3oh" path="res://assets/tiles/water_rock.png" id="10_water_rock"]
 [ext_resource type="Texture2D" uid="uid://bruqhcr5xhiru" path="res://assets/tiles/sanctuary_temple.png" id="11_temple"]
 
+[ext_resource type="Shader" path="res://assets/tiles/departure_shore.gdshader" id="12_shore_shader"]
+[ext_resource type="Texture2D" path="res://assets/tiles/bordes.png" id="13_shore_atlas"]
+[ext_resource type="Texture2D" path="res://assets/tiles/island_hidden.png" id="14_island_hidden"]
+[ext_resource type="Texture2D" path="res://assets/tiles/island_reeds.png" id="15_island_reeds"]
+[ext_resource type="Texture2D" path="res://assets/tiles/island_rocky.png" id="16_island_rocky"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_departure_shore"]
+shader = ExtResource("12_shore_shader")
+shader_parameter/terrain_atlas = ExtResource("13_shore_atlas")
+shader_parameter/land_size = Vector2(1352, 612)
+shader_parameter/border_width = 104.0
+shader_parameter/corner_radius = 90.0
+
 [sub_resource type="CircleShape2D" id="CircleRock"]
 radius = 42.0
 
@@ -101,10 +114,13 @@ color = Color(0.08, 0.29, 0.48, 0.45)
 [node name="DepartureShore" type="Node2D" parent="." unique_id=1418599111]
 position = Vector2(-700, 180)
 
-[node name="Ground" type="TileMapLayer" parent="DepartureShore" unique_id=1538360605]
-texture_filter = 1
-tile_map_data = PackedByteArray("AAAAAAAAAAALAAEAAAABAAAAAAALAAIAAAACAAAAAAALAAIAAAADAAAAAAALAAEAAAAEAAAAAAALAAIAAAAFAAAAAAALAAEAAAAGAAAAAAAHAAEAAAAHAAAAAAALAAIAAAAIAAAAAAALAAIAAAAJAAAAAAALAAIAAAAKAAAAAAALAAIAAAALAAAAAAAHAAEAAAAMAAAAAAALAAIAAAAAAAEAAAALAAIAAAABAAEAAAALAAIAAAACAAEAAAALAAIAAAADAAEAAAALAAIAAAAEAAEAAAALAAIAAAAFAAEAAAALAAIAAAAGAAEAAAAHAAEAAAAHAAEAAAALAAIAAAAIAAEAAAALAAIAAAAJAAEAAAAHAAEAAAAKAAEAAAALAAEAAAALAAEAAAAHAAEAAAAMAAEAAAALAAIAAAAAAAIAAAALAAEAAAABAAIAAAALAAIAAAACAAIAAAALAAIAAAADAAIAAAALAAIAAAAEAAIAAAALAAIAAAAFAAIAAAALAAIAAAAGAAIAAAAHAAEAAAAHAAIAAAALAAIAAAAIAAIAAAALAAIAAAAJAAIAAAALAAIAAAAKAAIAAAALAAIAAAALAAIAAAALAAIAAAAMAAIAAAALAAIAAAAAAAMAAAALAAIAAAABAAMAAAALAAIAAAACAAMAAAALAAIAAAADAAMAAAALAAIAAAAEAAMAAAALAAIAAAAFAAMAAAALAAIAAAAGAAMAAAALAAIAAAAHAAMAAAAHAAEAAAAIAAMAAAALAAIAAAAJAAMAAAALAAIAAAAKAAMAAAALAAIAAAALAAMAAAALAAIAAAAMAAMAAAALAAIAAAAAAAQAAAALAAIAAAABAAQAAAALAAIAAAACAAQAAAALAAIAAAADAAQAAAALAAIAAAAEAAQAAAALAAIAAAAFAAQAAAALAAIAAAAGAAQAAAALAAIAAAAHAAQAAAALAAIAAAAIAAQAAAALAAEAAAAJAAQAAAALAAEAAAAKAAQAAAALAAIAAAALAAQAAAALAAIAAAAMAAQAAAALAAIAAAAAAAUAAAALAAIAAAABAAUAAAALAAIAAAACAAUAAAAHAAEAAAADAAUAAAALAAIAAAAEAAUAAAALAAIAAAAFAAUAAAALAAIAAAAGAAUAAAALAAIAAAAHAAUAAAALAAIAAAAIAAUAAAALAAEAAAAJAAUAAAALAAEAAAAKAAUAAAALAAIAAAALAAUAAAALAAIAAAAMAAUAAAALAAIAAAA=")
-tile_set = ExtResource("2_low01")
+[node name="Ground" type="ColorRect" parent="DepartureShore" unique_id=1538360605]
+material = SubResource("ShaderMaterial_departure_shore")
+offset_left = -52.0
+offset_top = -52.0
+offset_right = 1404.0
+offset_bottom = 664.0
+mouse_filter = 2
 
 [node name="DepartureDock" type="ColorRect" parent="." unique_id=833715066]
 offset_left = -45.0
@@ -123,12 +139,16 @@ text = "MUELLE DE PARTIDA"
 
 [node name="Islands" type="Node2D" parent="." unique_id=1719028898]
 
-[node name="IslandA" type="ColorRect" parent="Islands" unique_id=424194143]
+[node name="IslandA" type="TextureRect" parent="Islands" unique_id=424194143]
+texture_filter = 1
 offset_left = 620.0
 offset_top = -300.0
 offset_right = 960.0
 offset_bottom = 80.0
-color = Color(0.2, 0.42, 0.19, 1)
+mouse_filter = 2
+texture = ExtResource("14_island_hidden")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="IslandALabel" type="Label" parent="Islands/IslandA" unique_id=164974629]
 layout_mode = 0
@@ -138,26 +158,38 @@ offset_right = 80.0
 offset_bottom = 170.0
 text = "ISLA ESCONDIDA"
 
-[node name="IslandB" type="ColorRect" parent="Islands" unique_id=742404564]
+[node name="IslandB" type="TextureRect" parent="Islands" unique_id=742404564]
+texture_filter = 1
 offset_left = 1250.0
 offset_top = 220.0
 offset_right = 1580.0
 offset_bottom = 570.0
-color = Color(0.18, 0.38, 0.16, 1)
+mouse_filter = 2
+texture = ExtResource("15_island_reeds")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="IslandC" type="ColorRect" parent="Islands" unique_id=140746003]
+[node name="IslandC" type="TextureRect" parent="Islands" unique_id=140746003]
+texture_filter = 1
 offset_left = 1850.0
 offset_top = -600.0
 offset_right = 2140.0
 offset_bottom = -280.0
-color = Color(0.17, 0.35, 0.15, 1)
+mouse_filter = 2
+texture = ExtResource("16_island_rocky")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="SanctuaryLand" type="ColorRect" parent="." unique_id=424146291]
+[node name="SanctuaryLand" type="TextureRect" parent="." unique_id=424146291]
+texture_filter = 1
 offset_left = 8750.0
 offset_top = -700.0
 offset_right = 9650.0
 offset_bottom = 100.0
-color = Color(0.24, 0.38, 0.18, 1)
+mouse_filter = 2
+texture = ExtResource("14_island_hidden")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="SanctuaryLabel" type="Label" parent="." unique_id=1440896346]
 offset_left = 8940.0

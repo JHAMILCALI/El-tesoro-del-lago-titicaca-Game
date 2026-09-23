@@ -176,32 +176,13 @@ offset_right = 1640.0
 offset_bottom = -650.0
 color = Color(0.45, 0.3, 0.15, 1)
 
-[node name="BoatVisual" type="Node2D" parent="DockEnvironment" unique_id=625970483]
+[node name="BoatVisual" type="AnimatedSprite2D" parent="DockEnvironment" unique_id=625970483]
+texture_filter = 1
 position = Vector2(1600, -780)
-
-[node name="Hull" type="ColorRect" parent="DockEnvironment/BoatVisual" unique_id=1994692363]
-offset_left = -35.0
-offset_top = -18.0
-offset_right = 35.0
-offset_bottom = 18.0
-color = Color(0.55, 0.35, 0.15, 1)
-
-[node name="Bow" type="ColorRect" parent="DockEnvironment/BoatVisual" unique_id=1330188601]
-offset_left = 18.0
-offset_top = -12.0
-offset_right = 35.0
-offset_bottom = 12.0
-color = Color(0.8, 0.6, 0.3, 1)
-
-[node name="Label" type="Label" parent="DockEnvironment/BoatVisual" unique_id=82043296]
-offset_left = -50.0
-offset_top = -42.0
-offset_right = 50.0
-offset_bottom = -20.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 13
-text = "BOTE DE ESCAPE"
-horizontal_alignment = 1
+scale = Vector2(0.22, 0.22)
+sprite_frames = SubResource("SpriteFrames_boat")
+animation = &"empty"
+autoplay = "empty"
 
 [node name="Boundaries" type="Node2D" parent="." unique_id=1094220063]
 
@@ -779,13 +760,3 @@ point_b = Vector2(1600, -550)
 [node name="HUD" parent="." unique_id=1718876460 instance=ExtResource("5_hud")]
 
 [node name="DialogueBox" parent="." unique_id=662807709 instance=ExtResource("6_dialogue")]
-
-[node name="DockEnvironment" type="Node2D" parent="."]
-position = Vector2(1600, -780)
-
-[node name="BoatVisual" type="AnimatedSprite2D" parent="DockEnvironment"]
-texture_filter = 1
-scale = Vector2(0.22, 0.22)
-sprite_frames = SubResource("SpriteFrames_boat")
-animation = &"empty"
-autoplay = "empty"

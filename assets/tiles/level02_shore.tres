@@ -4,7 +4,7 @@
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7bekm"]
 texture = ExtResource("1_qwhho")
-margins = Vector2i(0, 10)
+margins = Vector2i(0, 20)
 texture_region_size = Vector2i(104, 102)
 11:2/0 = 0
 11:1/0 = 0
