@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/tiles/lake_current_flow.png" id="1_flow"]
+[ext_resource type="Script" path="res://scripts/lake_current_visual.gd" id="2_script"]
+
+[node name="Visual" type="Sprite2D"]
+texture_filter = 1
+texture = ExtResource("1_flow")
+script = ExtResource("2_script")

@@ -39,6 +39,7 @@ func _disable_passenger_controls() -> void:
 func _physics_process(delta: float) -> void:
 	impact_cooldown = maxf(0.0, impact_cooldown - delta)
 	if not can_move:
+		_update_rowing_visual(0.0)
 		velocity = external_force
 		_move_and_handle_obstacles()
 		return
@@ -46,6 +47,7 @@ func _physics_process(delta: float) -> void:
 	var input_vector := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var using_fast_rowing := Input.is_action_pressed("run") and input_vector != Vector2.ZERO and resistencia > 0.0
 	var target_speed := normal_speed
+	_update_rowing_visual((1.0 if using_fast_rowing else 0.65) if input_vector != Vector2.ZERO else 0.0)
 	if using_fast_rowing:
 		target_speed = sprint_speed
 		resistencia = maxf(0.0, resistencia - stamina_drain_per_second * delta)
@@ -64,6 +66,11 @@ func _physics_process(delta: float) -> void:
 	_move_and_handle_obstacles()
 	external_force = external_force.move_toward(Vector2.ZERO, 100.0 * delta)
 	speed_changed.emit(velocidad_actual)
+
+func _update_rowing_visual(strength: float) -> void:
+	var visual := get_node_or_null("BoatSprite") as PlayerBoatVisual
+	if visual:
+		visual.set_rowing(strength)
 
 func _move_and_handle_obstacles() -> void:
 	move_and_slide()

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dm7og8w2nwwxm" path="res://scripts/boat_prototype.gd" id="1_boat"]
 [ext_resource type="Texture2D" uid="uid://bip7kjt8r2076" path="res://assets/tiles/bordes.png" id="1_e0nwj"]
-[ext_resource type="Texture2D" uid="uid://q7nv7ws0s0qg" path="res://assets/sprites/boat_crewed.png" id="4_boat_sprite"]
+[ext_resource type="PackedScene" path="res://scenes/objects/PlayerBoatVisual.tscn" id="4_boat_visual"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7bekm"]
 texture = ExtResource("1_e0nwj")
@@ -19,44 +19,9 @@ sources/0 = SubResource("TileSetAtlasSource_7bekm")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rock"]
 size = Vector2(80, 80)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_boat"]
-size = Vector2(48, 28)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_crewed_0"]
-atlas = ExtResource("4_boat_sprite")
-region = Rect2(0, 0, 512, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_crewed_1"]
-atlas = ExtResource("4_boat_sprite")
-region = Rect2(512, 0, 512, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_crewed_2"]
-atlas = ExtResource("4_boat_sprite")
-region = Rect2(0, 512, 512, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_crewed_3"]
-atlas = ExtResource("4_boat_sprite")
-region = Rect2(512, 512, 512, 512)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_boat_crewed"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_crewed_0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_crewed_1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_crewed_2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_crewed_3")
-}],
-"loop": 1,
-"name": &"rowing",
-"speed": 6.0
-}]
+[sub_resource type="CapsuleShape2D" id="BoatHullShape"]
+radius = 18.0
+height = 98.0
 
 [node name="BoatPrototype" type="Node2D" unique_id=386862067]
 
@@ -140,18 +105,16 @@ color = Color(0.3, 0.5, 0.2, 1)
 [node name="Boat" type="CharacterBody2D" parent="." unique_id=447552329]
 position = Vector2(0, 55)
 rotation = -1.5708
+collision_layer = 1
+collision_mask = 1
 script = ExtResource("1_boat")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boat" unique_id=400597182]
-shape = SubResource("RectangleShape2D_boat")
+rotation = 1.5707963
+shape = SubResource("BoatHullShape")
 
-[node name="BoatSprite" type="AnimatedSprite2D" parent="Boat" unique_id=308465644]
-texture_filter = 1
+[node name="BoatSprite" parent="Boat" unique_id=308465644 instance=ExtResource("4_boat_visual")]
 rotation = 1.5708
-scale = Vector2(0.2, 0.2)
-sprite_frames = SubResource("SpriteFrames_boat_crewed")
-animation = &"rowing"
-autoplay = "rowing"
 
 [node name="Camera2D" type="Camera2D" parent="Boat" unique_id=13290536]
 position_smoothing_enabled = true

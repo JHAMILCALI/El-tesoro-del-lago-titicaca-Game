@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[node name="IslandRockyCollider" type="StaticBody2D" groups=["lake_islands"]]
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(632, 16, 531, 52, 420, 146, 431, 216, 335, 253, 370, 349, 288, 398, 245, 515, 282, 580, 243, 587, 301, 630, 239, 725, 368, 995, 448, 1046, 477, 1149, 617, 1236, 740, 1192, 830, 1089, 827, 1041, 940, 1000, 950, 827, 1016, 771, 948, 670, 1014, 631, 974, 591, 1011, 544, 993, 489, 923, 412, 953, 302, 778, 137, 813, 107)

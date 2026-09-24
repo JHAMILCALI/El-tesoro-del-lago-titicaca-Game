@@ -23,9 +23,9 @@ var capture_cooldown := 0.0
 
 func _ready() -> void:
 	add_to_group("enemy_boat")
-	# La captura se calcula por distancia: los enemigos no deben bloquearse entre sí.
+	# La captura se calcula por distancia; solo el terreno sólido bloquea su avance.
 	collision_layer = 0
-	collision_mask = 0
+	collision_mask = 1
 	home_position = global_position
 	player = get_tree().get_first_node_in_group("player") as Node2D
 	if patrol_points.is_empty():

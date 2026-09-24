@@ -7,8 +7,6 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/DialogueBox.tscn" id="4_dialogue"]
 [ext_resource type="Script" uid="uid://1f7nccfbg3tl" path="res://scripts/alert_system.gd" id="5_alert"]
 [ext_resource type="Script" uid="uid://cr06d7m6kquxt" path="res://scripts/current_zone.gd" id="7_current"]
-[ext_resource type="Script" uid="uid://g15w0r46slpb" path="res://scripts/enemy_boat.gd" id="8_enemy"]
-[ext_resource type="Texture2D" uid="uid://b35gmnc0526fu" path="res://assets/sprites/spanish_patrol_boat.png" id="9_spanish_boat"]
 [ext_resource type="Texture2D" uid="uid://bruqhcr5xhiru" path="res://assets/tiles/sanctuary_temple.png" id="11_temple"]
 
 [ext_resource type="Shader" path="res://assets/tiles/departure_shore.gdshader" id="12_shore_shader"]
@@ -16,10 +14,16 @@
 [ext_resource type="Texture2D" path="res://assets/tiles/island_hidden.png" id="14_island_hidden"]
 [ext_resource type="Texture2D" path="res://assets/tiles/island_reeds.png" id="15_island_reeds"]
 [ext_resource type="Texture2D" path="res://assets/tiles/island_rocky.png" id="16_island_rocky"]
+[ext_resource type="PackedScene" path="res://scenes/objects/IslandHiddenCollider.tscn" id="island_hidden_collider"]
+[ext_resource type="PackedScene" path="res://scenes/objects/IslandReedsCollider.tscn" id="island_reeds_collider"]
+[ext_resource type="PackedScene" path="res://scenes/objects/IslandRockyCollider.tscn" id="island_rocky_collider"]
+[ext_resource type="PackedScene" path="res://scenes/objects/LakeCurrentVisual.tscn" id="lake_current_visual"]
 
 [ext_resource type="PackedScene" path="res://scenes/objects/LakeRockRound.tscn" id="rock_round"]
 [ext_resource type="PackedScene" path="res://scenes/objects/LakeRockCluster.tscn" id="rock_cluster"]
 [ext_resource type="PackedScene" path="res://scenes/objects/LakeRockJagged.tscn" id="rock_jagged"]
+
+[ext_resource type="PackedScene" path="res://scenes/enemies/SpanishRowboat.tscn" id="8_spanish_rowboat"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_departure_shore"]
 shader = ExtResource("12_shore_shader")
@@ -37,50 +41,12 @@ size = Vector2(520, 500)
 [sub_resource type="CircleShape2D" id="CircleFinish"]
 radius = 110.0
 
-[sub_resource type="RectangleShape2D" id="EnemyShape"]
-size = Vector2(54, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_spanish_0"]
-atlas = ExtResource("9_spanish_boat")
-region = Rect2(0, 0, 512, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_spanish_1"]
-atlas = ExtResource("9_spanish_boat")
-region = Rect2(512, 0, 512, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_spanish_2"]
-atlas = ExtResource("9_spanish_boat")
-region = Rect2(0, 512, 512, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_spanish_3"]
-atlas = ExtResource("9_spanish_boat")
-region = Rect2(512, 512, 512, 512)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_spanish_boat"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_spanish_0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_spanish_1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_spanish_2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_spanish_3")
-}],
-"loop": 1,
-"name": &"sailing",
-"speed": 5.0
-}]
-
 [node name="LakeLevel02" type="Node2D" unique_id=1965236474]
 script = ExtResource("1_level")
 
 [node name="LakeWater" type="Node2D" parent="." unique_id=2032920836]
 position = Vector2(-1000, -1600)
+z_index = -2
 
 [node name="Ground" type="TileMapLayer" parent="LakeWater" unique_id=75833539]
 texture_filter = 1
@@ -88,6 +54,7 @@ tile_map_data = PackedByteArray("AAAAAAAAAAAAAAgAAAABAAAAAAACAAoAAAACAAAAAAAKAAg
 tile_set = ExtResource("2_low01")
 
 [node name="WaterBands" type="Node2D" parent="." unique_id=1116371359]
+z_index = -2
 
 [node name="Band1" type="ColorRect" parent="WaterBands" unique_id=1449209830]
 offset_left = -800.0
@@ -179,6 +146,18 @@ texture = ExtResource("16_island_rocky")
 expand_mode = 1
 stretch_mode = 5
 
+[node name="IslandACollider" parent="Islands" instance=ExtResource("island_hidden_collider")]
+position = Vector2(620, -280)
+scale = Vector2(0.2711324, 0.2711324)
+
+[node name="IslandBCollider" parent="Islands" instance=ExtResource("island_reeds_collider")]
+position = Vector2(1250, 230)
+scale = Vector2(0.2631579, 0.2631579)
+
+[node name="IslandCCollider" parent="Islands" instance=ExtResource("island_rocky_collider")]
+position = Vector2(1850, -585)
+scale = Vector2(0.23125997, 0.23125997)
+
 [node name="SanctuaryLand" type="TextureRect" parent="." unique_id=424146291]
 texture_filter = 1
 offset_left = 8750.0
@@ -189,6 +168,10 @@ mouse_filter = 2
 texture = ExtResource("14_island_hidden")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="SanctuaryCollider" parent="." instance=ExtResource("island_hidden_collider")]
+position = Vector2(8800, -700)
+scale = Vector2(0.6379585, 0.6379585)
 
 [node name="SanctuaryLabel" type="Label" parent="." unique_id=1440896346]
 offset_left = 8940.0
@@ -261,18 +244,14 @@ scale = Vector2(1.1, 1.1)
 
 [node name="Current1" type="Area2D" parent="." unique_id=727397258]
 position = Vector2(1050, 120)
+z_index = -1
 script = ExtResource("7_current")
 force = Vector2(110, -45)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Current1" unique_id=1653315042]
 shape = SubResource("RectangleCurrent")
 
-[node name="Visual" type="ColorRect" parent="Current1" unique_id=1049780853]
-offset_left = -190.0
-offset_top = -90.0
-offset_right = 190.0
-offset_bottom = 90.0
-color = Color(0.3, 0.75, 0.9, 0.18)
+[node name="Visual" parent="Current1" unique_id=1049780853 instance=ExtResource("lake_current_visual")]
 
 [node name="Areas" type="Node2D" parent="." unique_id=1597879044]
 
@@ -310,7 +289,7 @@ theme_override_colors/font_color = Color(0.75, 0.82, 0.95, 1)
 text = "ZONA SAGRADA DEL LAGO"
 
 [node name="FinishArea" type="Area2D" parent="Areas" unique_id=60709546 groups=["lake_destination"]]
-position = Vector2(8920, -250)
+position = Vector2(8750, -250)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Areas/FinishArea" unique_id=870633286]
 shape = SubResource("CircleFinish")
@@ -320,47 +299,14 @@ position = Vector2(4, -57)
 
 [node name="Enemies" type="Node2D" parent="." unique_id=1645942973]
 
-[node name="EnemyBoat1" type="CharacterBody2D" parent="Enemies" unique_id=1402006552]
+[node name="EnemyBoat1" parent="Enemies" unique_id=1402006552 instance=ExtResource("8_spanish_rowboat")]
 position = Vector2(980, 310)
-script = ExtResource("8_enemy")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemies/EnemyBoat1" unique_id=497363583]
-shape = SubResource("EnemyShape")
-
-[node name="BoatSprite" type="AnimatedSprite2D" parent="Enemies/EnemyBoat1" unique_id=1934756690]
-texture_filter = 1
-scale = Vector2(0.18, 0.18)
-sprite_frames = SubResource("SpriteFrames_spanish_boat")
-animation = &"sailing"
-autoplay = "sailing"
-
-[node name="EnemyBoat2" type="CharacterBody2D" parent="Enemies" unique_id=1209156513]
+[node name="EnemyBoat2" parent="Enemies" unique_id=1209156513 instance=ExtResource("8_spanish_rowboat")]
 position = Vector2(1450, -610)
-script = ExtResource("8_enemy")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemies/EnemyBoat2" unique_id=949834909]
-shape = SubResource("EnemyShape")
-
-[node name="BoatSprite" type="AnimatedSprite2D" parent="Enemies/EnemyBoat2" unique_id=1051177027]
-texture_filter = 1
-scale = Vector2(0.18, 0.18)
-sprite_frames = SubResource("SpriteFrames_spanish_boat")
-animation = &"sailing"
-autoplay = "sailing"
-
-[node name="EnemyBoat3" type="CharacterBody2D" parent="Enemies" unique_id=1401140379]
+[node name="EnemyBoat3" parent="Enemies" unique_id=1401140379 instance=ExtResource("8_spanish_rowboat")]
 position = Vector2(1900, 420)
-script = ExtResource("8_enemy")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemies/EnemyBoat3" unique_id=1654910031]
-shape = SubResource("EnemyShape")
-
-[node name="BoatSprite" type="AnimatedSprite2D" parent="Enemies/EnemyBoat3" unique_id=646205287]
-texture_filter = 1
-scale = Vector2(0.18, 0.18)
-sprite_frames = SubResource("SpriteFrames_spanish_boat")
-animation = &"sailing"
-autoplay = "sailing"
 
 [node name="AlertSystem" type="Node" parent="." unique_id=38212229]
 script = ExtResource("5_alert")

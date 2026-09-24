@@ -1,5 +1,7 @@
 extends Node2D
 
+const SPANISH_ROWBOAT = preload("res://scenes/enemies/SpanishRowboat.tscn")
+const CURRENT_VISUAL = preload("res://scenes/objects/LakeCurrentVisual.tscn")
 const ENEMY_EVENT_TIME := 18.0
 const WAVE_TRIGGER_X := [500.0, 2500.0, 4500.0, 6500.0, 7900.0]
 
@@ -26,6 +28,10 @@ func _ready() -> void:
 	$BoatPrototype/NorthernShore.hide()
 	$BoatPrototype/DepartureDock.hide()
 	$BoatPrototype/Obstacles.hide()
+	$BoatPrototype/Obstacles.process_mode = Node.PROCESS_MODE_DISABLED
+	for old_obstacle in $BoatPrototype/Obstacles.get_children():
+		if old_obstacle is CollisionObject2D:
+			old_obstacle.collision_layer = 0
 	_build_extended_lake()
 	start_position = boat.global_position
 	hud.show_lake_hud(true)
@@ -107,25 +113,10 @@ func _activate_enemy_wave(wave_index: int) -> void:
 		show_notification("Más barcas enemigas cierran el paso.", 2.2)
 
 func _spawn_enemy_boat(spawn_position: Vector2, speed_multiplier: float) -> void:
-	var enemy := EnemyBoat.new()
+	var enemy := SPANISH_ROWBOAT.instantiate() as EnemyBoat
 	enemy.position = spawn_position
 	enemy.patrol_speed *= speed_multiplier
 	enemy.chase_speed *= speed_multiplier
-	var collision := CollisionShape2D.new()
-	var shape := RectangleShape2D.new()
-	shape.size = Vector2(42, 24)
-	collision.shape = shape
-	enemy.add_child(collision)
-	var hull := ColorRect.new()
-	hull.position = Vector2(-21, -12)
-	hull.size = Vector2(42, 24)
-	hull.color = Color(0.78, 0.1, 0.08, 1)
-	enemy.add_child(hull)
-	var marker := Label.new()
-	marker.position = Vector2(-30, -35)
-	marker.text = "ESPAÑOL"
-	marker.add_theme_font_size_override("font_size", 10)
-	enemy.add_child(marker)
 	$Enemies.add_child(enemy)
 	enemy_boats.append(enemy)
 	_connect_enemy_capture(enemy)
@@ -180,16 +171,14 @@ func _add_current(current_position: Vector2, force: Vector2) -> void:
 	var current := CurrentZone.new()
 	current.position = current_position
 	current.force = force
+	current.z_index = -1
 	var collision := CollisionShape2D.new()
+	collision.name = "CollisionShape2D"
 	var shape := RectangleShape2D.new()
 	shape.size = Vector2(440, 210)
 	collision.shape = shape
 	current.add_child(collision)
-	var visual := ColorRect.new()
-	visual.position = Vector2(-220, -105)
-	visual.size = Vector2(440, 210)
-	visual.color = Color(0.3, 0.75, 0.9, 0.18)
-	current.add_child(visual)
+	current.add_child(CURRENT_VISUAL.instantiate())
 	add_child(current)
 
 func set_enemy_pressure(enemy: Node, active: bool, distance: float) -> void:

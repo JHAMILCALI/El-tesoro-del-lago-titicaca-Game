@@ -329,8 +329,9 @@ func _on_next_level_requested() -> void:
 	if huita:
 		huita.visible = false
 
-	if boat_visual and boat_visual is AnimatedSprite2D:
-		boat_visual.play(&"crewed")
+	if boat_visual is PlayerBoatVisual:
+		boat_visual.set_crewed(true)
+		boat_visual.set_rowing(0.8)
 
 	var sail_tween := create_tween()
 	if boat_visual:

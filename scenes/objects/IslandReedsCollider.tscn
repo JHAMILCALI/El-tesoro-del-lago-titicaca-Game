@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[node name="IslandReedsCollider" type="StaticBody2D" groups=["lake_islands"]]
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(782, 75, 488, 113, 205, 281, 38, 757, 114, 963, 565, 1162, 699, 1180, 862, 1083, 979, 1089, 1158, 1008, 1174, 957, 1097, 807, 917, 709, 865, 612, 873, 544, 968, 489, 1101, 513, 1184, 480, 1202, 386, 1007, 167)

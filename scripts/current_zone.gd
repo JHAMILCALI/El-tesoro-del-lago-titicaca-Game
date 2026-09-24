@@ -4,6 +4,10 @@ class_name CurrentZone
 @export var force: Vector2 = Vector2(90, 0)
 
 func _ready() -> void:
+	var visual := get_node_or_null("Visual") as Sprite2D
+	var collision := get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if visual and collision and collision.shape is RectangleShape2D:
+		visual.call("configure", force, (collision.shape as RectangleShape2D).size)
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 
