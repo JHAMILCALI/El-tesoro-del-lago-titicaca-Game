@@ -1,6 +1,8 @@
 extends CanvasLayer
 class_name HUD
 
+const StatusMeter = preload("res://scripts/lake_status_meter.gd")
+
 signal restart_requested
 signal menu_requested
 signal next_level_requested
@@ -15,10 +17,8 @@ signal next_level_requested
 @onready var detection_container: Control = $Control/DetectionContainer
 @onready var detection_bar_label: Label = $Control/DetectionContainer/DetectionBarLabel
 @onready var stone_count_label: Label = $Control/StoneCountPanel/StoneCountLabel
-@onready var rowing_container: Control = $Control/RowingContainer
-@onready var rowing_bar_label: Label = $Control/RowingContainer/RowingBarLabel
-@onready var alert_container: Control = $Control/AlertContainer
-@onready var alert_bar_label: Label = $Control/AlertContainer/AlertBarLabel
+@onready var rowing_container: StatusMeter = $Control/RowingContainer
+@onready var alert_container: StatusMeter = $Control/AlertContainer
 @onready var speed_label: Label = $Control/SpeedPanel/SpeedLabel
 @onready var minimap_panel: Control = $Control/MiniMapPanel
 
@@ -96,24 +96,16 @@ func show_lake_hud(show: bool = true) -> void:
 		stone_count_label.get_parent().visible = not show
 
 func update_stamina(current: float, maximum: float) -> void:
-	if not rowing_bar_label:
-		return
-	rowing_bar_label.text = _block_bar(current / maximum)
+	if rowing_container:
+		rowing_container.set_ratio(current / maximum if maximum > 0.0 else 0.0)
 
 func update_alert(ratio: float) -> void:
-	if alert_bar_label:
-		alert_bar_label.text = _block_bar(ratio)
+	if alert_container:
+		alert_container.set_ratio(ratio)
 
 func update_speed(current_speed: float) -> void:
 	if speed_label:
 		speed_label.text = "VELOCIDAD: " + str(int(round(current_speed)))
-
-func _block_bar(ratio: float) -> String:
-	var filled := clampi(int(round(clampf(ratio, 0.0, 1.0) * 10.0)), 0, 10)
-	var result := ""
-	for i in range(10):
-		result += "█" if i < filled else "░"
-	return result
 
 func show_interaction_prompt(prompt_text: String = "[E] HABLAR") -> void:
 	if interaction_prompt:

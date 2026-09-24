@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
 [ext_resource type="Script" path="res://scripts/lake_minimap.gd" id="2_minimap"]
+[ext_resource type="PackedScene" path="res://scenes/ui/LakeStatusMeter.tscn" id="3_meter"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -74,45 +75,22 @@ theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
 theme_override_font_sizes/font_size = 16
 text = "[░░░░░░░░░░]"
 
-[node name="RowingContainer" type="VBoxContainer" parent="Control"]
+[node name="RowingContainer" parent="Control" instance=ExtResource("3_meter")]
 visible = false
 layout_mode = 0
 offset_left = 20.0
-offset_top = 110.0
-offset_right = 280.0
-offset_bottom = 160.0
+offset_top = 112.0
+offset_right = 360.0
+offset_bottom = 198.0
 
-[node name="RowingTitle" type="Label" parent="Control/RowingContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.45, 0.85, 1, 1)
-theme_override_font_sizes/font_size = 14
-text = "REMO:"
-
-[node name="RowingBarLabel" type="Label" parent="Control/RowingContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.45, 0.85, 1, 1)
-theme_override_font_sizes/font_size = 18
-text = "██████████"
-
-[node name="AlertContainer" type="VBoxContainer" parent="Control"]
+[node name="AlertContainer" parent="Control" instance=ExtResource("3_meter")]
 visible = false
 layout_mode = 0
 offset_left = 20.0
-offset_top = 170.0
-offset_right = 280.0
-offset_bottom = 220.0
-
-[node name="AlertTitle" type="Label" parent="Control/AlertContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.35, 0.3, 1)
-theme_override_font_sizes/font_size = 14
-text = "ALERTA:"
-
-[node name="AlertBarLabel" type="Label" parent="Control/AlertContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.5, 0.25, 1)
-theme_override_font_sizes/font_size = 18
-text = "░░░░░░░░░░"
+offset_top = 208.0
+offset_right = 360.0
+offset_bottom = 294.0
+meter_kind = 1
 
 [node name="SpeedPanel" type="Panel" parent="Control"]
 visible = false
