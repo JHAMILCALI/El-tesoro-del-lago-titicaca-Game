@@ -5,8 +5,11 @@ signal player_caught(enemy: EnemyBoat)
 
 enum State { PATROL, CHASE, LOST }
 
+const CAPTURE_FORWARD_REACH := 100.0
+const CAPTURE_SIDE_REACH := 38.0
+
 @export var patrol_speed: float = 80.0
-@export var chase_speed: float = 125.0
+@export var chase_speed: float = 175.0
 @export var detection_range: float = 300.0
 @export var lose_range: float = 470.0
 @export var follow_distance: float = 140.0
@@ -50,9 +53,10 @@ func _physics_process(delta: float) -> void:
 		current_target = player.global_position
 		_chase_player(distance)
 		var level = get_tree().get_first_node_in_group("lake_level")
-		if distance < 58.0 and _is_in_front_of_player() and capture_cooldown <= 0.0 and level and level.has_method("request_enemy_capture") and level.request_enemy_capture(self):
+		if _is_head_on_contact() and capture_cooldown <= 0.0 and level and level.has_method("request_enemy_capture") and level.request_enemy_capture(self):
 			capture_cooldown = 2.0
 			player_caught.emit(self)
+			return
 		if level and level.has_method("set_enemy_pressure"):
 			level.set_enemy_pressure(self, true, distance)
 	else:
@@ -118,6 +122,13 @@ func _is_in_front_of_player() -> bool:
 	var from_player_to_enemy := player.global_position.direction_to(global_position)
 	# 0.55 equivale aproximadamente a un cono frontal de 113 grados.
 	return player_forward.dot(from_player_to_enemy) > 0.55
+
+func _is_head_on_contact() -> bool:
+	var player_forward := Vector2.from_angle(player.rotation)
+	var offset := global_position - player.global_position
+	var forward_distance := offset.dot(player_forward)
+	var side_distance := absf(player_forward.cross(offset))
+	return forward_distance > 0.0 and forward_distance <= CAPTURE_FORWARD_REACH and side_distance <= CAPTURE_SIDE_REACH
 
 func set_home_position(new_home: Vector2) -> void:
 	home_position = new_home

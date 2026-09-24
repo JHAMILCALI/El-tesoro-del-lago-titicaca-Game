@@ -1,0 +1,116 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/lake_capture_sequence.gd" id="1_sequence"]
+[ext_resource type="PackedScene" path="res://scenes/objects/PlayerBoatVisual.tscn" id="2_boat"]
+[ext_resource type="Texture2D" path="res://assets/sprites/spanish_rowboat_v2.png" id="3_spanish"]
+[ext_resource type="Texture2D" path="res://assets/tiles/lake_current_flow.png" id="4_current"]
+
+[node name="LakeCaptureSequence" type="CanvasLayer"]
+layer = 20
+script = ExtResource("1_sequence")
+
+[node name="Screen" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Veil" type="ColorRect" parent="Screen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.015, 0.055, 0.095, 0)
+
+[node name="Stage" type="Node2D" parent="Screen"]
+modulate = Color(1, 1, 1, 0)
+
+[node name="CurrentBack" type="Sprite2D" parent="Screen/Stage"]
+texture_filter = 1
+position = Vector2(0, -35)
+scale = Vector2(0.32, 0.42)
+modulate = Color(0.45, 0.72, 0.86, 0.22)
+texture = ExtResource("4_current")
+
+[node name="CurrentFront" type="Sprite2D" parent="Screen/Stage"]
+texture_filter = 1
+position = Vector2(0, 115)
+scale = Vector2(0.28, 0.25)
+modulate = Color(0.45, 0.72, 0.86, 0.16)
+texture = ExtResource("4_current")
+flip_h = true
+
+[node name="Impact" type="Line2D" parent="Screen/Stage"]
+position = Vector2(0, -58)
+modulate = Color(1, 1, 1, 0)
+width = 2.0
+default_color = Color(0.62, 0.9, 1, 0.7)
+closed = true
+
+[node name="Player" parent="Screen/Stage" instance=ExtResource("2_boat")]
+position = Vector2(0, 76)
+scale = Vector2(1.65, 1.65)
+
+[node name="Blocker" parent="Screen/Stage" instance=ExtResource("2_boat")]
+position = Vector2(0, -270)
+rotation = 3.1415927
+scale = Vector2(1.65, 1.65)
+crewed_texture = ExtResource("3_spanish")
+
+[node name="LeftEscort" parent="Screen/Stage" instance=ExtResource("2_boat")]
+position = Vector2(-280, 100)
+scale = Vector2(1.65, 1.65)
+crewed_texture = ExtResource("3_spanish")
+
+[node name="RightEscort" parent="Screen/Stage" instance=ExtResource("2_boat")]
+position = Vector2(280, 100)
+scale = Vector2(1.65, 1.65)
+crewed_texture = ExtResource("3_spanish")
+
+[node name="Ropes" type="Node2D" parent="Screen/Stage"]
+modulate = Color(1, 1, 1, 0)
+
+[node name="Left" type="Line2D" parent="Screen/Stage/Ropes"]
+points = PackedVector2Array(-76, 32, -53, 39, -25, 35)
+width = 3.0
+default_color = Color(0.82, 0.65, 0.36, 1)
+
+[node name="Right" type="Line2D" parent="Screen/Stage/Ropes"]
+points = PackedVector2Array(25, 35, 53, 39, 76, 32)
+width = 3.0
+default_color = Color(0.82, 0.65, 0.36, 1)
+
+[node name="Title" type="Label" parent="Screen/Stage"]
+offset_left = -340.0
+offset_top = -238.0
+offset_right = 340.0
+offset_bottom = -183.0
+theme_override_colors/font_color = Color(1, 0.81, 0.48, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 32
+text = "¡ALTO!"
+horizontal_alignment = 1
+
+[node name="Caption" type="Label" parent="Screen/Stage"]
+offset_left = -350.0
+offset_top = 181.0
+offset_right = 350.0
+offset_bottom = 232.0
+theme_override_colors/font_color = Color(0.82, 0.91, 0.96, 1)
+theme_override_font_sizes/font_size = 19
+text = "Las barcas españolas cierran el paso."
+horizontal_alignment = 1
+
+[node name="Fade" type="ColorRect" parent="Screen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)

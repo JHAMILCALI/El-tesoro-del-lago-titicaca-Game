@@ -2,6 +2,7 @@ extends Node2D
 
 const SPANISH_ROWBOAT = preload("res://scenes/enemies/SpanishRowboat.tscn")
 const CURRENT_VISUAL = preload("res://scenes/objects/LakeCurrentVisual.tscn")
+const CAPTURE_SEQUENCE = preload("res://scenes/ui/LakeCaptureSequence.tscn")
 const ENEMY_EVENT_TIME := 18.0
 const WAVE_TRIGGER_X := [500.0, 2500.0, 4500.0, 6500.0, 7900.0]
 
@@ -18,7 +19,6 @@ var pressure_enemies: Dictionary = {}
 var level_finished := false
 var next_wave_index := 0
 var capture_in_progress := false
-var start_position := Vector2.ZERO
 var active_captor: EnemyBoat
 
 func _ready() -> void:
@@ -33,7 +33,6 @@ func _ready() -> void:
 		if old_obstacle is CollisionObject2D:
 			old_obstacle.collision_layer = 0
 	_build_extended_lake()
-	start_position = boat.global_position
 	hud.show_lake_hud(true)
 	hud.update_objective("Cruza el lago y llega al santuario.")
 	hud.update_stamina(boat.resistencia, boat.max_stamina)
@@ -58,7 +57,7 @@ func _ready() -> void:
 	_start_intro()
 
 func _process(delta: float) -> void:
-	if level_finished:
+	if level_finished or capture_in_progress:
 		return
 	elapsed_time += delta
 	if not enemies_activated and elapsed_time >= ENEMY_EVENT_TIME:
@@ -133,34 +132,27 @@ func request_enemy_capture(enemy: EnemyBoat) -> bool:
 	active_captor = enemy
 	return true
 
-func _on_player_caught(caught_enemy: EnemyBoat) -> void:
+func _on_player_caught(_caught_enemy: EnemyBoat) -> void:
 	if capture_in_progress or level_finished:
 		return
 	capture_in_progress = true
 	boat.set_movement_enabled(false)
-	# Al capturar, toda la persecución se congela: no hay giros ni empujones bruscos.
+	boat.velocity = Vector2.ZERO
+	boat.external_force = Vector2.ZERO
+	boat.set_physics_process(false)
+	boat.set_process_unhandled_input(false)
+	hud.hide()
+	dialogue_box.hide()
+	dialogue_box.set_process_unhandled_input(false)
 	for enemy in enemy_boats:
 		if enemy is EnemyBoat:
 			enemy.velocity = Vector2.ZERO
 			enemy.set_physics_process(false)
-	show_notification("¡Te atrapamos! Regresas al muelle en 3 segundos.", 3.0)
-	await get_tree().create_timer(3.0).timeout
-	boat.global_position = start_position
-	boat.velocity = Vector2.ZERO
-	boat.velocidad_actual = 0.0
-	boat.external_force = Vector2.ZERO
-	boat.resistencia = boat.max_stamina
-	boat.stamina_changed.emit(boat.resistencia, boat.max_stamina)
-	pressure_enemies.clear()
-	alert_system.danger_sources = 0
-	alert_system.set_value(0.0)
-	for patrol_enemy in enemy_boats:
-		if patrol_enemy is EnemyBoat:
-			patrol_enemy.reset_to_patrol()
-			patrol_enemy.set_physics_process(true)
-	active_captor = null
-	boat.set_movement_enabled(true)
-	capture_in_progress = false
+	var sequence := CAPTURE_SEQUENCE.instantiate()
+	add_child(sequence)
+	sequence.play()
+	await sequence.finished
+	get_tree().reload_current_scene()
 
 func _build_extended_lake() -> void:
 	# Las rocas están instanciadas en la escena para poder editar sus gráficos y colisiones.
@@ -222,7 +214,7 @@ func _on_sacred_zone_body_exited(body: Node2D) -> void:
 		inside_sacred_zone = false
 
 func _on_finish_area_body_entered(body: Node2D) -> void:
-	if body != boat or level_finished:
+	if body != boat or level_finished or capture_in_progress:
 		return
 	level_finished = true
 	boat.set_movement_enabled(false)
