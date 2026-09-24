@@ -192,10 +192,6 @@ func _process_alert(delta: float) -> void:
 		alert_label.visible = true
 		alert_label.text = "¡Alerta!"
 
-	var hud = get_tree().get_first_node_in_group("hud")
-	if hud and hud.has_method("show_temporary_notification"):
-		hud.show_temporary_notification("¡Alerta!", 0.2)
-
 	_check_player_detection(delta)
 
 func _process_capture() -> void:
@@ -312,6 +308,10 @@ func _check_player_detection(delta: float) -> void:
 				return
 
 	# Pasco is visible in detection area and clear Line of Sight
+	if current_state != State.ALERT:
+		var hud = get_tree().get_first_node_in_group("hud")
+		if hud and hud.has_method("show_temporary_notification"):
+			hud.show_temporary_notification("¡Alerta!", 1.2)
 	current_state = State.ALERT
 	detection_timer += delta
 	if detection_timer >= detection_duration:

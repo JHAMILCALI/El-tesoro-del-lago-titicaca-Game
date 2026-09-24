@@ -5,7 +5,7 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_thrown_stone"]
 atlas = ExtResource("2_stones")
-region = Rect2(190, 410, 140, 150)
+region = Rect2(68, 180, 325, 290)
 
 [node name="Stone" type="Node2D"]
 script = ExtResource("1_stone")
@@ -13,7 +13,7 @@ script = ExtResource("1_stone")
 [node name="StoneSprite" type="Sprite2D" parent="."]
 texture_filter = 1
 texture = SubResource("AtlasTexture_thrown_stone")
-scale = Vector2(0.14, 0.14)
+scale = Vector2(0.075, 0.075)
 
 [node name="ColorRect" type="ColorRect" parent="."]
 visible = false

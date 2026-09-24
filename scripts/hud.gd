@@ -2,14 +2,15 @@ extends CanvasLayer
 class_name HUD
 
 const StatusMeter = preload("res://scripts/lake_status_meter.gd")
+const HudNoticeScript = preload("res://scripts/hud_notice.gd")
 
 signal restart_requested
 signal menu_requested
 signal next_level_requested
 
-@onready var objective_label: Label = $Control/ObjectiveLabel
+@onready var objective_label: Label = $Control/ObjectivePanel/ObjectiveLabel
 @onready var interaction_prompt: Label = $Control/InteractionPrompt
-@onready var notification_label: Label = $Control/NotificationLabel
+@onready var notification_panel: HudNoticeScript = $Control/NotificationPanel
 @onready var alpha_complete_panel: Panel = $Control/AlphaCompletePanel
 @onready var next_level_button: Button = $Control/AlphaCompletePanel/VBoxContainer/NextLevelButton
 @onready var restart_button: Button = $Control/AlphaCompletePanel/VBoxContainer/RestartButton
@@ -33,8 +34,8 @@ func _ready() -> void:
 
 	if interaction_prompt:
 		interaction_prompt.visible = false
-	if notification_label:
-		notification_label.visible = false
+	if notification_panel:
+		notification_panel.visible = false
 	if alpha_complete_panel:
 		alpha_complete_panel.visible = false
 	if detection_container:
@@ -57,11 +58,11 @@ func _ready() -> void:
 
 func update_objective(text: String) -> void:
 	if objective_label:
-		objective_label.text = "OBJETIVO:\n" + text
+		objective_label.text = text
 
 func update_stone_count(count: int) -> void:
 	if stone_count_label:
-		stone_count_label.text = "PIEDRAS: " + str(count) + "  [Clic Izq]"
+		stone_count_label.text = "%02d" % count
 
 func update_detection_progress(ratio: float) -> void:
 	if not detection_container or not detection_bar_label:
@@ -117,13 +118,8 @@ func hide_interaction_prompt() -> void:
 		interaction_prompt.visible = false
 
 func show_temporary_notification(message: String, duration: float = 2.0) -> void:
-	if notification_label:
-		notification_label.text = message
-		notification_label.visible = true
-		get_tree().create_timer(duration).timeout.connect(func():
-			if notification_label and notification_label.text == message:
-				notification_label.visible = false
-		)
+	if notification_panel:
+		notification_panel.show_message(message, duration)
 
 func show_alpha_complete() -> void:
 	if alpha_complete_panel:

@@ -1,8 +1,28 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
 [ext_resource type="Script" path="res://scripts/lake_minimap.gd" id="2_minimap"]
 [ext_resource type="PackedScene" path="res://scenes/ui/LakeStatusMeter.tscn" id="3_meter"]
+[ext_resource type="Texture2D" path="res://assets/tiles/piedra 1.png" id="4_stones"]
+[ext_resource type="Script" path="res://scripts/hud_notice.gd" id="5_notice"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud_plaque"]
+bg_color = Color(0.129, 0.105, 0.09, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72, 0.52, 0.28, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.42)
+shadow_size = 5
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hud_stone"]
+atlas = ExtResource("4_stones")
+region = Rect2(68, 180, 325, 290)
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -21,39 +41,105 @@ layout_mode = 0
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 380.0
-offset_bottom = 100.0
+offset_bottom = 102.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hud_plaque")
 
-[node name="ObjectiveLabel" type="Label" parent="Control"]
+[node name="ObjectiveAccent" type="ColorRect" parent="Control/ObjectivePanel"]
+offset_left = 14.0
+offset_top = 13.0
+offset_right = 18.0
+offset_bottom = 29.0
+mouse_filter = 2
+color = Color(0.9, 0.69, 0.35, 1)
+
+[node name="ObjectiveTitle" type="Label" parent="Control/ObjectivePanel"]
+offset_left = 27.0
+offset_top = 8.0
+offset_right = 344.0
+offset_bottom = 31.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.96, 0.79, 0.49, 1)
+theme_override_font_sizes/font_size = 15
+text = "OBJETIVO"
+
+[node name="ObjectiveRule" type="ColorRect" parent="Control/ObjectivePanel"]
+offset_left = 14.0
+offset_top = 32.0
+offset_right = 346.0
+offset_bottom = 33.0
+mouse_filter = 2
+color = Color(0.53, 0.38, 0.22, 1)
+
+[node name="ObjectiveLabel" type="Label" parent="Control/ObjectivePanel"]
 layout_mode = 0
-offset_left = 30.0
-offset_top = 25.0
-offset_right = 370.0
-offset_bottom = 95.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+offset_left = 16.0
+offset_top = 39.0
+offset_right = 344.0
+offset_bottom = 77.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.96, 0.87, 1)
 theme_override_font_sizes/font_size = 16
-text = "OBJETIVO:
-Avanza con cuidado por el camino."
+text = "Avanza con cuidado por el camino."
 autowrap_mode = 2
 
 [node name="StoneCountPanel" type="Panel" parent="Control"]
 layout_mode = 0
 offset_left = 400.0
 offset_top = 20.0
-offset_right = 580.0
-offset_bottom = 70.0
+offset_right = 628.0
+offset_bottom = 102.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hud_plaque")
+
+[node name="StoneMedallion" type="Panel" parent="Control/StoneCountPanel"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 72.0
+offset_bottom = 72.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hud_plaque")
+
+[node name="StoneIcon" type="TextureRect" parent="Control/StoneCountPanel/StoneMedallion"]
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 56.0
+offset_bottom = 56.0
+mouse_filter = 2
+texture_filter = 1
+texture = SubResource("AtlasTexture_hud_stone")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StoneTitle" type="Label" parent="Control/StoneCountPanel"]
+offset_left = 83.0
+offset_top = 8.0
+offset_right = 218.0
+offset_bottom = 31.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.96, 0.79, 0.49, 1)
+theme_override_font_sizes/font_size = 15
+text = "PIEDRAS"
 
 [node name="StoneCountLabel" type="Label" parent="Control/StoneCountPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
-theme_override_font_sizes/font_size = 16
-text = "PIEDRAS: 3  [Clic Izq]"
-horizontal_alignment = 1
-vertical_alignment = 1
+offset_left = 84.0
+offset_top = 29.0
+offset_right = 218.0
+offset_bottom = 62.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.94, 0.71, 1)
+theme_override_font_sizes/font_size = 27
+text = "03"
+
+[node name="StoneHint" type="Label" parent="Control/StoneCountPanel"]
+offset_left = 84.0
+offset_top = 60.0
+offset_right = 218.0
+offset_bottom = 76.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.77, 0.7, 0.58, 1)
+theme_override_font_sizes/font_size = 11
+text = "CLIC IZQ · LANZAR"
 
 [node name="DetectionContainer" type="VBoxContainer" parent="Control"]
 visible = false
@@ -179,22 +265,65 @@ text = "[E] Interactuar"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="NotificationLabel" type="Label" parent="Control"]
+[node name="NotificationPanel" type="Panel" parent="Control"]
 visible = false
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -250.0
-offset_top = 30.0
-offset_right = 250.0
-offset_bottom = 80.0
+offset_left = -260.0
+offset_top = 114.0
+offset_right = 260.0
+offset_bottom = 180.0
 grow_horizontal = 2
-theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hud_plaque")
+script = ExtResource("5_notice")
+
+[node name="Accent" type="ColorRect" parent="Control/NotificationPanel"]
+offset_left = 13.0
+offset_top = 12.0
+offset_right = 17.0
+offset_bottom = 58.0
+mouse_filter = 2
+color = Color(0.89, 0.71, 0.37, 1)
+
+[node name="Symbol" type="Label" parent="Control/NotificationPanel"]
+offset_left = 23.0
+offset_top = 21.0
+offset_right = 45.0
+offset_bottom = 53.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.89, 0.71, 0.37, 1)
 theme_override_font_sizes/font_size = 24
+text = "◆"
+
+[node name="Heading" type="Label" parent="Control/NotificationPanel"]
+offset_left = 52.0
+offset_top = 10.0
+offset_right = 504.0
+offset_bottom = 27.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.89, 0.71, 0.37, 1)
+theme_override_font_sizes/font_size = 12
+text = "AVISO"
+
+[node name="NotificationLabel" type="Label" parent="Control/NotificationPanel"]
+offset_left = 52.0
+offset_top = 28.0
+offset_right = 504.0
+offset_bottom = 62.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.86, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 17
 text = "¡Alerta!"
-horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="HideTimer" type="Timer" parent="Control/NotificationPanel"]
+one_shot = true
 
 [node name="AlphaCompletePanel" type="Panel" parent="Control"]
 visible = false
