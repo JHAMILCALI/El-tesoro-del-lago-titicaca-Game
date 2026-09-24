@@ -1,0 +1,110 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/level01_capture_sequence.gd" id="1_sequence"]
+[ext_resource type="Texture2D" path="res://assets/sprites/pasco_walk_v2.png" id="2_pasco"]
+[ext_resource type="Texture2D" path="res://assets/sprites/spanish_patrol_walk.png" id="3_guard"]
+[ext_resource type="Texture2D" path="res://assets/sprites/level01_captured_pasco.png" id="4_captured"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pasco"]
+atlas = ExtResource("2_pasco")
+region = Rect2(0, 0, 313, 313)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_guard"]
+atlas = ExtResource("3_guard")
+region = Rect2(0, 0, 313, 313)
+
+[node name="Level01CaptureSequence" type="CanvasLayer"]
+layer = 20
+script = ExtResource("1_sequence")
+
+[node name="Screen" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="Veil" type="ColorRect" parent="Screen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.028, 0.057, 0.054, 0)
+
+[node name="Stage" type="Node2D" parent="Screen"]
+modulate = Color(1, 1, 1, 0)
+
+[node name="GroundShadow" type="Polygon2D" parent="Screen/Stage"]
+polygon = PackedVector2Array(-205, 120, -185, 108, -130, 99, -65, 94, 65, 94, 130, 99, 185, 108, 205, 120, 185, 132, 130, 141, 65, 146, -65, 146, -130, 141, -185, 132)
+color = Color(0.07, 0.07, 0.035, 0.45)
+
+[node name="Pasco" type="Sprite2D" parent="Screen/Stage"]
+texture_filter = 1
+position = Vector2(0, 17)
+scale = Vector2(0.76, 0.76)
+texture = SubResource("AtlasTexture_pasco")
+
+[node name="GuardLeft" type="Sprite2D" parent="Screen/Stage"]
+texture_filter = 1
+position = Vector2(-305, 17)
+scale = Vector2(0.76, 0.76)
+texture = SubResource("AtlasTexture_guard")
+
+[node name="GuardRight" type="Sprite2D" parent="Screen/Stage"]
+texture_filter = 1
+position = Vector2(305, 17)
+scale = Vector2(0.76, 0.76)
+texture = SubResource("AtlasTexture_guard")
+
+[node name="Captured" type="Sprite2D" parent="Screen/Stage"]
+texture_filter = 1
+position = Vector2(0, 12)
+scale = Vector2(0.3, 0.3)
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("4_captured")
+
+[node name="Impact" type="Line2D" parent="Screen/Stage"]
+modulate = Color(1, 1, 1, 0)
+points = PackedVector2Array(-90, -10, -62, -57, 0, -75, 62, -57, 90, -10, 62, 46, 0, 65, -62, 46)
+width = 3.0
+default_color = Color(1, 0.8, 0.44, 0.8)
+closed = true
+
+[node name="Title" type="Label" parent="Screen/Stage"]
+offset_left = -350.0
+offset_top = -245.0
+offset_right = 350.0
+offset_bottom = -190.0
+theme_override_colors/font_color = Color(1, 0.82, 0.5, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 34
+text = "¡ALTO!"
+horizontal_alignment = 1
+
+[node name="Caption" type="Label" parent="Screen/Stage"]
+offset_left = -365.0
+offset_top = 178.0
+offset_right = 365.0
+offset_bottom = 230.0
+theme_override_colors/font_color = Color(0.88, 0.93, 0.82, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 19
+text = "Una patrulla española cierra el paso."
+horizontal_alignment = 1
+
+[node name="Fade" type="ColorRect" parent="Screen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)

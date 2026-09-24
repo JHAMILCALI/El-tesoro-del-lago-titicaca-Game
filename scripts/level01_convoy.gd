@@ -1,5 +1,7 @@
 extends Node2D
 
+const CAPTURE_SEQUENCE = preload("res://scenes/ui/Level01CaptureSequence.tscn")
+
 enum StoryState {
 	START = 0,
 	PATROL_1_PASSED = 1,
@@ -52,6 +54,9 @@ var has_heard_secret_convo: bool = false
 var is_near_dock_boat: bool = false
 var is_changing_to_boat_level: bool = false
 
+var capture_in_progress: bool = false
+var capture_grace_until_ms: int = 0
+
 func _ready() -> void:
 	last_checkpoint_pos = start_checkpoint.global_position
 	hud.update_objective("Explora el sendero y encuentra a Huita.")
@@ -100,6 +105,8 @@ func _ready() -> void:
 		house.treasure_proximity_changed.connect(_on_treasure_proximity_changed)
 
 func _unhandled_input(event: InputEvent) -> void:
+	if capture_in_progress:
+		return
 	var dist_to_dock := 9999.0
 	if dock_area and pasco:
 		dist_to_dock = pasco.global_position.distance_to(dock_area.global_position)
@@ -352,17 +359,50 @@ func _on_hide_zone_exited(body: Node2D) -> void:
 		body.exit_hide_area()
 
 func _on_player_captured() -> void:
-	hud.show_temporary_notification("HAS SIDO DESCUBIERTO", 2.0)
-	_teleport_player(last_checkpoint_pos)
-	pasco.set_movement_enabled(true)
+	if capture_in_progress or is_changing_to_boat_level or story_state == StoryState.LEVEL_COMPLETED or Time.get_ticks_msec() < capture_grace_until_ms:
+		return
+	capture_in_progress = true
+	var checkpoint_pos := last_checkpoint_pos
+	var hud_was_visible: bool = hud.visible
+	var dialogue_was_visible: bool = dialogue_box.visible
+	var huita_was_processing := huita.is_physics_processing() if huita else false
+	var patrol_processing := {}
+	pasco.set_movement_enabled(false)
+	pasco.velocity = Vector2.ZERO
+	hud.hide_interaction_prompt()
+	hud.visible = false
+	dialogue_box.visible = false
+	if huita:
+		huita.set_physics_process(false)
+	for patrol in [spanish_patrol1, spanish_patrol2, spanish_patrol_north1, spanish_patrol_north2]:
+		if patrol:
+			patrol_processing[patrol] = patrol.is_physics_processing()
+			patrol.set_physics_process(false)
+
+	var sequence := CAPTURE_SEQUENCE.instantiate()
+	add_child(sequence)
+	sequence.play()
+	await sequence.finished
+	sequence.queue_free()
+
+	_teleport_player(checkpoint_pos)
 
 	if story_state >= StoryState.ESCORT_HUITA_TO_DOCK and huita:
-		huita.global_position = last_checkpoint_pos + Vector2(-40, 0)
+		huita.global_position = checkpoint_pos + Vector2(-40, 0)
 		huita.start_following(pasco)
+	if huita:
+		huita.set_physics_process(huita_was_processing)
 
 	for patrol in [spanish_patrol1, spanish_patrol2, spanish_patrol_north1, spanish_patrol_north2]:
-		if patrol and patrol.visible:
+		if patrol:
 			patrol.reset_patrol()
+			patrol.set_physics_process(patrol_processing[patrol])
+	hud.visible = hud_was_visible
+	dialogue_box.visible = dialogue_was_visible
+	pasco.set_movement_enabled(true)
+	capture_grace_until_ms = Time.get_ticks_msec() + 1200
+	capture_in_progress = false
+	hud.show_temporary_notification("Regresaste al último checkpoint", 2.0)
 
 func _teleport_player(target_position: Vector2) -> void:
 	pasco.clear_hide_state()
