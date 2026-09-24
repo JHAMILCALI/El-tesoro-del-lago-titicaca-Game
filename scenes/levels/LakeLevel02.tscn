@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/DialogueBox.tscn" id="4_dialogue"]
 [ext_resource type="Script" uid="uid://1f7nccfbg3tl" path="res://scripts/alert_system.gd" id="5_alert"]
 [ext_resource type="Script" uid="uid://cr06d7m6kquxt" path="res://scripts/current_zone.gd" id="7_current"]
-[ext_resource type="Texture2D" uid="uid://bruqhcr5xhiru" path="res://assets/tiles/sanctuary_temple.png" id="11_temple"]
+[ext_resource type="Texture2D" path="res://assets/tiles/sanctuary_temple_v2.png" id="11_temple"]
 
 [ext_resource type="Shader" path="res://assets/tiles/departure_shore.gdshader" id="12_shore_shader"]
 [ext_resource type="Texture2D" path="res://assets/tiles/bordes.png" id="13_shore_atlas"]
@@ -174,18 +174,21 @@ position = Vector2(8800, -700)
 scale = Vector2(0.6379585, 0.6379585)
 
 [node name="SanctuaryLabel" type="Label" parent="." unique_id=1440896346]
-offset_left = 8940.0
-offset_top = -260.0
-offset_right = 8940.0
-offset_bottom = -260.0
+offset_left = 9020.0
+offset_top = -555.0
+offset_right = 9380.0
+offset_bottom = -525.0
 theme_override_colors/font_color = Color(1, 0.87, 0.42, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.12, 0.1, 1)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 20
 text = "SANTUARIO"
+horizontal_alignment = 1
 
 [node name="SanctuaryTemple" type="Sprite2D" parent="." unique_id=1673261634]
 texture_filter = 1
 position = Vector2(9200, -300)
-scale = Vector2(0.85, 0.85)
+scale = Vector2(0.38, 0.38)
 texture = ExtResource("11_temple")
 
 [node name="Obstacles" type="Node2D" parent="." unique_id=52983123]
