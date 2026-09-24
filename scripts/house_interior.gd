@@ -31,6 +31,7 @@ func _ready() -> void:
 	treasure_area.body_entered.connect(_on_treasure_body_entered)
 	treasure_area.body_exited.connect(_on_treasure_body_exited)
 	if treasure_chest_sprite:
+		treasure_chest_sprite.animation_finished.connect(_on_chest_animation_finished)
 		treasure_chest_sprite.play(&"sparkle" if treasure_available else &"empty")
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -53,7 +54,7 @@ func collect_treasure() -> void:
 	if treasure_visual:
 		treasure_visual.visible = false
 	if treasure_chest_sprite:
-		treasure_chest_sprite.play(&"empty")
+		treasure_chest_sprite.play(&"collect")
 	if treasure_label:
 		treasure_label.text = "TESORO RECOGIDO"
 	if treasure_area:
@@ -68,6 +69,10 @@ func get_exterior_spawn_position() -> Vector2:
 
 func get_treasure_checkpoint_position() -> Vector2:
 	return treasure_checkpoint.global_position
+
+func _on_chest_animation_finished() -> void:
+	if treasure_chest_sprite.animation == &"collect":
+		treasure_chest_sprite.play(&"empty")
 
 func _on_door_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):

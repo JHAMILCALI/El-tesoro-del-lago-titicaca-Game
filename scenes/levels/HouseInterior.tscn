@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dofypgmco4vc2" path="res://scripts/house_interior.gd" id="1_house"]
 [ext_resource type="Texture2D" uid="uid://dvt5e8nijhmlu" path="res://assets/tiles/casa 1.png" id="2_house_tile"]
 [ext_resource type="Texture2D" path="res://assets/tiles/casa_interior.png" id="3_interior_bg"]
-[ext_resource type="Texture2D" path="res://assets/sprites/treasure_chest.png" id="4_treasure_chest"]
+[ext_resource type="Texture2D" path="res://assets/sprites/treasure_chest_v2.png" id="4_treasure_chest"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_right_wall"]
 size = Vector2(60, 400)
@@ -24,26 +24,43 @@ size = Vector2(34, 360)
 radius = 52.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_treasure"]
-radius = 48.0
+radius = 76.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_chest_base"]
+size = Vector2(86, 44)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_chest_sparkle_0"]
 atlas = ExtResource("4_treasure_chest")
-region = Rect2(0, 0, 512, 512)
+region = Rect2(0, 0, 627, 627)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_chest_sparkle_1"]
 atlas = ExtResource("4_treasure_chest")
-region = Rect2(512, 0, 512, 512)
+region = Rect2(627, 0, 627, 627)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_chest_sparkle_2"]
 atlas = ExtResource("4_treasure_chest")
-region = Rect2(0, 512, 512, 512)
+region = Rect2(0, 627, 627, 627)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_chest_empty"]
 atlas = ExtResource("4_treasure_chest")
-region = Rect2(512, 512, 512, 512)
+region = Rect2(627, 627, 627, 627)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_treasure_chest"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chest_sparkle_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chest_sparkle_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chest_empty")
+}],
+"loop": false,
+"name": &"collect",
+"speed": 6.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_chest_empty")
@@ -64,7 +81,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"sparkle",
-"speed": 4.0
+"speed": 3.0
 }]
 
 [node name="HouseInterior" type="Node2D" unique_id=295096835]
@@ -287,13 +304,23 @@ position = Vector2(110, 0)
 collision_layer = 16
 collision_mask = 2
 
+[node name="ChestBody" type="StaticBody2D" parent="Interior"]
+position = Vector2(110, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interior/ChestBody"]
+position = Vector2(0, 20)
+shape = SubResource("RectangleShape2D_chest_base")
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interior/TreasureArea" unique_id=280920347]
 shape = SubResource("CircleShape2D_treasure")
 
 [node name="TreasureChestSprite" type="AnimatedSprite2D" parent="Interior/TreasureArea"]
+z_index = 11
 texture_filter = 1
-position = Vector2(0, -10)
-scale = Vector2(0.18, 0.18)
+position = Vector2(0, -12)
+scale = Vector2(0.16, 0.16)
 sprite_frames = SubResource("SpriteFrames_treasure_chest")
 animation = &"sparkle"
 autoplay = "sparkle"
@@ -309,17 +336,21 @@ color = Color(1, 0.75, 0.08, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="TreasureLabel" type="Label" parent="Interior/TreasureArea" unique_id=289288754]
-offset_left = -60.0
-offset_top = -52.0
-offset_right = 60.0
-offset_bottom = -28.0
+z_index = 12
+offset_left = -85.0
+offset_top = -83.0
+offset_right = 85.0
+offset_bottom = -60.0
 theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_outline_color = Color(0.15, 0.08, 0.03, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 14
 text = "TESORO"
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="TriggerLabel" type="Label" parent="Interior/TreasureArea" unique_id=829476489]
+visible = false
 offset_left = -75.0
 offset_top = 32.0
 offset_right = 75.0
