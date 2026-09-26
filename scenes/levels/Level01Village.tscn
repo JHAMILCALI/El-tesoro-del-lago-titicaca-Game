@@ -1,8 +1,13 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/tiles/level01_house_adobe.png" id="1_adobe"]
 [ext_resource type="Texture2D" path="res://assets/tiles/level01_house_stone.png" id="2_stone"]
 [ext_resource type="Texture2D" path="res://assets/tiles/level01_house_round.png" id="3_round"]
+[ext_resource type="PackedScene" path="res://scenes/characters/LocalVillager.tscn" id="4_villager"]
+[ext_resource type="Texture2D" path="res://assets/sprites/npc_amauta.png" id="5_amauta"]
+[ext_resource type="Texture2D" path="res://assets/sprites/npc_weaver.png" id="6_weaver"]
+[ext_resource type="Texture2D" path="res://assets/sprites/npc_fisher.png" id="7_fisher"]
+[ext_resource type="Texture2D" path="res://assets/sprites/npc_mother.png" id="8_mother"]
 
 [node name="Level01Village" type="Node2D"]
 
@@ -97,3 +102,85 @@ texture_filter = 1
 position = Vector2(3070, 720)
 offset = Vector2(0, -106)
 texture = ExtResource("1_adobe")
+
+[node name="LocalVillagers" type="Node2D" parent="."]
+z_index = 1
+
+[node name="AmautaWest" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(115, 83)
+appearance = ExtResource("5_amauta")
+activity = 3
+
+[node name="MotherWest" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(545, 84)
+appearance = ExtResource("8_mother")
+
+[node name="WeaverNorth" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(935, 82)
+appearance = ExtResource("6_weaver")
+activity = 1
+
+[node name="FisherNorth" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(1320, 82)
+appearance = ExtResource("7_fisher")
+activity = 2
+
+[node name="AmautaEast" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(2120, 84)
+appearance = ExtResource("5_amauta")
+activity = 3
+
+[node name="MotherEast" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(2590, 82)
+appearance = ExtResource("8_mother")
+
+[node name="FisherLakeside" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(3240, 84)
+appearance = ExtResource("7_fisher")
+activity = 2
+
+[node name="FisherSouthWest" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(205, 620)
+appearance = ExtResource("7_fisher")
+grass_side = 1
+activity = 2
+
+[node name="WeaverWest" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(685, 620)
+appearance = ExtResource("6_weaver")
+grass_side = 1
+activity = 1
+
+[node name="MotherSouth" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(1095, 620)
+appearance = ExtResource("8_mother")
+grass_side = 1
+
+[node name="AmautaCenter" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(1550, 620)
+appearance = ExtResource("5_amauta")
+grass_side = 1
+activity = 3
+
+[node name="FisherSouthEast" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(2010, 620)
+appearance = ExtResource("7_fisher")
+grass_side = 1
+activity = 2
+
+[node name="WeaverEast" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(2425, 620)
+appearance = ExtResource("6_weaver")
+grass_side = 1
+activity = 1
+
+[node name="MotherFarEast" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(2840, 620)
+appearance = ExtResource("8_mother")
+grass_side = 1
+
+[node name="AmautaFarEast" parent="LocalVillagers" instance=ExtResource("4_villager")]
+position = Vector2(3300, 620)
+appearance = ExtResource("5_amauta")
+grass_side = 1
+activity = 3
