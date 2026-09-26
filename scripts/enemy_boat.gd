@@ -7,9 +7,12 @@ enum State { PATROL, CHASE, LOST }
 
 const CAPTURE_FORWARD_REACH := 100.0
 const CAPTURE_SIDE_REACH := 38.0
+const CHASE_TURN_RATE := 2.8
+const ESCORT_BLEND_DISTANCE := 90.0
 
 @export var patrol_speed: float = 80.0
 @export var chase_speed: float = 175.0
+@export var chase_acceleration: float = 360.0
 @export var detection_range: float = 300.0
 @export var lose_range: float = 470.0
 @export var follow_distance: float = 140.0
@@ -51,7 +54,7 @@ func _physics_process(delta: float) -> void:
 
 	if state == State.CHASE:
 		current_target = player.global_position
-		_chase_player(distance)
+		_chase_player(distance, delta)
 		var level = get_tree().get_first_node_in_group("lake_level")
 		if _is_head_on_contact() and capture_cooldown <= 0.0 and level and level.has_method("request_enemy_capture") and level.request_enemy_capture(self):
 			capture_cooldown = 2.0
@@ -77,25 +80,24 @@ func _move_toward(target: Vector2, speed: float) -> void:
 		rotation = velocity.angle()
 	move_and_slide()
 
-func _chase_player(distance: float) -> void:
+func _chase_player(distance: float, delta: float) -> void:
 	var direction := global_position.direction_to(player.global_position)
 	var desired_velocity := Vector2.ZERO
 	var is_lead_chaser := _is_closest_chaser(distance)
 	var is_in_front := _is_in_front_of_player()
-	if not is_in_front:
-		# Por los costados acompaña sin atravesarse frente al rumbo del jugador.
-		if distance < side_clearance:
-			desired_velocity = -direction * chase_speed * 0.55 + direction.rotated(PI * 0.5) * chase_speed * 0.4
-		else:
-			desired_velocity = direction * patrol_speed
-	elif is_lead_chaser and distance > 42.0:
+	if is_in_front and is_lead_chaser and distance > 42.0:
 		# Solo el perseguidor más cercano puede cerrar la distancia para capturar.
 		desired_velocity = direction * chase_speed
-	elif distance > follow_distance:
-		desired_velocity = direction * chase_speed
 	else:
-		# Al llegar, rodea la barca en vez de montarse encima de ella.
-		desired_velocity = -direction * chase_speed * 0.45 + direction.rotated(PI * 0.5) * chase_speed * 0.35
+		# Cerca del jugador, la corrección radial cambia gradualmente y el bote
+		# acompaña por un costado sin alternar entre avanzar y retroceder.
+		var desired_distance := follow_distance if is_in_front else side_clearance
+		var radial_error := distance - desired_distance
+		var radial_factor := clampf(radial_error / ESCORT_BLEND_DISTANCE, -0.4, 1.0)
+		var approach_speed := chase_speed if is_in_front else patrol_speed
+		var radial_speed := radial_factor * (approach_speed if radial_factor >= 0.0 else chase_speed)
+		var orbit_factor := 1.0 - clampf(radial_error / ESCORT_BLEND_DISTANCE, 0.0, 1.0)
+		desired_velocity = direction * radial_speed + direction.orthogonal() * chase_speed * 0.35 * orbit_factor
 	for other in get_tree().get_nodes_in_group("enemy_boat"):
 		if other == self or not other is Node2D or not other.visible:
 			continue
@@ -104,9 +106,10 @@ func _chase_player(distance: float) -> void:
 		var separation_length: float = separation.length()
 		if separation_length > 0.0 and separation_length < separation_distance:
 			desired_velocity += separation.normalized() * chase_speed * (separation_distance - separation_length) / separation_distance
-	velocity = desired_velocity.limit_length(chase_speed)
-	if velocity.length() > 0.0:
-		rotation = velocity.angle()
+	velocity = velocity.move_toward(desired_velocity.limit_length(chase_speed), chase_acceleration * delta)
+	if velocity.length_squared() > 25.0:
+		var angle_error := wrapf(velocity.angle() - rotation, -PI, PI)
+		rotation += clampf(angle_error, -CHASE_TURN_RATE * delta, CHASE_TURN_RATE * delta)
 	move_and_slide()
 
 func _is_closest_chaser(my_distance: float) -> bool:
