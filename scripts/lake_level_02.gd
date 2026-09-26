@@ -5,6 +5,10 @@ const CURRENT_VISUAL = preload("res://scenes/objects/LakeCurrentVisual.tscn")
 const CAPTURE_SEQUENCE = preload("res://scenes/ui/LakeCaptureSequence.tscn")
 const ENEMY_EVENT_TIME := 18.0
 const WAVE_TRIGGER_X := [500.0, 2500.0, 4500.0, 6500.0, 7900.0]
+const PERSISTENT_MUSIC = preload("res://scripts/persistent_music.gd")
+const BACKGROUND_MUSIC = preload("res://assets/audio/Escape Across Lake Titicaca.mp3")
+const BACKGROUND_MUSIC_VOLUME := 0.60
+const BACKGROUND_MUSIC_NODE := "Level02Music"
 
 @onready var boat: BoatPrototype = $BoatPrototype/Boat
 @onready var hud: HUD = $HUD
@@ -22,6 +26,7 @@ var capture_in_progress := false
 var active_captor: EnemyBoat
 
 func _ready() -> void:
+	_setup_background_music()
 	add_to_group("lake_level")
 	$BoatPrototype/CanvasLayer.hide()
 	$BoatPrototype/WaterBackground.hide()
@@ -55,6 +60,22 @@ func _ready() -> void:
 		enemy.set_physics_process(false)
 		_connect_enemy_capture(enemy)
 	_start_intro()
+
+func _setup_background_music() -> void:
+	# La música cuelga de la raíz: no se reinicia al recargar el nivel (captura/reintentar) ni se corta con la pausa.
+	var root := get_tree().root
+	if root.has_node(BACKGROUND_MUSIC_NODE):
+		return
+	var looped_music := BACKGROUND_MUSIC.duplicate() as AudioStreamMP3
+	looped_music.loop = true
+	looped_music.loop_offset = 0.0
+	var music := PERSISTENT_MUSIC.new()
+	music.name = BACKGROUND_MUSIC_NODE
+	music.scene_path = scene_file_path
+	music.stream = looped_music
+	music.volume_db = linear_to_db(BACKGROUND_MUSIC_VOLUME)
+	music.autoplay = true
+	root.add_child.call_deferred(music)
 
 func _process(delta: float) -> void:
 	if level_finished or capture_in_progress:

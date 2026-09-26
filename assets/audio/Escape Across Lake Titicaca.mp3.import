@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://f5kfpfn1fwf1"
+path="res://.godot/imported/Escape Across Lake Titicaca.mp3-147de77a930c8e2addc3963f42ead98f.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/Escape Across Lake Titicaca.mp3"
+dest_files=["res://.godot/imported/Escape Across Lake Titicaca.mp3-147de77a930c8e2addc3963f42ead98f.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
