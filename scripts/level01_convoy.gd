@@ -260,6 +260,8 @@ func _on_house_enter_requested() -> void:
 		hud.update_objective("Los guardias de la casa te descubrieron.")
 		_capture_house_intruder.call_deferred()
 		return
+	for guard in [treasure_guard_left, treasure_guard_right]:
+		guard.hold_unconscious()
 	if has_treasure:
 		hud.update_objective("Sal de la casa.")
 	else:
@@ -276,6 +278,8 @@ func _on_house_exit_requested() -> void:
 	if capture_in_progress or story_state < StoryState.HOUSE_REACHED or not house_entry_secure:
 		return
 
+	for guard in [treasure_guard_left, treasure_guard_right]:
+		guard.release_unconscious(8.0)
 	_teleport_player(house.get_exterior_spawn_position())
 	hud.hide_interaction_prompt()
 

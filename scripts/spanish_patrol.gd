@@ -20,6 +20,7 @@ var detection_timer: float = 0.0
 var state_timer: float = 0.0
 var is_waiting_at_waypoint: bool = false
 var unconscious_time_remaining: float = 0.0
+var unconscious_held: bool = false
 var facing_direction: Vector2 = Vector2.RIGHT
 
 @onready var alert_label: Label = $AlertLabel
@@ -65,11 +66,12 @@ func _physics_process(delta: float) -> void:
 
 func _process_unconscious(delta: float) -> void:
 	velocity = Vector2.ZERO
-	unconscious_time_remaining = maxf(0.0, unconscious_time_remaining - delta)
+	if not unconscious_held:
+		unconscious_time_remaining = maxf(0.0, unconscious_time_remaining - delta)
 	if alert_label:
 		alert_label.visible = true
-		alert_label.text = "DESMAYADO " + str(int(ceil(unconscious_time_remaining))) + "s"
-	if unconscious_time_remaining <= 0.0:
+		alert_label.text = "DESMAYADO" if unconscious_held else "DESMAYADO " + str(int(ceil(unconscious_time_remaining))) + "s"
+	if not unconscious_held and unconscious_time_remaining <= 0.0:
 		current_state = State.PATROL
 		is_waiting_at_waypoint = false
 		if detection_area:
@@ -93,6 +95,17 @@ func knock_out(duration: float = 8.0) -> void:
 	if alert_label:
 		alert_label.visible = true
 		alert_label.text = "DESMAYADO 8s"
+
+func hold_unconscious() -> void:
+	if current_state == State.UNCONSCIOUS:
+		unconscious_held = true
+		if alert_label:
+			alert_label.text = "DESMAYADO"
+
+func release_unconscious(duration: float = 8.0) -> void:
+	unconscious_held = false
+	if current_state == State.UNCONSCIOUS:
+		unconscious_time_remaining = maxf(unconscious_time_remaining, duration)
 
 func _process_patrol(delta: float) -> void:
 	if alert_label:
@@ -205,10 +218,14 @@ func _process_capture() -> void:
 
 func reset_patrol() -> void:
 	current_state = State.PATROL
+	unconscious_held = false
+	unconscious_time_remaining = 0.0
 	detection_timer = 0.0
 	state_timer = 0.0
 	is_player_in_area = false
 	is_waiting_at_waypoint = false
+	if detection_area:
+		detection_area.monitoring = true
 	if alert_label:
 		alert_label.visible = false
 
