@@ -130,7 +130,7 @@ func _input(event: InputEvent) -> void:
 		touch_mode_changed.emit()
 	if mode.is_empty():
 		return
-	if event.is_action_pressed("pause") and not event.is_echo():
+	if mode != "complete" and event.is_action_pressed("pause") and not event.is_echo():
 		_toggle_pause()
 		get_viewport().set_input_as_handled()
 		return
@@ -286,14 +286,21 @@ func draw_controls(canvas: Control) -> void:
 		_text(canvas, screen * 0.5 + Vector2(0, 65), "Juega en horizontal", 32)
 		return
 	if manual_paused:
-		canvas.draw_rect(Rect2(Vector2.ZERO, screen), Color(0.03, 0.04, 0.05, 0.88))
-		_text(canvas, screen * 0.5 + Vector2(0, -130), "PAUSA", 42)
+		canvas.draw_rect(Rect2(Vector2.ZERO, screen), Color(0.015, 0.045, 0.06, 0.88))
+		var card := Rect2(screen * 0.5 + Vector2(-310, -204), Vector2(620, 485))
+		canvas.draw_rect(card, Color("102b35"))
+		canvas.draw_rect(card, GOLD, false, 3.0)
+		canvas.draw_line(card.position + Vector2(30, 26), card.position + Vector2(card.size.x - 30, 26), GOLD, 3.0)
+		_text(canvas, screen * 0.5 + Vector2(0, -151), "LAGO TITICACA", 20, Color("92cdc0"))
+		_text(canvas, screen * 0.5 + Vector2(0, -112), "TRAVESÍA EN PAUSA", 38, Color("f4d08b"))
 		var labels := ["CONTINUAR", "REINICIAR NIVEL", "VOLVER AL MENÚ"]
 		for index in 3:
 			var rect := pause_rect(index)
-			canvas.draw_rect(rect, INK)
+			canvas.draw_rect(rect, Color("d9ac62") if index == 0 else Color("193945"))
 			canvas.draw_rect(rect, GOLD, false, 3.0)
-			_text(canvas, rect.get_center(), labels[index], 28)
+			_text(canvas, rect.get_center(), labels[index], 28, Color("102b35") if index == 0 else Color("fff0d3"))
+		return
+	if mode == "complete":
 		return
 	_round_button(canvas, "pause", "PAUSA", 52)
 	if can_fullscreen:
@@ -328,7 +335,7 @@ func _round_button(canvas: Control, which: String, label: String, radius: float 
 	canvas.draw_arc(center, radius, 0, TAU, 48, GOLD, 3.0, true)
 	_text(canvas, center, label, 22 if radius < BUTTON_RADIUS else 25)
 
-func _text(canvas: Control, center: Vector2, text: String, font_size: int) -> void:
+func _text(canvas: Control, center: Vector2, text: String, font_size: int, color: Color = Color("fff0d3")) -> void:
 	var font := ThemeDB.fallback_font
 	var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
-	canvas.draw_string(font, center + Vector2(-width * 0.5, font_size * 0.35), text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, Color("fff0d3"))
+	canvas.draw_string(font, center + Vector2(-width * 0.5, font_size * 0.35), text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)

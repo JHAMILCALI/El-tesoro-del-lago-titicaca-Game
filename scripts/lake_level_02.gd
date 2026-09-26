@@ -227,5 +227,5 @@ func _on_finish_area_body_entered(body: Node2D) -> void:
 	]
 	dialogue_box.start_dialogue(lines)
 	dialogue_box.dialogue_finished.connect(func():
-		hud.show_level_complete("NIVEL 2 COMPLETADO", "El santuario protege el tesoro. Nivel 3 preparado.")
+		hud.show_level_complete("EL LAGO ESTÁ A SALVO", "Pasco y Huita han llegado al santuario.\nSu historia continuará muy pronto.")
 	, CONNECT_ONE_SHOT)

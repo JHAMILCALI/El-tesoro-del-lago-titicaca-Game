@@ -5,6 +5,7 @@ class_name HUD
 
 const StatusMeter = preload("res://scripts/lake_status_meter.gd")
 const HudNoticeScript = preload("res://scripts/hud_notice.gd")
+const MenuSkin = preload("res://scripts/menu_skin.gd")
 
 signal restart_requested
 signal menu_requested
@@ -14,6 +15,7 @@ signal next_level_requested
 @onready var interaction_prompt: Label = $Control/InteractionPrompt
 @onready var notification_panel: HudNoticeScript = $Control/NotificationPanel
 @onready var alpha_complete_panel: Panel = $Control/AlphaCompletePanel
+@onready var complete_backdrop: ColorRect = $Control/CompleteBackdrop
 @onready var next_level_button: Button = $Control/AlphaCompletePanel/VBoxContainer/NextLevelButton
 @onready var restart_button: Button = $Control/AlphaCompletePanel/VBoxContainer/RestartButton
 @onready var menu_button: Button = $Control/AlphaCompletePanel/VBoxContainer/MenuButton
@@ -31,8 +33,11 @@ func _ready() -> void:
 	if control_node is Control:
 		control_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		for child in control_node.get_children():
-			if child is Control and child not in [next_level_button, restart_button, menu_button] and not child.get_parent() == alpha_complete_panel:
+			if child is Control and child not in [alpha_complete_panel, complete_backdrop]:
 				child.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	MenuSkin.style_button(next_level_button, true)
+	MenuSkin.style_button(restart_button)
+	MenuSkin.style_button(menu_button)
 
 	if interaction_prompt:
 		interaction_prompt.visible = false
@@ -40,6 +45,7 @@ func _ready() -> void:
 		notification_panel.visible = false
 	if alpha_complete_panel:
 		alpha_complete_panel.visible = false
+	complete_backdrop.visible = false
 	if detection_container:
 		detection_container.visible = false
 	if rowing_container:
@@ -99,25 +105,31 @@ func _apply_touch_layout() -> void:
 	interaction_prompt.offset_left = strip.x - half_width
 	interaction_prompt.offset_right = strip.y - half_width
 	interaction_prompt.add_theme_font_size_override("font_size", 28)
-	alpha_complete_panel.offset_left = -350
-	alpha_complete_panel.offset_right = 350
+	alpha_complete_panel.offset_left = -530
+	alpha_complete_panel.offset_right = 530
 	alpha_complete_panel.offset_top = -270
 	alpha_complete_panel.offset_bottom = 270
+	$Control/AlphaCompletePanel/TopAccent.offset_right = 1024
+	$Control/AlphaCompletePanel/ChapterLabel.offset_right = 1026
+	$Control/AlphaCompletePanel/ChapterLabel.add_theme_font_size_override("font_size", 24)
+	$Control/AlphaCompletePanel/TitleLabel.add_theme_font_size_override("font_size", 39)
+	$Control/AlphaCompletePanel/TitleRule.offset_left = 180
+	$Control/AlphaCompletePanel/TitleRule.offset_right = 880
 	var buttons: VBoxContainer = alpha_complete_panel.get_node("VBoxContainer")
-	buttons.offset_left = -270
-	buttons.offset_right = 270
-	buttons.offset_top = -310
+	buttons.offset_left = -430
+	buttons.offset_right = 430
+	buttons.offset_top = -296
 	for button in [next_level_button, restart_button, menu_button]:
 		button.custom_minimum_size.y = 82
-		button.add_theme_font_size_override("font_size", 26)
+		button.add_theme_font_size_override("font_size", 30)
 	var message: Label = alpha_complete_panel.get_node("MessageLabel")
 	message.anchor_top = 0
 	message.anchor_bottom = 0
-	message.offset_top = 80
-	message.offset_bottom = 180
-	message.offset_left = -310
-	message.offset_right = 310
-	message.add_theme_font_size_override("font_size", 24)
+	message.offset_top = 160
+	message.offset_bottom = 234
+	message.offset_left = -460
+	message.offset_right = 460
+	message.add_theme_font_size_override("font_size", 27)
 
 func update_objective(text: String) -> void:
 	if objective_label:
@@ -186,6 +198,7 @@ func show_temporary_notification(message: String, duration: float = 2.0) -> void
 
 func show_alpha_complete() -> void:
 	if alpha_complete_panel:
+		complete_backdrop.visible = true
 		alpha_complete_panel.visible = true
 	var pasco = get_tree().get_first_node_in_group("player")
 	if pasco and pasco.has_method("set_movement_enabled"):
@@ -193,6 +206,7 @@ func show_alpha_complete() -> void:
 
 func show_level_complete(title: String, message: String) -> void:
 	if alpha_complete_panel:
+		complete_backdrop.visible = true
 		alpha_complete_panel.visible = true
 		var title_label = alpha_complete_panel.get_node_or_null("TitleLabel") as Label
 		var message_label = alpha_complete_panel.get_node_or_null("MessageLabel") as Label
@@ -200,8 +214,8 @@ func show_level_complete(title: String, message: String) -> void:
 		var restart = alpha_complete_panel.get_node_or_null("VBoxContainer/RestartButton") as Button
 		if title_label: title_label.text = title
 		if message_label: message_label.text = message
-		if next_button: next_button.text = "PREPARAR NIVEL 3"
-		if restart: restart.text = "REINICIAR NIVEL 2"
+		if next_button: next_button.text = "VER LO QUE SIGUE"
+		if restart: restart.text = "REPETIR LA TRAVESÍA"
 	var player = get_tree().get_first_node_in_group("player")
 	if player and player.has_method("set_movement_enabled"):
 		player.set_movement_enabled(false)
@@ -209,6 +223,7 @@ func show_level_complete(title: String, message: String) -> void:
 func hide_alpha_complete() -> void:
 	if alpha_complete_panel:
 		alpha_complete_panel.visible = false
+	complete_backdrop.visible = false
 
 func _on_restart_pressed() -> void:
 	restart_requested.emit()

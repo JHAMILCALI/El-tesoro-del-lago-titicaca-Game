@@ -1,5 +1,7 @@
 extends Control
 
+const MenuSkin = preload("res://scripts/menu_skin.gd")
+
 @onready var mobile_controls: Node = get_node("/root/MobileControls")
 
 @onready var play_button: Button = $VBoxContainer/PlayButton
@@ -12,6 +14,9 @@ var level_01_scene: PackedScene = preload("res://scenes/levels/Level01_Convoy.ts
 var boat_scene: PackedScene = preload("res://scenes/levels/LakeLevel02.tscn")
 
 func _ready() -> void:
+	MenuSkin.style_button(play_button, true)
+	MenuSkin.style_button(boat_button)
+	MenuSkin.style_button(quit_button)
 	if background_video:
 		background_video.finished.connect(_on_video_finished)
 		background_video.play()
@@ -33,12 +38,24 @@ func _ready() -> void:
 func _apply_touch_layout() -> void:
 	if not mobile_controls.enabled:
 		return
-	$VBoxContainer.offset_left = -260
-	$VBoxContainer.offset_right = 260
-	$VBoxContainer.offset_top = -25
-	$VBoxContainer.offset_bottom = 210
+	$VBoxContainer.offset_left = -410
+	$VBoxContainer.offset_right = 410
+	$VBoxContainer.offset_top = 18
+	$VBoxContainer.offset_bottom = 230
+	$MenuCard.offset_left = -460
+	$MenuCard.offset_right = 460
+	$MenuCard/CardKicker.offset_right = 900
+	$MenuCard/CardKicker.add_theme_font_size_override("font_size", 23)
+	$MenuCard/CardRule.offset_right = 886
+	$MenuCard/CardFooter.offset_right = 890
+	$MenuCard/CardFooter.offset_top = 270
+	$MenuCard/CardFooter.offset_bottom = 292
+	$MenuCard/CardFooter.add_theme_font_size_override("font_size", 16)
+	$MenuCard.offset_bottom = 244
+	$TitleTexture.offset_top = 0
+	$TitleTexture.offset_bottom = 230
 	for button in [play_button, boat_button]:
-		button.custom_minimum_size.y = 90
+		button.custom_minimum_size.y = 82
 		button.add_theme_font_size_override("font_size", 29)
 	quit_button.hide()
 	$SubtitleLabel.text = "Controles táctiles · Juega en horizontal"
