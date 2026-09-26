@@ -11,5 +11,5 @@ polygon = PackedVector2Array(-23, -2, -19, -7, -10, -10, 10, -10, 19, -7, 23, -2
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
-offset = Vector2(0, -515)
-scale = Vector2(0.06, 0.06)
+offset = Vector2(0, -280)
+scale = Vector2(0.11, 0.11)

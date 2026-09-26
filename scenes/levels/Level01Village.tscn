@@ -4,10 +4,10 @@
 [ext_resource type="Texture2D" path="res://assets/tiles/level01_house_stone.png" id="2_stone"]
 [ext_resource type="Texture2D" path="res://assets/tiles/level01_house_round.png" id="3_round"]
 [ext_resource type="PackedScene" path="res://scenes/characters/LocalVillager.tscn" id="4_villager"]
-[ext_resource type="Texture2D" path="res://assets/sprites/npc_amauta.png" id="5_amauta"]
-[ext_resource type="Texture2D" path="res://assets/sprites/npc_weaver.png" id="6_weaver"]
-[ext_resource type="Texture2D" path="res://assets/sprites/npc_fisher.png" id="7_fisher"]
-[ext_resource type="Texture2D" path="res://assets/sprites/npc_mother.png" id="8_mother"]
+[ext_resource type="Texture2D" path="res://assets/sprites/npc_amauta_walk.png" id="5_amauta"]
+[ext_resource type="Texture2D" path="res://assets/sprites/npc_weaver_walk.png" id="6_weaver"]
+[ext_resource type="Texture2D" path="res://assets/sprites/npc_fisher_walk.png" id="7_fisher"]
+[ext_resource type="Texture2D" path="res://assets/sprites/npc_mother_walk.png" id="8_mother"]
 
 [node name="Level01Village" type="Node2D"]
 
@@ -107,80 +107,92 @@ texture = ExtResource("1_adobe")
 z_index = 1
 
 [node name="AmautaWest" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(115, 83)
+position = Vector2(255, 435)
 appearance = ExtResource("5_amauta")
 activity = 3
+route_start = Vector2(220, 435)
+route_end = Vector2(740, 435)
+walk_speed = 28.0
 
 [node name="MotherWest" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(545, 84)
+position = Vector2(610, 385)
 appearance = ExtResource("8_mother")
+route_start = Vector2(240, 385)
+route_end = Vector2(740, 385)
 
 [node name="WeaverNorth" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(935, 82)
+position = Vector2(1780, 385)
 appearance = ExtResource("6_weaver")
 activity = 1
+route_start = Vector2(1590, 385)
+route_end = Vector2(2010, 385)
 
 [node name="FisherNorth" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(1320, 82)
+position = Vector2(1950, 442)
 appearance = ExtResource("7_fisher")
 activity = 2
+route_start = Vector2(1620, 442)
+route_end = Vector2(2050, 442)
 
 [node name="AmautaEast" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(2120, 84)
+position = Vector2(2900, 440)
 appearance = ExtResource("5_amauta")
 activity = 3
+route_start = Vector2(2850, 440)
+route_end = Vector2(3220, 440)
+walk_speed = 27.0
 
 [node name="MotherEast" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(2590, 82)
+position = Vector2(3180, 385)
 appearance = ExtResource("8_mother")
+route_start = Vector2(2840, 385)
+route_end = Vector2(3210, 385)
 
 [node name="FisherLakeside" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(3240, 84)
+position = Vector2(3000, 445)
 appearance = ExtResource("7_fisher")
 activity = 2
+route_start = Vector2(2850, 445)
+route_end = Vector2(3230, 445)
 
 [node name="FisherSouthWest" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(205, 620)
+position = Vector2(725, 425)
 appearance = ExtResource("7_fisher")
-grass_side = 1
 activity = 2
+route_start = Vector2(230, 425)
+route_end = Vector2(760, 425)
 
 [node name="WeaverWest" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(685, 620)
+position = Vector2(410, 445)
 appearance = ExtResource("6_weaver")
-grass_side = 1
 activity = 1
+route_start = Vector2(220, 445)
+route_end = Vector2(760, 445)
 
 [node name="MotherSouth" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(1095, 620)
+position = Vector2(2015, 430)
 appearance = ExtResource("8_mother")
-grass_side = 1
+route_start = Vector2(1660, 430)
+route_end = Vector2(2030, 430)
 
 [node name="AmautaCenter" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(1550, 620)
+position = Vector2(1690, 435)
 appearance = ExtResource("5_amauta")
-grass_side = 1
 activity = 3
+route_start = Vector2(1620, 435)
+route_end = Vector2(2030, 435)
+walk_speed = 27.0
 
 [node name="FisherSouthEast" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(2010, 620)
+position = Vector2(2930, 430)
 appearance = ExtResource("7_fisher")
-grass_side = 1
 activity = 2
+route_start = Vector2(2840, 430)
+route_end = Vector2(3220, 430)
 
 [node name="WeaverEast" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(2425, 620)
+position = Vector2(3190, 400)
 appearance = ExtResource("6_weaver")
-grass_side = 1
 activity = 1
-
-[node name="MotherFarEast" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(2840, 620)
-appearance = ExtResource("8_mother")
-grass_side = 1
-
-[node name="AmautaFarEast" parent="LocalVillagers" instance=ExtResource("4_villager")]
-position = Vector2(3300, 620)
-appearance = ExtResource("5_amauta")
-grass_side = 1
-activity = 3
+route_start = Vector2(2840, 400)
+route_end = Vector2(3230, 400)

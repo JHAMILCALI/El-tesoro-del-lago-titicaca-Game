@@ -2,66 +2,67 @@ extends Node2D
 class_name LocalVillager
 
 enum Activity { WALK, WEAVE, FISH, REST }
-enum GrassSide { NORTH, SOUTH }
+
+const WALK_FRAMES := 4
+const WALK_FPS := 7.0
 
 @export var appearance: Texture2D
 @export var activity: Activity = Activity.WALK
-@export var grass_side: GrassSide = GrassSide.NORTH
-@export var walk_speed: float = 22.0
-@export var wander_radius: float = 38.0
-@export var spanish_clearance: float = 205.0
+@export var route_start: Vector2
+@export var route_end: Vector2
+@export var walk_speed: float = 34.0
+@export var spanish_clearance: float = 155.0
 
-var home: Vector2
 var destination: Vector2
 var pause_remaining: float = 0.0
 var motion_time: float = 0.0
+var walk_elapsed: float = 0.0
+var current_walk_frame: int = 1
 var rng := RandomNumberGenerator.new()
 
 @onready var sprite: Sprite2D = $Sprite2D
 
 func _ready() -> void:
 	add_to_group("local_villagers")
-	home = global_position
-	rng.seed = int(absf(home.x * 37.0 + home.y * 101.0)) + 1
-	pause_remaining = rng.randf_range(0.5, 2.5)
-	destination = _on_grass(home + Vector2(rng.randf_range(-wander_radius, wander_radius), rng.randf_range(-13.0, 13.0)))
+	rng.seed = int(absf(global_position.x * 37.0 + global_position.y * 101.0)) + 1
+	if route_start.is_equal_approx(route_end):
+		route_start = global_position
+		route_end = global_position + Vector2(300.0, 0.0)
+	destination = route_end if global_position.distance_to(route_start) <= global_position.distance_to(route_end) else route_start
+	pause_remaining = rng.randf_range(0.2, 1.1)
 	sprite.texture = appearance
+	sprite.region_enabled = true
+	sprite.region_filter_clip_enabled = true
+	_set_frame(1)
 
 func _physics_process(delta: float) -> void:
 	motion_time += delta
 	var nearest_spanish := _nearest_active_spanish()
 	if nearest_spanish != null and global_position.distance_to(nearest_spanish.global_position) < spanish_clearance:
-		var away := global_position - nearest_spanish.global_position
-		if away.length_squared() < 0.01:
-			away = Vector2.UP if grass_side == GrassSide.NORTH else Vector2.DOWN
-		var retreat := global_position + away.normalized() * walk_speed * 1.8 * delta
-		global_position = _on_grass(retreat)
-		destination = global_position
-		pause_remaining = 0.8
-		_animate(true)
+		var retreat_target := route_start if route_start.distance_to(nearest_spanish.global_position) > route_end.distance_to(nearest_spanish.global_position) else route_end
+		destination = retreat_target
+		pause_remaining = 0.0
+		_move_to_destination(delta, walk_speed * 1.45)
 		return
 
 	if pause_remaining > 0.0:
 		pause_remaining -= delta
-		_animate(false)
+		_animate(false, delta)
 		return
 
 	if global_position.distance_to(destination) <= 3.0:
-		pause_remaining = rng.randf_range(1.8, 4.0) if activity == Activity.WALK else rng.randf_range(3.5, 6.0)
-		var offset := Vector2(rng.randf_range(-wander_radius, wander_radius), rng.randf_range(-13.0, 13.0))
-		destination = _on_grass(home + offset)
-		_animate(false)
+		destination = route_start if destination.is_equal_approx(route_end) else route_end
+		pause_remaining = rng.randf_range(1.1, 2.0) if activity == Activity.WALK else rng.randf_range(2.5, 4.0)
+		_animate(false, delta)
 		return
 
-	var next_position := global_position.move_toward(destination, walk_speed * delta)
-	global_position = _on_grass(next_position)
-	sprite.flip_h = destination.x < global_position.x
-	_animate(true)
+	_move_to_destination(delta, walk_speed)
 
-func _on_grass(point: Vector2) -> Vector2:
-	var y_min := 35.0 if grass_side == GrassSide.NORTH else 585.0
-	var y_max := 95.0 if grass_side == GrassSide.NORTH else 655.0
-	return Vector2(clampf(point.x, home.x - wander_radius, home.x + wander_radius), clampf(point.y, y_min, y_max))
+func _move_to_destination(delta: float, speed: float) -> void:
+	var previous_position := global_position
+	sprite.flip_h = destination.x < global_position.x
+	global_position = global_position.move_toward(destination, speed * delta)
+	_animate(global_position.distance_squared_to(previous_position) > 0.001, delta)
 
 func _nearest_active_spanish() -> SpanishPatrol:
 	var nearest: SpanishPatrol = null
@@ -74,14 +75,27 @@ func _nearest_active_spanish() -> SpanishPatrol:
 				nearest = node
 	return nearest
 
-func _animate(walking: bool) -> void:
-	var bob := sin(motion_time * 9.0) * 2.0 if walking else 0.0
-	if not walking and activity != Activity.REST:
-		bob = sin(motion_time * 2.2) * 0.8
-	sprite.position.y = -1.0 + bob
-	if activity == Activity.WEAVE and not walking:
+func _animate(walking: bool, delta: float) -> void:
+	if walking:
+		walk_elapsed += delta * WALK_FPS
+		_set_frame(int(walk_elapsed) % WALK_FRAMES)
+		sprite.position.y = -1.0 + sin(motion_time * 14.0) * 0.8
+		sprite.rotation = 0.0
+		return
+
+	walk_elapsed = 0.0
+	_set_frame(1)
+	sprite.position.y = -1.0 + sin(motion_time * 2.2) * 0.6
+	if activity == Activity.WEAVE:
 		sprite.rotation = sin(motion_time * 3.0) * 0.018
-	elif activity == Activity.FISH and not walking:
+	elif activity == Activity.FISH:
 		sprite.rotation = sin(motion_time * 1.5) * 0.012
 	else:
 		sprite.rotation = 0.0
+
+func _set_frame(frame: int) -> void:
+	if appearance == null:
+		return
+	current_walk_frame = frame
+	var frame_width := appearance.get_width() / WALK_FRAMES
+	sprite.region_rect = Rect2(frame * frame_width, 0, frame_width, appearance.get_height())
