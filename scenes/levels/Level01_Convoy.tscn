@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://brho7h7lry3sj"]
 
 [ext_resource type="Script" uid="uid://coi0sqi4xiek3" path="res://scripts/level01_convoy.gd" id="1_level"]
+[ext_resource type="AudioStream" path="res://assets/audio/Ambient Background Version.mp3" id="1_level_music"]
 [ext_resource type="PackedScene" path="res://scenes/characters/Pasco.tscn" id="2_pasco"]
 [ext_resource type="PackedScene" path="res://scenes/characters/Huita.tscn" id="3_huita"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/SpanishPatrol.tscn" id="4_patrol"]
@@ -83,6 +84,10 @@ region = Rect2(1448, 0, 724, 724)
 
 [node name="Level01_Convoy" type="Node2D" unique_id=902698703]
 script = ExtResource("1_level")
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_level_music")
+volume_db = -4.43697
 
 [node name="Terrain" type="Node2D" parent="." unique_id=315711161]
 

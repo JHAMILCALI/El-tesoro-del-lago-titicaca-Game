@@ -24,8 +24,14 @@ func run_checks() -> void:
 	var pasco: Pasco = level.get_node("Pasco")
 	var footstep_audio: AudioStreamPlayer = pasco.get_node("FootstepAudio")
 	var throw_audio: AudioStreamPlayer = pasco.get_node("ThrowAudio")
+	var background_music: AudioStreamPlayer = level.get_node("BackgroundMusic")
 	check(footstep_audio != null, "Pasco has no footstep audio player")
 	check(throw_audio.stream != null, "Pasco has no stone throw sound")
+	check(background_music.stream is AudioStreamMP3, "Level 1 has no MP3 background music")
+	check(is_equal_approx(background_music.volume_db, linear_to_db(0.60)), "Level 1 music is not set to 60 percent volume")
+	check(background_music.playing, "Level 1 background music did not start")
+	if background_music.stream is AudioStreamMP3:
+		check((background_music.stream as AudioStreamMP3).loop, "Level 1 background music is not looped")
 
 	var main_path: Control = level.get_node("Terrain/MainPath")
 	pasco.global_position = main_path.get_global_rect().get_center()

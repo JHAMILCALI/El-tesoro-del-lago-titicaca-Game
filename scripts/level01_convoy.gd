@@ -3,6 +3,7 @@ extends Node2D
 @onready var mobile_controls: Node = get_node("/root/MobileControls")
 
 const CAPTURE_SEQUENCE = preload("res://scenes/ui/Level01CaptureSequence.tscn")
+const BACKGROUND_MUSIC_VOLUME := 0.60
 
 enum StoryState {
 	START = 0,
@@ -30,6 +31,7 @@ enum StoryState {
 @onready var dialogue_box = $DialogueBox
 @onready var house = $HouseInterior
 @onready var north_barrier = $Boundaries/RockBarrierNorth
+@onready var background_music: AudioStreamPlayer = $BackgroundMusic
 
 @onready var start_checkpoint: Node2D = $Checkpoints/StartCheckpoint
 @onready var checkpoint_huita: Node2D = $Checkpoints/CheckpointHuita
@@ -64,6 +66,7 @@ var house_entry_secure: bool = false
 var last_guard_count_shown: int = -1
 
 func _ready() -> void:
+	_setup_background_music()
 	last_checkpoint_pos = start_checkpoint.global_position
 	hud.update_objective("Explora el sendero y encuentra a Huita.")
 	if mobile_controls.enabled:
@@ -112,6 +115,17 @@ func _ready() -> void:
 		house.door_proximity_changed.connect(_on_house_door_proximity_changed)
 		house.exit_proximity_changed.connect(_on_house_exit_proximity_changed)
 		house.treasure_proximity_changed.connect(_on_treasure_proximity_changed)
+
+func _setup_background_music() -> void:
+	if not background_music or not background_music.stream:
+		return
+	background_music.volume_db = linear_to_db(BACKGROUND_MUSIC_VOLUME)
+	if background_music.stream is AudioStreamMP3:
+		var looped_music := background_music.stream.duplicate() as AudioStreamMP3
+		looped_music.loop = true
+		looped_music.loop_offset = 0.0
+		background_music.stream = looped_music
+	background_music.play()
 
 func _process(_delta: float) -> void:
 	if house and house.player_near_door and not capture_in_progress:
