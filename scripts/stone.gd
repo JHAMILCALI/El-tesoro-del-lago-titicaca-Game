@@ -26,7 +26,7 @@ func _process(delta: float) -> void:
 
 func _try_direct_patrol_hit() -> bool:
 	for enemy in get_tree().get_nodes_in_group("enemies"):
-		if enemy is SpanishPatrol and global_position.distance_to(enemy.global_position) <= direct_hit_radius:
+		if enemy is SpanishPatrol and enemy.current_state != SpanishPatrol.State.UNCONSCIOUS and global_position.distance_to(enemy.global_position) <= direct_hit_radius:
 			enemy.knock_out(8.0)
 			var hud = get_tree().get_first_node_in_group("hud")
 			if hud and hud.has_method("show_temporary_notification"):

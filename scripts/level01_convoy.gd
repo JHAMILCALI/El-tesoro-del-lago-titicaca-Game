@@ -22,6 +22,8 @@ enum StoryState {
 @onready var huita = $Huita
 @onready var spanish_patrol1 = $SpanishPatrol1
 @onready var spanish_patrol2 = $SpanishPatrol2
+@onready var treasure_guard_left: SpanishPatrol = $TreasureGuardLeft
+@onready var treasure_guard_right: SpanishPatrol = $TreasureGuardRight
 @onready var spanish_patrol_north1 = $SpanishPatrolNorth1
 @onready var spanish_patrol_north2 = $SpanishPatrolNorth2
 @onready var hud = $HUD
@@ -58,6 +60,8 @@ var is_changing_to_boat_level: bool = false
 
 var capture_in_progress: bool = false
 var capture_grace_until_ms: int = 0
+var house_entry_secure: bool = false
+var last_guard_count_shown: int = -1
 
 func _ready() -> void:
 	last_checkpoint_pos = start_checkpoint.global_position
@@ -75,7 +79,7 @@ func _ready() -> void:
 		huita.interaction_requested.connect(_on_huita_interaction)
 		huita.player_proximity_changed.connect(_on_huita_proximity_changed)
 
-	for patrol in [spanish_patrol1, spanish_patrol2, spanish_patrol_north1, spanish_patrol_north2]:
+	for patrol in _all_patrols():
 		if patrol:
 			patrol.player_captured.connect(_on_player_captured)
 
@@ -108,6 +112,23 @@ func _ready() -> void:
 		house.door_proximity_changed.connect(_on_house_door_proximity_changed)
 		house.exit_proximity_changed.connect(_on_house_exit_proximity_changed)
 		house.treasure_proximity_changed.connect(_on_treasure_proximity_changed)
+
+func _process(_delta: float) -> void:
+	if house and house.player_near_door and not capture_in_progress:
+		var active_guards := _active_treasure_guards()
+		if active_guards != last_guard_count_shown:
+			last_guard_count_shown = active_guards
+			_on_house_door_proximity_changed(true)
+
+func _all_patrols() -> Array[SpanishPatrol]:
+	return [spanish_patrol1, spanish_patrol2, treasure_guard_left, treasure_guard_right, spanish_patrol_north1, spanish_patrol_north2]
+
+func _active_treasure_guards() -> int:
+	var active := 0
+	for guard in [treasure_guard_left, treasure_guard_right]:
+		if is_instance_valid(guard) and guard.current_state != SpanishPatrol.State.UNCONSCIOUS:
+			active += 1
+	return active
 
 func _unhandled_input(event: InputEvent) -> void:
 	if capture_in_progress:
@@ -158,7 +179,7 @@ func _on_huita_interaction() -> void:
 
 	dialogue_box.start_dialogue(lines)
 	dialogue_box.dialogue_finished.connect(func() -> void:
-		hud.update_objective("Encuentra la casa abandonada y recupera el tesoro.")
+		hud.update_objective("Busca la casa y derriba a sus dos guardias antes de entrar.")
 		hud.show_temporary_notification("Checkpoint alcanzado", 2.0)
 	, CONNECT_ONE_SHOT)
 
@@ -203,21 +224,26 @@ func _on_secret_convo_area_entered(body: Node2D) -> void:
 
 		dialogue_box.start_dialogue(lines)
 		dialogue_box.dialogue_finished.connect(func() -> void:
-			hud.update_objective("Llega a la casa antes que ellos.")
+			hud.update_objective("Llega a la casa y derriba a sus dos guardias.")
 			hud.show_temporary_notification("Escuchaste la conversación enemiga", 2.5)
 		, CONNECT_ONE_SHOT)
 
 func _on_house_door_proximity_changed(is_near: bool) -> void:
 	if not is_near:
+		last_guard_count_shown = -1
 		hud.hide_interaction_prompt()
 		return
 
 	if story_state < StoryState.TREASURE_QUEST_ACTIVE:
 		hud.show_interaction_prompt("Habla primero con Huita")
+	elif not has_treasure and _active_treasure_guards() > 0:
+		hud.show_interaction_prompt("Guardias: %d · [E] Entrar" % _active_treasure_guards())
 	else:
 		hud.show_interaction_prompt("[E] Entrar")
 
 func _on_house_enter_requested() -> void:
+	if capture_in_progress:
+		return
 	if story_state < StoryState.TREASURE_QUEST_ACTIVE:
 		hud.show_temporary_notification("Debes hablar con Huita primero.", 2.0)
 		return
@@ -226,8 +252,14 @@ func _on_house_enter_requested() -> void:
 
 	story_state = StoryState.HOUSE_REACHED if not has_treasure else StoryState.TREASURE_COLLECTED
 	last_checkpoint_pos = checkpoint_house.global_position
+	house_entry_secure = _active_treasure_guards() == 0
 	_teleport_player(house.get_interior_spawn_position())
 	hud.hide_interaction_prompt()
+	if not house_entry_secure:
+		pasco.set_movement_enabled(false)
+		hud.update_objective("Los guardias de la casa te descubrieron.")
+		_capture_house_intruder.call_deferred()
+		return
 	if has_treasure:
 		hud.update_objective("Sal de la casa.")
 	else:
@@ -241,7 +273,7 @@ func _on_house_exit_proximity_changed(is_near: bool) -> void:
 		hud.hide_interaction_prompt()
 
 func _on_house_exit_requested() -> void:
-	if story_state < StoryState.HOUSE_REACHED:
+	if capture_in_progress or story_state < StoryState.HOUSE_REACHED or not house_entry_secure:
 		return
 
 	_teleport_player(house.get_exterior_spawn_position())
@@ -253,7 +285,7 @@ func _on_house_exit_requested() -> void:
 		hud.show_temporary_notification("TESORO RECUPERADO. REGRESA CON HUITA", 3.5)
 	else:
 		story_state = StoryState.TREASURE_QUEST_ACTIVE
-		hud.update_objective("Encuentra la casa abandonada y recupera el tesoro.")
+		hud.update_objective("Derriba a los dos guardias y recupera el tesoro.")
 
 func _on_treasure_proximity_changed(is_near: bool) -> void:
 	if is_near and not has_treasure:
@@ -262,7 +294,7 @@ func _on_treasure_proximity_changed(is_near: bool) -> void:
 		hud.hide_interaction_prompt()
 
 func _on_treasure_requested() -> void:
-	if story_state != StoryState.HOUSE_REACHED or has_treasure:
+	if capture_in_progress or story_state != StoryState.HOUSE_REACHED or has_treasure or not house_entry_secure:
 		return
 
 	has_treasure = true
@@ -363,7 +395,12 @@ func _on_hide_zone_exited(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		body.exit_hide_area()
 
-func _on_player_captured() -> void:
+func _capture_house_intruder() -> void:
+	if not house_entry_secure and not capture_in_progress:
+		capture_grace_until_ms = 0
+		_on_player_captured("Los guardias del almacén sorprendieron a Pasco dentro de la casa.")
+
+func _on_player_captured(capture_caption: String = "") -> void:
 	if capture_in_progress or is_changing_to_boat_level or story_state == StoryState.LEVEL_COMPLETED or Time.get_ticks_msec() < capture_grace_until_ms:
 		return
 	capture_in_progress = true
@@ -379,12 +416,14 @@ func _on_player_captured() -> void:
 	dialogue_box.visible = false
 	if huita:
 		huita.set_physics_process(false)
-	for patrol in [spanish_patrol1, spanish_patrol2, spanish_patrol_north1, spanish_patrol_north2]:
+	for patrol in _all_patrols():
 		if patrol:
 			patrol_processing[patrol] = patrol.is_physics_processing()
 			patrol.set_physics_process(false)
 
 	var sequence := CAPTURE_SEQUENCE.instantiate()
+	if not capture_caption.is_empty():
+		sequence.set("capture_caption", capture_caption)
 	add_child(sequence)
 	sequence.play()
 	await sequence.finished
@@ -398,13 +437,15 @@ func _on_player_captured() -> void:
 	if huita:
 		huita.set_physics_process(huita_was_processing)
 
-	for patrol in [spanish_patrol1, spanish_patrol2, spanish_patrol_north1, spanish_patrol_north2]:
+	for patrol in _all_patrols():
 		if patrol:
 			patrol.reset_patrol()
 			patrol.set_physics_process(patrol_processing[patrol])
 	hud.visible = hud_was_visible
 	dialogue_box.visible = dialogue_was_visible
 	pasco.set_movement_enabled(true)
+	if not capture_caption.is_empty():
+		hud.update_objective("Derriba a los dos guardias antes de volver a entrar.")
 	capture_grace_until_ms = Time.get_ticks_msec() + 1200
 	capture_in_progress = false
 	hud.show_temporary_notification("Regresaste al último checkpoint", 2.0)

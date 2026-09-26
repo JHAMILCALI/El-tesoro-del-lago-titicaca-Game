@@ -7,6 +7,7 @@ const DURATION := 4.0
 @onready var stage: Node2D = $Screen/Stage
 
 var playing := false
+var capture_caption := "Los españoles han detenido a Pasco."
 
 func _ready() -> void:
 	_fit_viewport()
@@ -37,7 +38,7 @@ func _show_capture() -> void:
 	$Screen/Stage/GuardLeft.hide()
 	$Screen/Stage/GuardRight.hide()
 	$Screen/Stage/Title.text = "¡CAPTURADO!"
-	$Screen/Stage/Caption.text = "Los españoles han detenido a Pasco."
+	$Screen/Stage/Caption.text = capture_caption
 	var captured: Sprite2D = $Screen/Stage/Captured
 	var impact: Line2D = $Screen/Stage/Impact
 	impact.modulate.a = 1.0

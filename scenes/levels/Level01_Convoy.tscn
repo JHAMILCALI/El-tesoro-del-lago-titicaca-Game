@@ -696,6 +696,18 @@ position = Vector2(2150, 300)
 point_a = Vector2(2150, 300)
 point_b = Vector2(2700, 300)
 
+[node name="TreasureGuardLeft" parent="." instance=ExtResource("4_patrol")]
+position = Vector2(3390, 400)
+speed = 56.0
+point_a = Vector2(3390, 400)
+point_b = Vector2(3450, 400)
+
+[node name="TreasureGuardRight" parent="." instance=ExtResource("4_patrol")]
+position = Vector2(3570, 420)
+speed = 56.0
+point_a = Vector2(3570, 420)
+point_b = Vector2(3520, 420)
+
 [node name="SpanishPatrolNorth1" parent="." unique_id=1954897072 instance=ExtResource("4_patrol")]
 z_index = 0
 position = Vector2(1600, -150)
