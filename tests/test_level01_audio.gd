@@ -36,7 +36,12 @@ func run_checks() -> void:
 	pasco.global_position = Vector2(500, 100)
 	pasco._update_footstep_audio(true, true)
 	check(pasco.current_footstep_surface == &"grass", "The grass did not select grass footsteps")
-	check(is_equal_approx(footstep_audio.pitch_scale, 1.12), "Running did not accelerate the footstep cadence")
+	check(pasco.current_footstep_mode == &"run", "Running did not select the dedicated running clip")
+	check(footstep_audio.stream is AudioStreamMP3, "The running clip does not use the source dirt recording")
+	if footstep_audio.stream is AudioStreamMP3:
+		var run_stream := footstep_audio.stream as AudioStreamMP3
+		check(run_stream.loop, "The running clip is not looped")
+		check(is_equal_approx(run_stream.loop_offset, 45.0), "The running loop does not return to 00:45")
 	pasco._update_footstep_audio(false, false)
 	check(not footstep_audio.playing, "Footsteps continued after Pasco stopped")
 
@@ -51,6 +56,15 @@ func run_checks() -> void:
 	await process_frame
 	var impact_audio := _find_sound(level, &"stone_impact")
 	check(impact_audio != null, "Landing a stone did not create its impact sound")
+
+	var guard: SpanishPatrol = level.get_node("TreasureGuardLeft")
+	var direct_stone: Stone = load("res://scenes/objects/Stone.tscn").instantiate()
+	level.add_child(direct_stone)
+	direct_stone.global_position = guard.global_position
+	check(direct_stone._try_direct_patrol_hit(), "The test stone did not hit the guard")
+	await process_frame
+	var knockout_audio := _find_sound(level, &"stone_head_knockout")
+	check(knockout_audio != null, "A direct head hit did not create the knockout sound")
 
 	var pickup: PickableStone = load("res://scenes/objects/PickableStone.tscn").instantiate()
 	level.add_child(pickup)

@@ -10,6 +10,8 @@ const THROW_RECOVERY_COOLDOWN := 0.55
 const STONE_SPAWN_OFFSET := 18.0
 const FOOTSTEP_DIRT_STREAM: AudioStream = preload("res://assets/audio/footsteps dirt.mp3")
 const FOOTSTEP_GRASS_STREAM: AudioStream = preload("res://assets/audio/footsteps grass.mp3")
+const FOOTSTEP_RUN_STREAM: AudioStream = preload("res://assets/audio/footsteps dirt.mp3")
+const FOOTSTEP_RUN_OFFSET := 45.0
 const STONE_THROW_STREAM: AudioStream = preload("res://assets/audio/stone throw whoosh.mp3")
 
 @export var walk_speed: float = 180.0
@@ -28,6 +30,7 @@ var is_collecting_treasure: bool = false
 var has_treasure: bool = false
 var stone_count: int = 3
 var current_footstep_surface: StringName = &""
+var current_footstep_mode: StringName = &""
 var footstep_streams: Dictionary = {}
 
 var stone_scene: PackedScene = preload("res://scenes/objects/Stone.tscn")
@@ -43,7 +46,8 @@ func _ready() -> void:
 	stone_count = initial_stones
 	footstep_streams = {
 		&"dirt": _make_looping_stream(FOOTSTEP_DIRT_STREAM),
-		&"grass": _make_looping_stream(FOOTSTEP_GRASS_STREAM)
+		&"grass": _make_looping_stream(FOOTSTEP_GRASS_STREAM),
+		&"run": _make_looping_stream(FOOTSTEP_RUN_STREAM, FOOTSTEP_RUN_OFFSET)
 	}
 	throw_audio.stream = STONE_THROW_STREAM
 	_ensure_input_actions()
@@ -81,10 +85,17 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide()
 	_update_footstep_audio(input_vector != Vector2.ZERO, is_running)
 
-func _make_looping_stream(source: AudioStream) -> AudioStream:
+func _make_looping_stream(source: AudioStream, loop_offset: float = 0.0) -> AudioStream:
 	var looped_stream := source.duplicate() as AudioStream
 	if looped_stream is AudioStreamMP3:
-		(looped_stream as AudioStreamMP3).loop = true
+		var mp3_stream := looped_stream as AudioStreamMP3
+		mp3_stream.loop = true
+		mp3_stream.loop_offset = loop_offset
+	elif looped_stream is AudioStreamWAV:
+		var wav_stream := looped_stream as AudioStreamWAV
+		wav_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		wav_stream.loop_begin = 0
+		wav_stream.loop_end = int(wav_stream.get_length() * wav_stream.mix_rate)
 	return looped_stream
 
 func _update_footstep_audio(is_moving: bool, is_running: bool) -> void:
@@ -94,20 +105,23 @@ func _update_footstep_audio(is_moving: bool, is_running: bool) -> void:
 		if footstep_audio.playing:
 			footstep_audio.stop()
 		current_footstep_surface = &""
+		current_footstep_mode = &""
 		return
 
 	var surface := _get_footstep_surface()
 	if not footstep_streams.has(surface):
 		surface = &"grass"
-	footstep_audio.pitch_scale = 1.12 if is_running else 1.0
-	if current_footstep_surface != surface:
+	var mode: StringName = &"run" if is_running else surface
+	footstep_audio.pitch_scale = 1.0
+	if current_footstep_mode != mode:
 		current_footstep_surface = surface
+		current_footstep_mode = mode
 		footstep_audio.stop()
-		footstep_audio.stream = footstep_streams[surface]
-		footstep_audio.volume_db = -13.0 if surface == &"dirt" else -11.0
-		footstep_audio.play()
+		footstep_audio.stream = footstep_streams[mode]
+		footstep_audio.volume_db = -13.0 if mode == &"dirt" or mode == &"run" else -11.0
+		footstep_audio.play(FOOTSTEP_RUN_OFFSET if is_running else 0.0)
 	elif not footstep_audio.playing:
-		footstep_audio.play()
+		footstep_audio.play(FOOTSTEP_RUN_OFFSET if is_running else 0.0)
 
 func _get_footstep_surface() -> StringName:
 	var level := get_parent()
