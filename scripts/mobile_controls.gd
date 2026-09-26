@@ -122,7 +122,7 @@ func message_strip() -> Vector2:
 
 func pause_rect(index: int) -> Rect2:
 	var center := get_viewport().get_visible_rect().size * 0.5
-	return Rect2(center + Vector2(-220, -70 + index * 110), Vector2(440, 90))
+	return Rect2(center + Vector2(-220, -120 + index * 100), Vector2(440, 84))
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch and not enabled:
@@ -163,9 +163,12 @@ func _press(index: int, position: Vector2) -> bool:
 	if orientation_paused:
 		return true
 	if manual_paused:
-		for choice in 3:
+		for choice in 4:
 			if pause_rect(choice).has_point(position):
-				_pause_choice.call_deferred(choice)
+				if choice == 3:
+					_toggle_sound()
+				else:
+					_pause_choice.call_deferred(choice)
 		return true
 	if position.distance_to(button_center("pause")) < 56.0:
 		_toggle_pause()
@@ -272,6 +275,15 @@ func _pause_choice(choice: int) -> void:
 		get_tree().paused = false
 		get_tree().change_scene_to_file("res://scenes/main/MainMenu.tscn")
 
+func _toggle_sound() -> void:
+	var sound := get_node_or_null("/root/SoundToggle")
+	if sound:
+		sound.toggle()
+
+func _sound_muted() -> bool:
+	var sound := get_node_or_null("/root/SoundToggle")
+	return sound != null and sound.muted
+
 func _fullscreen() -> void:
 	if OS.has_feature("web"):
 		JavaScriptBridge.eval("if (!document.fullscreenElement && document.documentElement.requestFullscreen) { document.documentElement.requestFullscreen().then(() => { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); }).catch(() => {}); }")
@@ -287,14 +299,14 @@ func draw_controls(canvas: Control) -> void:
 		return
 	if manual_paused:
 		canvas.draw_rect(Rect2(Vector2.ZERO, screen), Color(0.015, 0.045, 0.06, 0.88))
-		var card := Rect2(screen * 0.5 + Vector2(-310, -204), Vector2(620, 485))
+		var card := Rect2(screen * 0.5 + Vector2(-310, -254), Vector2(620, 548))
 		canvas.draw_rect(card, Color("102b35"))
 		canvas.draw_rect(card, GOLD, false, 3.0)
 		canvas.draw_line(card.position + Vector2(30, 26), card.position + Vector2(card.size.x - 30, 26), GOLD, 3.0)
-		_text(canvas, screen * 0.5 + Vector2(0, -151), "LAGO TITICACA", 20, Color("92cdc0"))
-		_text(canvas, screen * 0.5 + Vector2(0, -112), "TRAVESÍA EN PAUSA", 38, Color("f4d08b"))
-		var labels := ["CONTINUAR", "REINICIAR NIVEL", "VOLVER AL MENÚ"]
-		for index in 3:
+		_text(canvas, screen * 0.5 + Vector2(0, -201), "LAGO TITICACA", 20, Color("92cdc0"))
+		_text(canvas, screen * 0.5 + Vector2(0, -162), "TRAVESÍA EN PAUSA", 38, Color("f4d08b"))
+		var labels := ["CONTINUAR", "REINICIAR NIVEL", "VOLVER AL MENÚ", "SONIDO: SILENCIADO" if _sound_muted() else "SONIDO: ACTIVADO"]
+		for index in 4:
 			var rect := pause_rect(index)
 			canvas.draw_rect(rect, Color("d9ac62") if index == 0 else Color("193945"))
 			canvas.draw_rect(rect, GOLD, false, 3.0)
