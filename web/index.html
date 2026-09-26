@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
@@ -89,18 +89,33 @@ body {
 	text-align: center;
 	z-index: 1;
 }
+
+html, body { width: 100%; height: 100%; overscroll-behavior: none; }
+body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+#rotate-hint { display: none; position: fixed; inset: 0; z-index: 20; background: #10191e;
+ color: #ffedc8; font: 600 24px/1.5 system-ui, sans-serif; text-align: center;
+ align-items: center; justify-content: center; padding: 28px; box-sizing: border-box; }
+#rotate-hint small { display: block; font-size: 17px; font-weight: 400; color: #d9c9aa; }
+@media (orientation: portrait) { .touch-device #rotate-hint { display: flex; } }
 		</style>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
 
 	</head>
 	<body>
+        <div id="rotate-hint" role="status"><div>Gira tu móvil para jugar<small>Los controles están preparados para la pantalla horizontal.</small></div></div>
+        <script>
+        if (navigator.maxTouchPoints > 0 || new URLSearchParams(location.search).get('touch') === '1') {
+            document.documentElement.classList.add('touch-device');
+        }
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        </script>
 		<canvas id="canvas">
-			Your browser does not support the canvas tag.
+			Tu navegador no admite el lienzo del juego.
 		</canvas>
 
 		<noscript>
-			Your browser does not support JavaScript.
+			Activa JavaScript para jugar.
 		</noscript>
 
 		<div id="status">
@@ -111,7 +126,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":57578296,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":57599384,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -217,3 +232,4 @@ const engine = new Engine(GODOT_CONFIG);
 		</script>
 	</body>
 </html>
+

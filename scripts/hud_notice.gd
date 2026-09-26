@@ -1,6 +1,8 @@
 extends Panel
 class_name HudNotice
 
+@onready var mobile_controls: Node = get_node("/root/MobileControls")
+
 const PALE_TEXT := Color("fff2dc")
 const GOLD := Color("e4b65f")
 const AMBER := Color("edaa53")
@@ -68,6 +70,8 @@ func show_message(message: String, duration: float) -> void:
 	panel_style.bg_color = Color("211b18").lerp(tone, 0.08)
 	panel_style.bg_color.a = 0.97
 	message_label.add_theme_font_size_override("font_size", 22 if shown_text.length() <= 25 else 17)
+	if mobile_controls.enabled:
+		message_label.add_theme_font_size_override("font_size", 24)
 	long_message = shown_text.length() > 45
 	_layout_panel()
 	visible = true
@@ -77,9 +81,14 @@ func _layout_panel() -> void:
 	var viewport_width := get_viewport_rect().size.x
 	var panel_width := minf(520.0, viewport_width - 32.0)
 	var panel_height := 90.0 if long_message else 70.0
+	if mobile_controls.enabled:
+		panel_width = minf(700.0, viewport_width - 400.0)
+		panel_height = 120.0 if long_message else 90.0
 	offset_left = -panel_width * 0.5
 	offset_right = panel_width * 0.5
 	offset_top = 114.0 if viewport_width >= 1040.0 else 310.0
+	if mobile_controls.enabled:
+		offset_top = 245.0
 	offset_bottom = offset_top + panel_height
 	accent.position = Vector2(13, 12)
 	accent.size = Vector2(4, panel_height - 24.0)

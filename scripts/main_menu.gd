@@ -1,5 +1,7 @@
 extends Control
 
+@onready var mobile_controls: Node = get_node("/root/MobileControls")
+
 @onready var play_button: Button = $VBoxContainer/PlayButton
 @onready var boat_button: Button = $VBoxContainer/BoatButton
 @onready var quit_button: Button = $VBoxContainer/QuitButton
@@ -25,6 +27,22 @@ func _ready() -> void:
 		boat_button.pressed.connect(_on_boat_pressed)
 	if quit_button:
 		quit_button.pressed.connect(_on_quit_pressed)
+	mobile_controls.touch_mode_changed.connect(_apply_touch_layout)
+	_apply_touch_layout()
+
+func _apply_touch_layout() -> void:
+	if not mobile_controls.enabled:
+		return
+	$VBoxContainer.offset_left = -260
+	$VBoxContainer.offset_right = 260
+	$VBoxContainer.offset_top = -25
+	$VBoxContainer.offset_bottom = 210
+	for button in [play_button, boat_button]:
+		button.custom_minimum_size.y = 90
+		button.add_theme_font_size_override("font_size", 29)
+	quit_button.hide()
+	$SubtitleLabel.text = "Controles táctiles · Juega en horizontal"
+	$SubtitleLabel.add_theme_font_size_override("font_size", 25)
 
 func _on_video_finished() -> void:
 	if background_video:

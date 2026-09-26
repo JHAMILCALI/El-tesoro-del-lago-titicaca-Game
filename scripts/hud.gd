@@ -1,6 +1,8 @@
 extends CanvasLayer
 class_name HUD
 
+@onready var mobile_controls: Node = get_node("/root/MobileControls")
+
 const StatusMeter = preload("res://scripts/lake_status_meter.gd")
 const HudNoticeScript = preload("res://scripts/hud_notice.gd")
 
@@ -55,6 +57,64 @@ func _ready() -> void:
 		next_level_button.pressed.connect(_on_next_level_pressed)
 	if menu_button:
 		menu_button.pressed.connect(_on_menu_pressed)
+	mobile_controls.touch_mode_changed.connect(_apply_touch_layout)
+	get_viewport().size_changed.connect(_apply_touch_layout)
+	_apply_touch_layout()
+
+func _apply_touch_layout() -> void:
+	if not mobile_controls.enabled:
+		return
+	$Control/PauseHelpLabel.hide()
+	var objective: Control = $Control/ObjectivePanel
+	objective.position = Vector2(24, 20)
+	objective.size = Vector2(530, 112)
+	objective_label.position = Vector2(16, 38)
+	objective_label.size = Vector2(498, 70)
+	objective_label.add_theme_font_size_override("font_size", 25)
+	$Control/ObjectivePanel/ObjectiveTitle.add_theme_font_size_override("font_size", 20)
+	$Control/ObjectivePanel/ObjectiveRule.size.x = 500
+	$Control/StoneCountPanel.position = Vector2(576, 20)
+	$Control/StoneCountPanel/StoneHint.hide()
+	$Control/StoneCountPanel/StoneTitle.add_theme_font_size_override("font_size", 22)
+	$Control/StoneCountPanel/StoneCountLabel.add_theme_font_size_override("font_size", 34)
+	for meter in [rowing_container, alert_container]:
+		meter.get_node("Title").add_theme_font_size_override("font_size", 22)
+		meter.get_node("Value").add_theme_font_size_override("font_size", 22)
+		meter.get_node("Status").add_theme_font_size_override("font_size", 18)
+	minimap_panel.get_node("Title").add_theme_font_size_override("font_size", 22)
+	for label in ["LevelTag", "PlayerLegend", "EnemyLegend", "RockLegend", "GoalLegend"]:
+		minimap_panel.get_node(label).hide()
+	rowing_container.position = Vector2(24, 146)
+	alert_container.position = Vector2(380, 146)
+	$Control/DetectionContainer.position = Vector2(24, 144)
+	minimap_panel.offset_left = -306
+	minimap_panel.offset_right = -26
+	minimap_panel.offset_top = 142
+	minimap_panel.offset_bottom = 362
+	interaction_prompt.offset_top = -350
+	interaction_prompt.offset_bottom = -300
+	interaction_prompt.offset_left = -310
+	interaction_prompt.offset_right = 310
+	interaction_prompt.add_theme_font_size_override("font_size", 28)
+	alpha_complete_panel.offset_left = -350
+	alpha_complete_panel.offset_right = 350
+	alpha_complete_panel.offset_top = -270
+	alpha_complete_panel.offset_bottom = 270
+	var buttons: VBoxContainer = alpha_complete_panel.get_node("VBoxContainer")
+	buttons.offset_left = -270
+	buttons.offset_right = 270
+	buttons.offset_top = -310
+	for button in [next_level_button, restart_button, menu_button]:
+		button.custom_minimum_size.y = 82
+		button.add_theme_font_size_override("font_size", 26)
+	var message: Label = alpha_complete_panel.get_node("MessageLabel")
+	message.anchor_top = 0
+	message.anchor_bottom = 0
+	message.offset_top = 80
+	message.offset_bottom = 180
+	message.offset_left = -310
+	message.offset_right = 310
+	message.add_theme_font_size_override("font_size", 24)
 
 func update_objective(text: String) -> void:
 	if objective_label:
@@ -110,7 +170,7 @@ func update_speed(current_speed: float) -> void:
 
 func show_interaction_prompt(prompt_text: String = "[E] HABLAR") -> void:
 	if interaction_prompt:
-		interaction_prompt.text = prompt_text
+		interaction_prompt.text = prompt_text.replace("[E]", "[ACCIÓN]") if mobile_controls.enabled else prompt_text
 		interaction_prompt.visible = true
 
 func hide_interaction_prompt() -> void:

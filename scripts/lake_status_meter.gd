@@ -40,12 +40,19 @@ func _process(delta: float) -> void:
 		queue_redraw()
 
 func _status_text() -> String:
+	var touch: bool = not Engine.is_editor_hint() and get_node_or_null("/root/MobileControls") != null and get_node("/root/MobileControls").enabled
+	if touch:
+		if meter_kind == MeterKind.ROWING:
+			return "DESCANSA" if ratio <= 0.25 else "MANTÉN IMPULSO"
+		if ratio >= 0.7:
+			return "¡PELIGRO!"
+		return "TE BUSCAN" if ratio > 0.01 else "SIN RASTRO"
 	if meter_kind == MeterKind.ROWING:
 		if ratio <= 0.01:
-			return "SIN FUERZAS · SUELTA SHIFT"
+			return "SIN FUERZAS · SUELTA IMPULSO" if touch else "SIN FUERZAS · SUELTA SHIFT"
 		if ratio <= 0.25:
 			return "POCA RESISTENCIA · DESCANSA"
-		return "RESISTENCIA · SHIFT PARA ACELERAR"
+		return "MANTÉN IMPULSO PARA ACELERAR" if touch else "RESISTENCIA · SHIFT PARA ACELERAR"
 	if ratio >= 0.7:
 		return "¡PELIGRO! · EVITA A LOS ESPAÑOLES"
 	if ratio >= 0.3:

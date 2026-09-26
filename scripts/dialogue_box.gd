@@ -1,6 +1,8 @@
 extends CanvasLayer
 class_name DialogueBox
 
+@onready var mobile_controls: Node = get_node("/root/MobileControls")
+
 signal dialogue_started
 signal dialogue_finished
 
@@ -17,6 +19,23 @@ func _ready() -> void:
 	visible = false
 	if panel:
 		panel.visible = false
+	mobile_controls.touch_mode_changed.connect(_apply_touch_layout)
+	_apply_touch_layout()
+
+func _apply_touch_layout() -> void:
+	if not mobile_controls.enabled:
+		return
+	panel.offset_left = 24
+	panel.offset_right = -24
+	panel.offset_top = -390
+	panel.offset_bottom = -135
+	speaker_label.add_theme_font_size_override("font_size", 28)
+	text_label.add_theme_font_size_override("font_size", 28)
+	text_label.anchor_right = 1.0
+	text_label.offset_right = -24
+	text_label.offset_top = 65
+	text_label.offset_bottom = 240
+	next_prompt.hide()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_active:
@@ -48,7 +67,7 @@ func _show_current_line() -> void:
 		speaker_label.text = speaker
 		text_label.text = line_data.get("text", "")
 		if next_prompt:
-			next_prompt.text = "[Presiona E o Enter para continuar]"
+			next_prompt.text = "Toca CONTINUAR" if mobile_controls.enabled else "[Presiona E o Enter para continuar]"
 
 		for node in get_tree().get_nodes_in_group("npc"):
 			if node is Huita:

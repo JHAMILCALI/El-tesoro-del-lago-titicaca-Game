@@ -1,6 +1,8 @@
 extends CharacterBody2D
 class_name Pasco
 
+@onready var mobile_controls: Node = get_node("/root/MobileControls")
+
 signal stone_count_changed(new_count: int)
 
 const THROW_RELEASE_DELAY := 0.1
@@ -108,6 +110,10 @@ func _input(event: InputEvent) -> void:
 func _handle_throw_input(event: InputEvent) -> void:
 	if not can_move:
 		return
+	# Touch browsers emulate a mouse click. Only the dedicated stone control
+	# may throw in touch mode, never a menu, dialogue or joystick tap.
+	if mobile_controls.enabled and event is InputEventMouseButton:
+		return
 
 	var is_throw_click := false
 	if event.is_action_pressed("throw_stone"):
@@ -130,6 +136,10 @@ func _handle_throw_input(event: InputEvent) -> void:
 			_throw_stone()
 
 func _get_mouse_aim() -> Dictionary:
+	if mobile_controls.enabled:
+		var direction: Vector2 = mobile_controls.aim_direction if mobile_controls.aiming else last_direction
+		var distance: float = stone_travel_distance * mobile_controls.aim_distance_ratio if mobile_controls.aiming else stone_travel_distance
+		return {"dir": direction, "dist": distance, "target_pos": direction * distance}
 	var local_mouse = get_local_mouse_position()
 	var mouse_dist = local_mouse.length()
 	var aim_dir = local_mouse.normalized() if mouse_dist > 5.0 else last_direction

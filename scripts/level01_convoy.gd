@@ -1,5 +1,7 @@
 extends Node2D
 
+@onready var mobile_controls: Node = get_node("/root/MobileControls")
+
 const CAPTURE_SEQUENCE = preload("res://scenes/ui/Level01CaptureSequence.tscn")
 
 enum StoryState {
@@ -60,7 +62,10 @@ var capture_grace_until_ms: int = 0
 func _ready() -> void:
 	last_checkpoint_pos = start_checkpoint.global_position
 	hud.update_objective("Explora el sendero y encuentra a Huita.")
-	hud.show_temporary_notification("El camino parece tranquilo, pero hay presencia enemiga cerca.", 3.5)
+	if mobile_controls.enabled:
+		hud.show_temporary_notification("Palanca: mover. Arrastra PIEDRA para apuntar y suelta para lanzar.", 6.0)
+	else:
+		hud.show_temporary_notification("El camino parece tranquilo, pero hay presencia enemiga cerca.", 3.5)
 
 	hud.restart_requested.connect(_on_restart_requested)
 	hud.menu_requested.connect(_on_menu_requested)
@@ -124,7 +129,7 @@ func _on_tutorial_trigger_entered(body: Node2D) -> void:
 	if story_state == StoryState.START:
 		story_state = StoryState.PATROL_1_PASSED
 	hud.update_objective("Evita a la patrulla y llega hasta Huita.")
-	hud.show_temporary_notification("Usa los arbustos para ocultarte o usa el Clic Izquierdo para lanzar piedras.", 3.0)
+	hud.show_temporary_notification("Usa los arbustos para ocultarte o el botón PIEDRA para lanzar." if mobile_controls.enabled else "Usa los arbustos para ocultarte o usa el Clic Izquierdo para lanzar piedras.", 3.0)
 
 func _on_huita_proximity_changed(is_near: bool) -> void:
 	if is_near and story_state <= StoryState.HUITA_FOUND:
