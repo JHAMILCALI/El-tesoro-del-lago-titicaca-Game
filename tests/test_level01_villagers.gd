@@ -20,6 +20,8 @@ func run_checks() -> void:
 		return
 	var villagers := get_nodes_in_group("local_villagers")
 	check(villagers.size() >= 12, "The village needs people walking along the path")
+	var pasco_sprite: AnimatedSprite2D = level.get_node("Pasco/AnimatedSprite2D")
+	var pasco_frame_height := pasco_sprite.sprite_frames.get_frame_texture(pasco_sprite.animation, pasco_sprite.frame).get_height() * pasco_sprite.scale.y
 	var appearances := {}
 	for node in villagers:
 		var villager: LocalVillager = node
@@ -29,6 +31,8 @@ func run_checks() -> void:
 		check(_on_path(villager), "A villager is outside the main path")
 		check(villager.route_start.distance_to(villager.route_end) >= 350.0, "A villager route is too short")
 		check(villager.appearance.get_width() % LocalVillager.WALK_FRAMES == 0, "A walking sprite sheet has uneven frames")
+		var villager_frame_height := villager.sprite.region_rect.size.y * villager.sprite.scale.y
+		check(villager_frame_height >= pasco_frame_height * 0.9 and villager_frame_height <= pasco_frame_height * 1.1, "A villager should be about Pasco's size")
 		appearances[villager.appearance.resource_path] = true
 	check(appearances.size() == 4, "The four distinct civilian sprites must be present")
 
