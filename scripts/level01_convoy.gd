@@ -402,12 +402,13 @@ func _on_hide_zone_exited(body: Node2D) -> void:
 func _capture_house_intruder() -> void:
 	if not house_entry_secure and not capture_in_progress:
 		capture_grace_until_ms = 0
-		_on_player_captured("Los guardias del almacén sorprendieron a Pasco dentro de la casa.")
+		_on_player_captured("Los guardias del almacén sorprendieron a Pasco dentro de la casa.", true)
 
-func _on_player_captured(capture_caption: String = "") -> void:
+func _on_player_captured(capture_caption: String = "", inside_warehouse: bool = false) -> void:
 	if capture_in_progress or is_changing_to_boat_level or story_state == StoryState.LEVEL_COMPLETED or Time.get_ticks_msec() < capture_grace_until_ms:
 		return
 	capture_in_progress = true
+	var warehouse_capture: bool = inside_warehouse or (house and pasco.global_position.distance_to(house.get_exterior_spawn_position()) <= 400.0)
 	var checkpoint_pos := last_checkpoint_pos
 	var hud_was_visible: bool = hud.visible
 	var dialogue_was_visible: bool = dialogue_box.visible
@@ -448,11 +449,14 @@ func _on_player_captured(capture_caption: String = "") -> void:
 	hud.visible = hud_was_visible
 	dialogue_box.visible = dialogue_was_visible
 	pasco.set_movement_enabled(true)
+	var refilled_stones: bool = warehouse_capture and pasco.stone_count == 0
+	if refilled_stones:
+		pasco.add_stones(3)
 	if not capture_caption.is_empty():
 		hud.update_objective("Derriba a los dos guardias antes de volver a entrar.")
 	capture_grace_until_ms = Time.get_ticks_msec() + 1200
 	capture_in_progress = false
-	hud.show_temporary_notification("Regresaste al último checkpoint", 2.0)
+	hud.show_temporary_notification("Regresaste al último checkpoint · recibiste 3 piedras" if refilled_stones else "Regresaste al último checkpoint", 2.5 if refilled_stones else 2.0)
 
 func _teleport_player(target_position: Vector2) -> void:
 	pasco.clear_hide_state()

@@ -31,6 +31,8 @@ func run_checks() -> void:
 
 	left.knock_out(20.0)
 	check(level._active_treasure_guards() == 1, "One guard must remain active")
+	pasco.stone_count = 0
+	pasco._sync_hud_stones()
 	level._on_house_enter_requested()
 	check(pasco.global_position.is_equal_approx(house.get_interior_spawn_position()), "Entry must place Pasco inside before capture")
 	level._on_treasure_requested()
@@ -42,6 +44,27 @@ func run_checks() -> void:
 	await process_frame
 	check(not level.capture_in_progress, "House capture did not finish")
 	check(pasco.global_position.is_equal_approx(level.checkpoint_house.global_position), "House capture did not return to the checkpoint")
+	check(pasco.stone_count == 3, "A warehouse capture with no stones must grant exactly three at respawn")
+	check(level.hud.stone_count_label.text == "03", "The HUD did not show the three replacement stones")
+
+	pasco.stone_count = 0
+	pasco._sync_hud_stones()
+	pasco.global_position = left.global_position + Vector2(-90, 0)
+	level.capture_grace_until_ms = 0
+	level._on_player_captured()
+	await create_timer(4.2).timeout
+	await process_frame
+	check(pasco.global_position.is_equal_approx(level.checkpoint_house.global_position), "A guard capture outside the warehouse must use the house checkpoint")
+	check(pasco.stone_count == 3, "An outside warehouse guard capture with zero stones must grant three")
+
+	pasco.stone_count = 2
+	pasco._sync_hud_stones()
+	level._on_house_enter_requested()
+	await process_frame
+	check(level.capture_in_progress, "The second guarded entry did not trigger capture")
+	await create_timer(4.2).timeout
+	await process_frame
+	check(pasco.stone_count == 2, "A warehouse capture must not add stones when Pasco has some left")
 
 	var first_stone: Stone = load("res://scenes/objects/Stone.tscn").instantiate()
 	level.add_child(first_stone)

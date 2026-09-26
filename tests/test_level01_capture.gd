@@ -25,6 +25,8 @@ func run_checks() -> void:
 	var huita := level.get_node("Huita")
 	var patrol := level.get_node("SpanishPatrol1")
 	patrol.set_physics_process(false)
+	pasco.stone_count = 0
+	pasco._sync_hud_stones()
 	pasco.global_position = start_checkpoint.global_position + Vector2(200, 0)
 	var capture_position: Vector2 = pasco.global_position
 	level._on_player_captured()
@@ -44,6 +46,7 @@ func run_checks() -> void:
 	await process_frame
 	check(not level.capture_in_progress, "Capture remained active after the sequence")
 	check(pasco.global_position.is_equal_approx(start_checkpoint.global_position), "Initial capture did not return to the start checkpoint")
+	check(pasco.stone_count == 0, "A capture away from the warehouse must not grant stones")
 	check(pasco.can_move, "Pasco remained frozen at checkpoint")
 	check(level.get_node_or_null("Level01CaptureSequence") == null, "Capture sequence was not removed")
 
@@ -56,6 +59,7 @@ func run_checks() -> void:
 	await create_timer(4.2).timeout
 	await process_frame
 	check(pasco.global_position.is_equal_approx(escort_checkpoint.global_position), "Escort capture did not use the latest checkpoint")
+	check(pasco.stone_count == 0, "An escort capture must not grant warehouse stones")
 	check(huita.global_position.is_equal_approx(escort_checkpoint.global_position + Vector2(-40, 0)), "Huita did not return with Pasco")
 	check(huita.is_following, "Huita stopped following after checkpoint return")
 	check(pasco.can_move and not level.capture_in_progress, "Controls were not restored after escort capture")
