@@ -91,10 +91,13 @@ func _apply_touch_layout() -> void:
 	minimap_panel.offset_right = -26
 	minimap_panel.offset_top = 142
 	minimap_panel.offset_bottom = 362
-	interaction_prompt.offset_top = -350
-	interaction_prompt.offset_bottom = -300
-	interaction_prompt.offset_left = -310
-	interaction_prompt.offset_right = 310
+	# Sits just above the notice panel, inside the strip free of touch controls.
+	var strip: Vector2 = mobile_controls.message_strip()
+	var half_width: float = get_viewport().get_visible_rect().size.x * 0.5
+	interaction_prompt.offset_top = -214
+	interaction_prompt.offset_bottom = -164
+	interaction_prompt.offset_left = strip.x - half_width
+	interaction_prompt.offset_right = strip.y - half_width
 	interaction_prompt.add_theme_font_size_override("font_size", 28)
 	alpha_complete_panel.offset_left = -350
 	alpha_complete_panel.offset_right = 350

@@ -40,6 +40,23 @@ func run_checks() -> void:
 	var pasco: Pasco = current_scene.get_node("Pasco")
 	var initial_position := pasco.position
 	var initial_stones := pasco.stone_count
+	# HUD messages must stay clear of Pasco (screen center) and of every touch control.
+	var level_hud: HUD = current_scene.get_node("HUD")
+	var view := Rect2(Vector2.ZERO, Vector2(root.size))
+	var pasco_zone := Rect2(view.get_center() - Vector2(60, 80), Vector2(120, 160))
+	var control_zones: Array[Rect2] = [Rect2(mobile.joystick_center() - Vector2.ONE * mobile.JOY_RADIUS, Vector2.ONE * mobile.JOY_RADIUS * 2.0)]
+	for control in ["run", "interact", "throw", "pause", "fullscreen"]:
+		control_zones.append(Rect2(mobile.button_center(control) - Vector2.ONE * mobile.BUTTON_RADIUS, Vector2.ONE * mobile.BUTTON_RADIUS * 2.0))
+	for message in ["OCULTO", "El camino parece tranquilo, pero hay presencia enemiga cerca."]:
+		level_hud.show_temporary_notification(message, 2.0)
+		level_hud.show_interaction_prompt("[E] EMBARCAR EN LA BARCA")
+		await settle()
+		for rect in [level_hud.notification_panel.get_global_rect(), level_hud.interaction_prompt.get_global_rect()]:
+			check(view.encloses(rect), "HUD message leaves the screen: %s" % message)
+			check(not rect.intersects(pasco_zone), "HUD message covers Pasco: %s" % message)
+			for zone in control_zones:
+				check(not rect.intersects(zone), "HUD message covers a touch control: %s" % message)
+	level_hud.hide_interaction_prompt()
 	var joystick: Vector2 = mobile.joystick_center()
 	touch(0, joystick, true)
 	drag(0, joystick + Vector2(95, 0))

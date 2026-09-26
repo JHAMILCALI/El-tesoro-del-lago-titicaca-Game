@@ -113,6 +113,13 @@ func button_center(which: String) -> Vector2:
 		"continue": return size - Vector2(190, 70)
 	return Vector2.ZERO
 
+## Horizontal span (x = left, y = right) at the bottom of the screen that is free of touch controls.
+## HUD messages live here so they never cover Pasco, who stays at the screen center.
+func message_strip() -> Vector2:
+	var left := joystick_center().x + JOY_RADIUS + 20.0
+	var right := button_center("run").x - BUTTON_RADIUS - 20.0
+	return Vector2(left, right)
+
 func pause_rect(index: int) -> Rect2:
 	var center := get_viewport().get_visible_rect().size * 0.5
 	return Rect2(center + Vector2(-220, -70 + index * 110), Vector2(440, 90))

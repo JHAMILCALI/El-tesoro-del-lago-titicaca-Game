@@ -25,6 +25,7 @@ func _ready() -> void:
 	add_theme_stylebox_override("panel", panel_style)
 	hide_timer.timeout.connect(_on_hide_timer_timeout)
 	get_viewport().size_changed.connect(_layout_panel)
+	mobile_controls.touch_mode_changed.connect(_layout_panel)
 	_layout_panel()
 	var strong_font := FontVariation.new()
 	strong_font.base_font = ThemeDB.fallback_font
@@ -81,15 +82,22 @@ func _layout_panel() -> void:
 	var viewport_width := get_viewport_rect().size.x
 	var panel_width := minf(520.0, viewport_width - 32.0)
 	var panel_height := 90.0 if long_message else 70.0
+	var center_x := 0.0
 	if mobile_controls.enabled:
-		panel_width = minf(700.0, viewport_width - 400.0)
+		# Bottom strip between the joystick and the action buttons keeps Pasco visible.
+		var strip: Vector2 = mobile_controls.message_strip()
+		panel_width = maxf(240.0, minf(640.0, strip.y - strip.x))
 		panel_height = 120.0 if long_message else 90.0
-	offset_left = -panel_width * 0.5
-	offset_right = panel_width * 0.5
-	offset_top = 114.0 if viewport_width >= 1040.0 else 310.0
-	if mobile_controls.enabled:
-		offset_top = 245.0
-	offset_bottom = offset_top + panel_height
+		center_x = (strip.x + strip.y) * 0.5 - viewport_width * 0.5
+		anchor_top = 1.0
+		anchor_bottom = 1.0
+		offset_bottom = -24.0
+		offset_top = offset_bottom - panel_height
+	else:
+		offset_top = 114.0 if viewport_width >= 1040.0 else 310.0
+		offset_bottom = offset_top + panel_height
+	offset_left = center_x - panel_width * 0.5
+	offset_right = center_x + panel_width * 0.5
 	accent.position = Vector2(13, 12)
 	accent.size = Vector2(4, panel_height - 24.0)
 	symbol.position = Vector2(23, 27 if long_message else 21)
