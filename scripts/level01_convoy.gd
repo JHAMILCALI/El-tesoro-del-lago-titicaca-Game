@@ -123,6 +123,17 @@ func _process(_delta: float) -> void:
 func _all_patrols() -> Array[SpanishPatrol]:
 	return [spanish_patrol1, spanish_patrol2, treasure_guard_left, treasure_guard_right, spanish_patrol_north1, spanish_patrol_north2]
 
+func get_footstep_surface_at(world_position: Vector2) -> StringName:
+	for path_node in [$Terrain/MainPath, $Terrain/NorthPath]:
+		if path_node is Control and (path_node as Control).get_global_rect().grow(12.0).has_point(world_position):
+			return &"dirt"
+	if house:
+		if world_position.distance_to(house.get_exterior_spawn_position()) <= 320.0:
+			return &"dirt"
+		if world_position.distance_to(house.get_interior_spawn_position()) <= 420.0:
+			return &"dirt"
+	return &"grass"
+
 func _active_treasure_guards() -> int:
 	var active := 0
 	for guard in [treasure_guard_left, treasure_guard_right]:

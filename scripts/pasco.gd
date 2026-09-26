@@ -8,6 +8,9 @@ signal stone_count_changed(new_count: int)
 const THROW_RELEASE_DELAY := 0.1
 const THROW_RECOVERY_COOLDOWN := 0.55
 const STONE_SPAWN_OFFSET := 18.0
+const FOOTSTEP_DIRT_STREAM: AudioStream = preload("res://assets/audio/footsteps dirt.mp3")
+const FOOTSTEP_GRASS_STREAM: AudioStream = preload("res://assets/audio/footsteps grass.mp3")
+const STONE_THROW_STREAM: AudioStream = preload("res://assets/audio/stone throw whoosh.mp3")
 
 @export var walk_speed: float = 180.0
 @export var run_speed: float = 280.0
@@ -24,16 +27,25 @@ var is_throwing: bool = false
 var is_collecting_treasure: bool = false
 var has_treasure: bool = false
 var stone_count: int = 3
+var current_footstep_surface: StringName = &""
+var footstep_streams: Dictionary = {}
 
 var stone_scene: PackedScene = preload("res://scenes/objects/Stone.tscn")
 
 @onready var aim_line: Line2D = $AimLine
 @onready var aim_target: Node2D = $AimTarget
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var footstep_audio: AudioStreamPlayer = $FootstepAudio
+@onready var throw_audio: AudioStreamPlayer = $ThrowAudio
 
 func _ready() -> void:
 	add_to_group("player")
 	stone_count = initial_stones
+	footstep_streams = {
+		&"dirt": _make_looping_stream(FOOTSTEP_DIRT_STREAM),
+		&"grass": _make_looping_stream(FOOTSTEP_GRASS_STREAM)
+	}
+	throw_audio.stream = STONE_THROW_STREAM
 	_ensure_input_actions()
 	_play_idle_animation(last_direction)
 	call_deferred("_sync_hud_stones")
@@ -44,17 +56,20 @@ func _process(_delta: float) -> void:
 func _physics_process(_delta: float) -> void:
 	if is_collecting_treasure or is_throwing:
 		velocity = Vector2.ZERO
+		_update_footstep_audio(false, false)
 		move_and_slide()
 		return
 
 	if not can_move:
 		velocity = Vector2.ZERO
 		_update_walk_animation(Vector2.ZERO)
+		_update_footstep_audio(false, false)
 		move_and_slide()
 		return
 
 	var input_vector := Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	var current_speed := run_speed if Input.is_action_pressed("run") else walk_speed
+	var is_running := Input.is_action_pressed("run")
+	var current_speed := run_speed if is_running else walk_speed
 
 	if input_vector != Vector2.ZERO:
 		velocity = input_vector.normalized() * current_speed
@@ -64,6 +79,41 @@ func _physics_process(_delta: float) -> void:
 
 	_update_walk_animation(input_vector)
 	move_and_slide()
+	_update_footstep_audio(input_vector != Vector2.ZERO, is_running)
+
+func _make_looping_stream(source: AudioStream) -> AudioStream:
+	var looped_stream := source.duplicate() as AudioStream
+	if looped_stream is AudioStreamMP3:
+		(looped_stream as AudioStreamMP3).loop = true
+	return looped_stream
+
+func _update_footstep_audio(is_moving: bool, is_running: bool) -> void:
+	if not footstep_audio:
+		return
+	if not is_moving:
+		if footstep_audio.playing:
+			footstep_audio.stop()
+		current_footstep_surface = &""
+		return
+
+	var surface := _get_footstep_surface()
+	if not footstep_streams.has(surface):
+		surface = &"grass"
+	footstep_audio.pitch_scale = 1.12 if is_running else 1.0
+	if current_footstep_surface != surface:
+		current_footstep_surface = surface
+		footstep_audio.stop()
+		footstep_audio.stream = footstep_streams[surface]
+		footstep_audio.volume_db = -13.0 if surface == &"dirt" else -11.0
+		footstep_audio.play()
+	elif not footstep_audio.playing:
+		footstep_audio.play()
+
+func _get_footstep_surface() -> StringName:
+	var level := get_parent()
+	if level and level.has_method("get_footstep_surface_at"):
+		return level.get_footstep_surface_at(global_position)
+	return &"grass"
 
 func _update_walk_animation(direction: Vector2) -> void:
 	if not animated_sprite or is_collecting_treasure:
@@ -195,6 +245,7 @@ func _throw_stone() -> void:
 	stone.global_position = global_position + (throw_direction * STONE_SPAWN_OFFSET)
 	stone.setup(throw_direction, aim_info.dist)
 	get_parent().add_child(stone)
+	throw_audio.play()
 
 	await animated_sprite.animation_finished
 	is_throwing = false
@@ -217,6 +268,7 @@ func set_movement_enabled(enabled: bool) -> void:
 	can_move = enabled
 	if not enabled:
 		velocity = Vector2.ZERO
+		_update_footstep_audio(false, false)
 
 func play_treasure_pickup_animation() -> void:
 	if not animated_sprite:
@@ -224,6 +276,7 @@ func play_treasure_pickup_animation() -> void:
 	is_collecting_treasure = true
 	can_move = false
 	velocity = Vector2.ZERO
+	_update_footstep_audio(false, false)
 	if animated_sprite.sprite_frames.has_animation(&"pack_treasure"):
 		animated_sprite.play(&"pack_treasure")
 	else:

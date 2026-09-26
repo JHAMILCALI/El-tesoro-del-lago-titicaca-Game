@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://uxifxky46p15"
+path="res://.godot/imported/rock impact dirt.mp3-73b9c288e8ad0b586e4ee9b5e1feccd0.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/rock impact dirt.mp3"
+dest_files=["res://.godot/imported/rock impact dirt.mp3-73b9c288e8ad0b586e4ee9b5e1feccd0.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
