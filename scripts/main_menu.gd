@@ -10,7 +10,7 @@ const MenuSkin = preload("res://scripts/menu_skin.gd")
 @onready var background_video: VideoStreamPlayer = $BackgroundVideo
 @onready var background_music: AudioStreamPlayer = $BackgroundMusic
 
-var level_01_scene: PackedScene = preload("res://scenes/levels/Level01_Convoy.tscn")
+var level_01_intro_scene: PackedScene = preload("res://scenes/levels/Level01Intro.tscn")
 var boat_scene: PackedScene = preload("res://scenes/levels/LakeLevel02.tscn")
 
 func _ready() -> void:
@@ -75,11 +75,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		_on_play_pressed()
 
 func _on_play_pressed() -> void:
-	print("[MainMenu] Cargando Nivel 1...")
-	if level_01_scene:
-		get_tree().change_scene_to_packed(level_01_scene)
+	print("[MainMenu] Iniciando cinemática del Nivel 1...")
+	if level_01_intro_scene:
+		get_tree().change_scene_to_packed(level_01_intro_scene)
 	else:
-		get_tree().change_scene_to_file("res://scenes/levels/Level01_Convoy.tscn")
+		get_tree().change_scene_to_file("res://scenes/levels/Level01Intro.tscn")
 
 func _on_boat_pressed() -> void:
 	print("[MainMenu] Cargando Nivel 2: Travesía del Titicaca...")

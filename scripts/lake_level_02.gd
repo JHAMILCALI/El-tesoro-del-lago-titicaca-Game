@@ -9,6 +9,7 @@ const PERSISTENT_MUSIC = preload("res://scripts/persistent_music.gd")
 const BACKGROUND_MUSIC = preload("res://assets/audio/Escape Across Lake Titicaca.mp3")
 const BACKGROUND_MUSIC_VOLUME := 0.60
 const BACKGROUND_MUSIC_NODE := "Level02Music"
+const FINAL_CINEMATIC_PATH := "res://scenes/levels/FinalCinematic.tscn"
 
 @onready var boat: BoatPrototype = $BoatPrototype/Boat
 @onready var hud: HUD = $HUD
@@ -239,14 +240,4 @@ func _on_finish_area_body_entered(body: Node2D) -> void:
 		return
 	level_finished = true
 	boat.set_movement_enabled(false)
-	for enemy in enemy_boats:
-		enemy.set_physics_process(false)
-	var lines: Array = [
-		{"speaker": "Huita", "text": "Lo logramos."},
-		{"speaker": "Pasco", "text": "El tesoro está a salvo."},
-		{"speaker": "Huita", "text": "Pero nuestra historia todavía no termina."}
-	]
-	dialogue_box.start_dialogue(lines)
-	dialogue_box.dialogue_finished.connect(func():
-		hud.show_level_complete("EL LAGO ESTÁ A SALVO", "Pasco y Huita han llegado al santuario.\nSu historia continuará muy pronto.")
-	, CONNECT_ONE_SHOT)
+	get_tree().change_scene_to_file.call_deferred(FINAL_CINEMATIC_PATH)

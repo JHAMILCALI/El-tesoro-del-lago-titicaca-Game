@@ -76,7 +76,7 @@ offset_bottom = 158.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.59, 1)
 theme_override_font_sizes/font_size = 33
-text = "LA HISTORIA CONTINUARÁ"
+text = "EL SECRETO DEL TITICACA"
 horizontal_alignment = 1
 
 [node name="Message" type="Label" parent="Card"]
@@ -87,7 +87,7 @@ offset_bottom = 265.0
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.97, 0.94, 0.85, 1)
 theme_override_font_sizes/font_size = 21
-text = "El tesoro está a salvo gracias a Pasco y Huita.\nUna nueva aventura les espera junto al lago."
+text = "El santuario y el tesoro se hundieron.\nEl lago guardará su secreto para siempre."
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
