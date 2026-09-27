@@ -26,7 +26,8 @@ func set_ratio(value: float, immediately: bool = false) -> void:
 		$Title.text = "REMO" if meter_kind == MeterKind.ROWING else "ALERTA"
 		$Value.text = "%d%%" % roundi(ratio * 100.0)
 		$Status.text = _status_text()
-		$Value.modulate = _fill_color().lightened(0.3)
+		var alarm := meter_kind != MeterKind.ROWING and ratio >= 0.7
+		$Value.modulate = Color.WHITE if alarm else _fill_color().lightened(0.3)
 		$Status.modulate = Color("f1c680") if _is_urgent() else Color("c6b496")
 	queue_redraw()
 

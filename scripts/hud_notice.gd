@@ -60,12 +60,14 @@ func show_message(message: String, duration: float) -> void:
 		tone = TEAL
 		icon = "✓"
 
+	# El rojo queda solo en el acento y el borde; el texto de peligro se lee en blanco.
+	var text_tone := Color.WHITE if tone == RED else tone
 	heading.text = category
-	heading.add_theme_color_override("font_color", tone)
+	heading.add_theme_color_override("font_color", text_tone)
 	message_label.text = shown_text
 	message_label.add_theme_color_override("font_color", PALE_TEXT)
 	symbol.text = icon
-	symbol.add_theme_color_override("font_color", tone)
+	symbol.add_theme_color_override("font_color", text_tone)
 	accent.color = tone
 	panel_style.border_color = tone.darkened(0.3)
 	panel_style.bg_color = Color("211b18").lerp(tone, 0.08)

@@ -96,11 +96,13 @@ offset_bottom = 320.0
 color = Color(0.43, 0.25, 0.12, 1)
 
 [node name="DockLabel" type="Label" parent="." unique_id=1556968834]
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 4
 offset_left = -100.0
 offset_top = 330.0
 offset_right = -100.0
 offset_bottom = 330.0
-theme_override_colors/font_color = Color(0.9, 0.78, 0.45, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "MUELLE DE PARTIDA"
 
 [node name="Islands" type="Node2D" parent="." unique_id=1719028898]
@@ -117,6 +119,9 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="IslandALabel" type="Label" parent="Islands/IslandA" unique_id=164974629]
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 layout_mode = 0
 offset_left = 80.0
 offset_top = 170.0
@@ -178,7 +183,7 @@ offset_left = 9020.0
 offset_top = -555.0
 offset_right = 9380.0
 offset_bottom = -525.0
-theme_override_colors/font_color = Color(1, 0.87, 0.42, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0.12, 0.12, 0.1, 1)
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 20
@@ -284,11 +289,13 @@ offset_bottom = 250.0
 color = Color(0.24, 0.3, 0.4, 0.32)
 
 [node name="FogLabel" type="Label" parent="Areas/SacredZone" unique_id=659145178]
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 4
 offset_left = -130.0
 offset_top = -20.0
 offset_right = -130.0
 offset_bottom = -20.0
-theme_override_colors/font_color = Color(0.75, 0.82, 0.95, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "ZONA SAGRADA DEL LAGO"
 
 [node name="FinishArea" type="Area2D" parent="Areas" unique_id=60709546 groups=["lake_destination"]]
